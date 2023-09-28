@@ -1,0 +1,74 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B2D821A5-3039-4C16-9028-FFAFD4662346}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{8A2C0DBB-6409-4137-836F-2E0DCC75B9B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{193D7BF8-94E7-409D-B7CE-8B0046755E3E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum.Extensions.Generator", "src\FastEnum.Extensions.Generator\FastEnum.Extensions.Generator.csproj", "{BD21D657-6C2C-496A-8BB5-7BF924A60CF4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum.Extensions.Generator.Tests.Snapshot", "test\FastEnum.Extensions.Generator.Tests.Snapshot\FastEnum.Extensions.Generator.Tests.Snapshot.csproj", "{D0CF2FDD-0EAC-4328-9E10-B6C188AB87EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BFB9B222-BA2B-41DB-BC83-47D89D4B3DDF}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		coverlet.runsettings.xml = coverlet.runsettings.xml
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		LICENSE = LICENSE
+		README.md = README.md
+		test.ps1 = test.ps1
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum.Extensions.NetCore.Example", "examples\FastEnum.Extensions.NetCore.Example\FastEnum.Extensions.NetCore.Example.csproj", "{8E38E58B-52E8-4CEF-BCF3-EFCFB43982D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum.Extensions.Generator.Data", "test\FastEnum.Extensions.Generator.Data\FastEnum.Extensions.Generator.Data.csproj", "{803C02DC-0F4E-4B20-A0B4-C09314E23D5D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum.Extensions.Generator.Tests.Integration", "test\FastEnum.Extensions.Generator.Tests.Integration\FastEnum.Extensions.Generator.Tests.Integration.csproj", "{BEC065C1-D58C-49AC-AE3E-0D40EC3B180E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD21D657-6C2C-496A-8BB5-7BF924A60CF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD21D657-6C2C-496A-8BB5-7BF924A60CF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD21D657-6C2C-496A-8BB5-7BF924A60CF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD21D657-6C2C-496A-8BB5-7BF924A60CF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0CF2FDD-0EAC-4328-9E10-B6C188AB87EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0CF2FDD-0EAC-4328-9E10-B6C188AB87EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0CF2FDD-0EAC-4328-9E10-B6C188AB87EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0CF2FDD-0EAC-4328-9E10-B6C188AB87EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E38E58B-52E8-4CEF-BCF3-EFCFB43982D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E38E58B-52E8-4CEF-BCF3-EFCFB43982D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E38E58B-52E8-4CEF-BCF3-EFCFB43982D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E38E58B-52E8-4CEF-BCF3-EFCFB43982D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803C02DC-0F4E-4B20-A0B4-C09314E23D5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803C02DC-0F4E-4B20-A0B4-C09314E23D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803C02DC-0F4E-4B20-A0B4-C09314E23D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803C02DC-0F4E-4B20-A0B4-C09314E23D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEC065C1-D58C-49AC-AE3E-0D40EC3B180E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC065C1-D58C-49AC-AE3E-0D40EC3B180E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC065C1-D58C-49AC-AE3E-0D40EC3B180E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC065C1-D58C-49AC-AE3E-0D40EC3B180E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD21D657-6C2C-496A-8BB5-7BF924A60CF4} = {B2D821A5-3039-4C16-9028-FFAFD4662346}
+		{D0CF2FDD-0EAC-4328-9E10-B6C188AB87EA} = {193D7BF8-94E7-409D-B7CE-8B0046755E3E}
+		{8E38E58B-52E8-4CEF-BCF3-EFCFB43982D7} = {8A2C0DBB-6409-4137-836F-2E0DCC75B9B0}
+		{803C02DC-0F4E-4B20-A0B4-C09314E23D5D} = {193D7BF8-94E7-409D-B7CE-8B0046755E3E}
+		{BEC065C1-D58C-49AC-AE3E-0D40EC3B180E} = {193D7BF8-94E7-409D-B7CE-8B0046755E3E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD9A38CC-C617-4417-832A-C3EB1B537916}
+	EndGlobalSection
+EndGlobal

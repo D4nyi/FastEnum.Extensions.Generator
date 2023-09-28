@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>Preview</LangVersion>
+
+		<IsRoslynComponent>True</IsRoslynComponent>
+
+		<PackageId>$(AssemblyName)</PackageId>
+		<Authors>Dániel Szöllősi</Authors>
+		<RepositoryType>git</RepositoryType>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>Enum, Extensions, Enum-Extensions, Fast, Efficient, Source Generator</PackageTags>
+		<RepositoryUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</PackageProjectUrl>
+		<Description>Source Generator generating extension methods for enums</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+		<PackageReleaseNotes>
+			Optimized HEX format generation for byte backed enums.
+			Added suppurt for Display and EnumMember attributes.
+		</PackageReleaseNotes>
+
+		<DebugType>portable</DebugType>
+
+		<PackageVersion>1.1.1</PackageVersion>
+		<Version>1.1.1</Version>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+		<IsPackable>True</IsPackable>
+		<ApplicationIcon>enum.ico</ApplicationIcon>
+		<PackageIcon>enum.png</PackageIcon>
+		<PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
+		<DevelopmentDependency>True</DevelopmentDependency>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<IncludeBuildOutput>False</IncludeBuildOutput>
+		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+
+		<WarningsAsErrors>CA2021</WarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md" Pack="true" PackagePath="."/>
+		<None Update="enum.png" Pack="true" PackagePath="."/>
+	</ItemGroup>
+</Project>

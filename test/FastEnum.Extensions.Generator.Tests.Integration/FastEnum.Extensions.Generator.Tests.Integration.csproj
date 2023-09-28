@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<IsPackable>False</IsPackable>
+		<IsTestProject>True</IsTestProject>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Using Include="FastEnum.Extensions.Generator.Data" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FastEnum.Extensions.Generator.Data\FastEnum.Extensions.Generator.Data.csproj" />
+	</ItemGroup>
+
+</Project>

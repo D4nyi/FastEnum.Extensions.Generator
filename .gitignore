@@ -1,0 +1,16 @@
+## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio cache/options directory
+.vs/
+
+# MSTest test Results
+[Cc]overage[Rr]esult*
+[Cc]overage[Rr]eport*
+[Tt]est[Rr]esult*
+
+# Benchmark Results
+BenchmarkDotNet.Artifacts/
