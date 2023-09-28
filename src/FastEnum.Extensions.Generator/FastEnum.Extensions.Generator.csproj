@@ -1,55 +1,51 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-	  <LangVersion>Latest</LangVersion>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>Latest</LangVersion>
 
-	  <Nullable>enable</Nullable>
+		<Nullable>enable</Nullable>
 
-	  <EnableNETAnalyzers>True</EnableNETAnalyzers>
-	  <AnalysisMode>All</AnalysisMode>
-	  <AnalysisLevel>latest-all</AnalysisLevel>
-	  <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-	  <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisMode>All</AnalysisMode>
+		<AnalysisLevel>latest-all</AnalysisLevel>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
 
-	  <PackageId>$(AssemblyName)</PackageId>
-	  <Authors>Dániel Szöllősi</Authors>
-	  <RepositoryType>git</RepositoryType>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <PackageTags>Enum, Extensions, Enum-Extensions, Fast, Efficient, Source Generator</PackageTags>
-	  <RepositoryUrl>https://github.com/D4nyi/FastEnumToString</RepositoryUrl>
-	  <PackageProjectUrl>https://github.com/D4nyi/FastEnumToString</PackageProjectUrl>
-	  <Description>Source Generator generating extension methods for enums</Description>
-	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageId>$(AssemblyName)</PackageId>
+		<Authors>Dániel Szöllősi</Authors>
+		<RepositoryType>git</RepositoryType>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>Enum, Extensions, Enum-Extensions, Fast, Efficient, Source Generator</PackageTags>
+		<RepositoryUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</PackageProjectUrl>
+		<Description>Source Generator generating extension methods for enums</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-	  <PackageReleaseNotes></PackageReleaseNotes>
+		<PackageReleaseNotes>First working preview version</PackageReleaseNotes>
 
-	  <DebugType>portable</DebugType>
+		<DebugType>portable</DebugType>
 
-	  <EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>
+		<EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>
 
-	  <PackageVersion>1.0.0</PackageVersion>
-	  <Version>1.0.0</Version>
-	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	  <DevelopmentDependency>true</DevelopmentDependency>
-	  <IsPackable>true</IsPackable>
-	  <ApplicationIcon>enum.ico</ApplicationIcon>
-	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <IncludeBuildOutput>false</IncludeBuildOutput>
-	  <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-	  <PackageIcon>enum.png</PackageIcon>
-	  <PackageIconUrl>https://github.com/D4nyi/FastEnumToString/blob/master/FastEnumToString/enum.svg</PackageIconUrl>
-  </PropertyGroup>
+		<PackageVersion>1.0.0-preview.1</PackageVersion>
+		<Version>1.0.0</Version>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<DevelopmentDependency>true</DevelopmentDependency>
+		<IsPackable>true</IsPackable>
+		<ApplicationIcon>enum.ico</ApplicationIcon>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+		<PackageIcon>enum.png</PackageIcon>
+		<PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
-	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="bin\Debug\netstandard2.0\\FastEnum.Extensions.Generator.dll" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" PrivateAssets="all" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="$(OutputPath)\$(AssemblyName).dll">
@@ -58,8 +54,8 @@
 			<Visible>False</Visible>
 		</None>
 		<None Include="..\..\README.md" Link="README.md">
-		  <PackagePath>\</PackagePath>
-		  <Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+			<Pack>True</Pack>
 		</None>
 
 		<None Update="enum.png">
