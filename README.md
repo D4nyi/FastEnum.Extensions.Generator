@@ -1,5 +1,5 @@
 # FastEnumToString
-Source Generator generating ToString extension methods for any enums.
+Source Generator for enums to create extension methods with basic functionality.
 
 
 ## Usage

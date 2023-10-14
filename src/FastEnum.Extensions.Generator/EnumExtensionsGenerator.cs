@@ -32,7 +32,7 @@ namespace FastEnum
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Extensions.Generator.EnumExtensionsGenerator", "{{Assembly.Version}}")]
     [global::System.AttributeUsage(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
-    public sealed class ExtensionsAttribute : global::System.Attribute { }
+    internal sealed class ExtensionsAttribute : global::System.Attribute { }
 }
 """;
 
