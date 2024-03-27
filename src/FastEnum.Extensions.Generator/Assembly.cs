@@ -5,11 +5,11 @@
 [assembly: System.Reflection.AssemblyInformationalVersion(Assembly.Version)]
 [assembly: System.Reflection.AssemblyFileVersion(Assembly.CorrectVersion)]
 
-[assembly: InternalsVisibleTo("FastEnumToString.Test", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("FastEnum.Helpers.Generator.Testst", AllInternalsVisible = true)]
 
 internal static class Assembly
 {
-    internal const string Version = "1.0.0-preview.1";
+    internal const string Version = "1.0.0-preview.2";
     internal const string CorrectVersion = "1.0.0";
 }
 

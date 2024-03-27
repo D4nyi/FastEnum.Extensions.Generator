@@ -1,13 +1,13 @@
-﻿namespace FastEnumToString.Tests;
+﻿using FastEnumToString.Tests;
+
+namespace FastEnum.Extensions.Generator.Tests;
 
 [UsesVerify]
 public sealed class EnumToStringGeneratorTests
 {
-    [Fact]
-    public Task GeneratesEnumExtensionsCorrectly()
-    {
-        // The source code to test
-        const string source =
+    // The source code to test
+    private const string Source =
+/*lang=csharp*/
 """
 namespace SnapshotTesting
 {
@@ -21,7 +21,10 @@ namespace SnapshotTesting
 }
 """;
 
+    [Fact]
+    public Task GeneratesEnumExtensionsCorrectly()
+    {
         // Pass the source code to our helper and snapshot test the output
-        return TestHelper.Verify(source);
+        return TestHelper.Verify(Source);
     }
 }

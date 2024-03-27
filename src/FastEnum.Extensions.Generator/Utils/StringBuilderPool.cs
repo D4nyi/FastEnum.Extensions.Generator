@@ -10,11 +10,11 @@ namespace FastEnum.Extensions.Generator.Utils;
 /// <remarks>
 /// Our own cheezy object pool since we can't use the .NET core version
 /// Logic borrowed from:
-/// https://github.com/davidfowl/LoggingGenerator/blob/939125e726d4b67cfb827c36dbbbaefea767fb69/Microsoft.Extensions.Logging.Generators/LoggingGenerator.cs#L346
+/// https://github.com/davidfowl/LoggingGenerator/blob/939125e726d4b67cfb827c36dbbbaefea767fb69/Microsoft.Helpers.Logging.Generators/LoggingGenerator.cs#L346
 /// </remarks>
 internal static class StringBuilderPool
 {
-    private const int DefaultStackCapacity = 4;
+    private const int DefaultStackCapacity   = 4;
     private const int DefaultBuilderCapacity = 4 * 1024;
     private static StringBuilder? _fastItem;
 
@@ -57,7 +57,7 @@ internal static class StringBuilderPool
     /// <br/>
     /// Usage:
     /// <code>
-    /// string value = StringBuilderPool.ReturnStringBuilder(sb);
+    /// string value = StringBuilderPool.Return(sb);
     /// </code>
     /// </summary>
     /// <param name="sb"><see cref="StringBuilder"/> that should be (re)added to the object pool.</param>

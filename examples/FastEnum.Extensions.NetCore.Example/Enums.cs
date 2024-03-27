@@ -2,26 +2,28 @@
 
 namespace ToStringExample;
 
-public class NestingClass<T, K>
-    where T : struct
-    where K : class, new()
+public class NestingClass
 {
     [Extensions]
     public enum NestedInClassEnum
     {
-        None
+        None,
+        First,
+        Second,
+        Third,
+        Fourth,
     }
 }
 
 [Extensions]
-public enum Color : System.Byte
+public enum Color : Byte
 {
     Red = 1,
     Green = 2,
     Blue = 4,
 }
 
-[Extensions]
+[Extensions, Flags]
 public enum Options
 {
     None = 0,

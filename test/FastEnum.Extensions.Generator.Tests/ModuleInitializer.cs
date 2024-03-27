@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace FastEnumToString.Tests;
+namespace FastEnum.Extensions.Generator.Tests;
 
 public static class ModuleInitializer
 {

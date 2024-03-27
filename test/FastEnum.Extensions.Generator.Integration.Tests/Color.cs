@@ -1,11 +1,12 @@
-using FastEnum;
+using System.ComponentModel;
 
-namespace FastEnumToString.IntegrationTests;
+namespace FastEnum.Extensions.Generator.IntegrationTests;
 
 [Extensions]
 public enum Color
 {
+    [Description("Not red")]
     Red = 1,
-    Blue = 2,
-    Green = 3,
+    Green = 2,
+    Blue = 4,
 }

@@ -13,7 +13,7 @@ internal static class TestHelper
 
         // Create references for assemblies we require
         // We could add multiple references if required
-        IEnumerable<PortableExecutableReference> references = new[]
+        PortableExecutableReference[] references =
         {
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
         };
