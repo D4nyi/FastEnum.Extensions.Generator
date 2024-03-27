@@ -9,7 +9,7 @@
 
 internal static class Assembly
 {
-    internal const string Version = "1.0.0-preview.2";
+    internal const string Version = "1.0.0-preview.3";
     internal const string CorrectVersion = "1.0.0";
 }
 
