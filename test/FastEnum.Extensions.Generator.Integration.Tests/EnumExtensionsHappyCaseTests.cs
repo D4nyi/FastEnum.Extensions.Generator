@@ -150,6 +150,22 @@ public sealed class EnumExtensionsHappyCaseTests
     }
 
     [Theory]
+    [ClassData(typeof(EnumStringIgnoreCaseGenerator))]
+    public void Extension_TryParseStringIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
+    {
+        // Act
+        bool success1 = ColorExtensions.TryParseIgnoreCase(name, out Color color1);
+        bool success2 = Enum.TryParse(name, true, out Color color2);
+
+        // Assert
+        Assert.True(success1);
+        Assert.Equal(success1, success2);
+
+        Assert.Equal(expected, color1);
+        Assert.Equal(color1, color2);
+    }
+
+    [Theory]
     [ClassData(typeof(EnumStringGenerator))]
     public void Extension_TryParseSpan_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
@@ -166,5 +182,35 @@ public sealed class EnumExtensionsHappyCaseTests
 
         Assert.Equal(expected, color1);
         Assert.Equal(color1, color2);
+    }
+
+    [Theory]
+    [ClassData(typeof(EnumStringIgnoreCaseGenerator))]
+    public void Extension_TryParseSpanIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
+    {
+        // Arrange
+        ReadOnlySpan<char> spanName = name.AsSpan();
+
+        // Act
+        bool success1 = ColorExtensions.TryParseIgnoreCase(spanName, out Color color1);
+        bool success2 = Enum.TryParse(spanName, true, out Color color2);
+
+        // Assert
+        Assert.True(success1);
+        Assert.Equal(success1, success2);
+
+        Assert.Equal(expected, color1);
+        Assert.Equal(color1, color2);
+    }
+
+    [Theory]
+    [ClassData(typeof(DescriptionDataGenerator))]
+    public void Extension_GetDescription_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
+    {
+        // Act
+        string? actualDescription = input.GetDescription();
+
+        // Assert
+        Assert.Equal(expectedDescription, actualDescription);
     }
 }
