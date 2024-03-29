@@ -4,38 +4,19 @@ namespace FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;
 
 internal sealed class FormattingGenerator : IEnumerable<object?[]>
 {
-    public IEnumerator<object?[]> GetEnumerator()
+    private static readonly List<object?[]> _testData;
+
+    static FormattingGenerator()
     {
-        yield return [Color.Red, "G"];
-        yield return [Color.Blue, "G"];
-        yield return [Color.Green, "G"];
-        yield return [(Color)15, "G"];
-        yield return [(Color)0, "G"];
-        
-        // ---------------------------
+        var colors = new[] { Color.Red, Color.Green, Color.Blue, (Color)15, (Color)0 };
+        var formats = new[] { "G", "g", "D", "d", "X", "x", "F", "f" };
 
-        yield return [Color.Red, "D"];
-        yield return [Color.Blue, "D"];
-        yield return [Color.Green, "D"];
-        yield return [(Color)15, "D"];
-        yield return [(Color)0, "D"];
-        
-        // ---------------------------
-
-        yield return [Color.Red, "X"];
-        yield return [Color.Blue, "X"];
-        yield return [Color.Green, "X"];
-        yield return [(Color)15, "X"];
-        yield return [(Color)0, "X"];
-        
-        // ---------------------------
-        
-        yield return [Color.Red, "F"];
-        yield return [Color.Blue, "F"];
-        yield return [Color.Green, "F"];
-        yield return [(Color)15, "F"];
-        yield return [(Color)0, "F"];
+        _testData = colors
+            .SelectMany(color => formats.Select(format => new object?[] { color, format }))
+            .ToList();
     }
+
+    public IEnumerator<object?[]> GetEnumerator() => _testData.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

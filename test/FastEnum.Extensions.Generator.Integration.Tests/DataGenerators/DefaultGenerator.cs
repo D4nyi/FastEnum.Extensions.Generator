@@ -4,14 +4,16 @@ namespace FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;
 
 internal sealed class DefaultGenerator : IEnumerable<object?[]>
 {
-    public IEnumerator<object?[]> GetEnumerator()
+    private static readonly List<object?[]> _testData = new()
     {
-        yield return [Color.Red];
-        yield return [Color.Blue];
-        yield return [Color.Green];
-        yield return [(Color)15];
-        yield return [(Color)0];
-    }
+        new object?[] { Color.Red },
+        new object?[] { Color.Blue },
+        new object?[] { Color.Green },
+        new object?[] { (Color)15 },
+        new object?[] { (Color)0 },
+    };
+
+    public IEnumerator<object?[]> GetEnumerator() => _testData.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

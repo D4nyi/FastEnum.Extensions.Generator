@@ -4,22 +4,24 @@ namespace FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;
 
 internal sealed class EnumStringGenerator : IEnumerable<object?[]>
 {
-    public IEnumerator<object?[]> GetEnumerator()
+    private static readonly List<object?[]> _testData = new()
     {
-        yield return [nameof(Color.Red), Color.Red];
-        yield return [nameof(Color.Green), Color.Green];
-        yield return [nameof(Color.Blue), Color.Blue];
-        yield return [(Color.Red | Color.Blue).ToString(), Color.Red | Color.Blue];
-        yield return [(Color.Red | Color.Green).ToString(), Color.Red | Color.Green];
-        yield return [(Color.Blue | Color.Green).ToString(), Color.Blue | Color.Green];
-        yield return ["1", Color.Red];
-        yield return ["2", Color.Green];
-        yield return ["4", Color.Blue];
-        yield return ["3", Color.Red | Color.Green];
-        yield return ["5", Color.Red | Color.Blue];
-        yield return ["6", Color.Blue | Color.Green];
-        yield return ["15", (Color)15];
-    }
+        new object?[] { nameof(Color.Red), Color.Red },
+        new object?[] { nameof(Color.Green), Color.Green },
+        new object?[] { nameof(Color.Blue), Color.Blue },
+        new object?[] { (Color.Red | Color.Blue).ToString(), Color.Red | Color.Blue },
+        new object?[] { (Color.Red | Color.Green).ToString(), Color.Red | Color.Green },
+        new object?[] { (Color.Blue | Color.Green).ToString(), Color.Blue | Color.Green },
+        new object?[] { "1", Color.Red },
+        new object?[] { "2", Color.Green },
+        new object?[] { "4", Color.Blue },
+        new object?[] { "3", Color.Red | Color.Green },
+        new object?[] { "5", Color.Red | Color.Blue },
+        new object?[] { "6", Color.Blue | Color.Green },
+        new object?[] { "15", (Color)15 },
+    };
+
+    public IEnumerator<object?[]> GetEnumerator() => _testData.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
