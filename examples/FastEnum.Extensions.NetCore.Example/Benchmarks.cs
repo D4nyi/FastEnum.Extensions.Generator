@@ -1,23 +1,35 @@
-﻿using System.Runtime.CompilerServices;
-
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 
 namespace ToStringExample;
 
 [MemoryDiagnoser]
 public class Benchmarks
 {
-    private Options options = Options.HasFlag;
+
+    [Params(Big.Value0, Big.Value512, Big.Value1023, (Big)2048)]
+    public Big BenchmarkValue { get; set; }
 
     [Benchmark]
-    public int UnsafeAs()
+    public bool IsDefined_Original()
     {
-        return Unsafe.As<Options, int>(ref options);
+        return Enum.IsDefined(BenchmarkValue);
     }
 
     [Benchmark]
-    public int Cast()
+    public bool IsDefined_Extension()
     {
-        return ((int)options);
+        return BenchmarkValue.IsDefined();
+    }
+
+    [Benchmark]
+    public string ToString_Original()
+    {
+        return BenchmarkValue.ToString();
+    }
+
+    [Benchmark]
+    public string ToString_Extension()
+    {
+        return BenchmarkValue.FastToString();
     }
 }
