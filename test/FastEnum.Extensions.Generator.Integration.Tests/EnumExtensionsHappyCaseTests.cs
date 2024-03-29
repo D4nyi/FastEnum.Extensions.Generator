@@ -94,13 +94,30 @@ public sealed class EnumExtensionsHappyCaseTests
     public void Extension_GetUnderlyingValues_GeneratesTheSameResultAsGetValuesAsUnderlyingType()
     {
         // Arrange
+#if NET7_0_OR_GREATER
         Array expected = Enum.GetValuesAsUnderlyingType<Color>();
+#else
+        Array expected = GetValuesAsUnderlyingType();
+#endif
 
         // Act
         int[] actual = ColorExtensions.GetUnderlyingValues();
 
         // Assert
         Assert.Equal(expected, actual);
+
+#if NET6_0
+        static object[] GetValuesAsUnderlyingType()
+        {
+            Type underlyingType = Enum.GetUnderlyingType(typeof(Color));
+
+            Color[] values = Enum.GetValues<Color>();
+
+            return values
+                .Select(x => Convert.ChangeType(x, underlyingType))
+                .ToArray();
+        }
+#endif
     }
 
     [Fact]
