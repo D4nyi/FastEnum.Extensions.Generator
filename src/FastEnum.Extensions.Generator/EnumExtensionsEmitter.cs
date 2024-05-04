@@ -59,7 +59,7 @@ internal sealed partial class EnumExtensionsEmitter
 
     private string Get(Indentation indentation)
     {
-        if (_currentSpec.IsGlobalNamespace && indentation != Indentation.Namespace)
+        if (_currentSpec.IsGlobalNamespace && indentation < Indentation.Method)
         {
             indentation--;
         }
@@ -67,14 +67,13 @@ internal sealed partial class EnumExtensionsEmitter
         // 4 spaces per indentation.
         return indentation switch
         {
-            Indentation.Class      => "    ",
-            Indentation.Method     => "        ",
-            Indentation.MethodBody => "            ",
-            Indentation.Nesting1   => "                ",
-            Indentation.Nesting2   => "                    ",
-            Indentation.Nesting3   => "                        ",
-            Indentation.Nesting4   => "                            ",
-            _ => "", // Indentation.Namespace
+            Indentation.Method     => "    ",
+            Indentation.MethodBody => "        ",
+            Indentation.Nesting1   => "            ",
+            Indentation.Nesting2   => "                ",
+            Indentation.Nesting3   => "                    ",
+            Indentation.Nesting4   => "                        ",
+            _ => "", // Indentation.Namespace or Indentation.Class
         };
     }
 }

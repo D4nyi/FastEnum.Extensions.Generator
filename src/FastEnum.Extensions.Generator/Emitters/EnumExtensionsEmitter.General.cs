@@ -12,7 +12,7 @@ internal sealed partial class EnumExtensionsEmitter
 
     private const string NoInliningAttribute =
         "[global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300";
-    
+
     private void AddFileAndClassHeader(StringBuilder sb)
     {
         sb.AppendLine(Constants.FileHeader);
@@ -20,23 +20,18 @@ internal sealed partial class EnumExtensionsEmitter
         if (!_currentSpec.IsGlobalNamespace)
         {
             sb
-                .Append("namespace ")
-                .AppendLine(_currentSpec.Namespace)
-                .AppendLine("{");
+                .Append("namespace ").Append(_currentSpec.Namespace).AppendLine(";").AppendLine();
         }
 
-        string classHeaderIndent = Get(Indentation.Class);
-
         sb
-            .Append(classHeaderIndent).AppendLine("/// <summary>")
-            .Append(classHeaderIndent).Append("/// Extension methods for <see cref=\"")
+            .AppendLine("/// <summary>")
+            .Append("/// Extension methods for <see cref=\"")
             .Append(_currentSpec.FullName).AppendLine("\" />")
-            .Append(classHeaderIndent).AppendLine("/// </summary>")
-            .Append(classHeaderIndent)
-                .Append("[global::System.CodeDom.Compiler.GeneratedCode(\"FastEnum.Helpers.Generator.EnumToStringGenerator\", \"")
+            .AppendLine("/// </summary>")
+            .Append("[global::System.CodeDom.Compiler.GeneratedCode(\"FastEnum.Helpers.Generator.EnumToStringGenerator\", \"")
                 .Append(Assembly.Version).AppendLine("\")]")
-            .Append(classHeaderIndent).Append(_currentSpec.Modifier).Append(" static class ").Append(_currentSpec.Name).AppendLine("Extensions")
-            .Append(classHeaderIndent).AppendLine("{");
+            .Append(_currentSpec.Modifier).Append(" static class ").Append(_currentSpec.Name).AppendLine("Extensions")
+            .AppendLine("{");
     }
 
     private void AddFieldsAndGetMethods(StringBuilder sb)
@@ -247,16 +242,8 @@ internal sealed partial class EnumExtensionsEmitter
             .Append(methodBodyIndent).AppendLine("new global::System.ArgumentException(global::System.String.Format(global::System.Globalization.CultureInfo.InvariantCulture, \"Requested value '{0}' was not found.\", originalValue.ToString()));");
     }
 
-    private void CloseClassAndNamespace(StringBuilder sb)
+    private static void CloseClassAndNamespace(StringBuilder sb)
     {
-        string indent = Get(Indentation.Class);
-        sb
-            .Append(indent)
-            .AppendLine("}");
-
-        if (!_currentSpec.IsGlobalNamespace)
-        {
-            sb.Append('}');
-        }
+        sb.AppendLine("}");
     }
 }
