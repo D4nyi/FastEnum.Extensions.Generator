@@ -2,7 +2,6 @@
 
 namespace FastEnum.Extensions.Generator.Tests;
 
-[UsesVerify]
 public sealed class EnumToStringGeneratorTests
 {
     // The source code to test
