@@ -20,6 +20,8 @@ internal readonly struct EnumGenerationSpec
     internal string OriginalUnderlyingType { get; }
     internal bool IsFlags { get; }
     internal int AverageMemberLength { get; }
+    internal object MinValue { get; }
+    internal object MaxValue { get; }
     internal ImmutableArray<EnumMemberSpec> Members { get; }
 
     internal EnumGenerationSpec(
@@ -45,25 +47,9 @@ internal readonly struct EnumGenerationSpec
         int lastIndexOfDot = FullName.LastIndexOf('.');
         Name = FullName.Substring(lastIndexOfDot + 1);
 
-        AverageMemberLength = (int)Math.Round(members.Average(x => x.MemberLength));
-    }
-
-    private static void GetGeneratorFriendlyTypeName(Type underlyingType)
-    {
-        // byte, sbyte, short, ushort, int, uint, long, or ulong
-
-        string underlyingTypeName = underlyingType.Name switch
-        {
-            nameof(Byte) => "byte",
-            nameof(SByte) => "sbyte",
-            nameof(Int16) => "short",
-            nameof(UInt16) => "ushort",
-            nameof(Int32) => "int",
-            nameof(UInt32) => "uint",
-            nameof(Int64) => "long",
-            nameof(UInt64) => "ulong",
-            _ => throw new UnreachableException("Unknown enum backing type!")
-        };
+        AverageMemberLength = (int)Math.Round(members.Average(x => x.MemberLength), MidpointRounding.AwayFromZero);
+        MinValue = members.Min();
+        MaxValue = members.Max();
     }
 
     public override string ToString() => FullName;

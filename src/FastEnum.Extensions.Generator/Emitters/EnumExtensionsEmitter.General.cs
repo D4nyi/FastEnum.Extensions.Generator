@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 using FastEnum.Extensions.Generator.Emitters;
 using FastEnum.Extensions.Generator.Specs;
@@ -171,10 +172,21 @@ internal sealed partial class EnumExtensionsEmitter
                 .Append(_currentSpec.FullName).AppendLine(" value)")
             .Append(methodIndent).AppendLine("{")
             .Append(methodBodyIndent).Append(_currentSpec.UnderlyingType).Append(" resultValue = ")
-                .AddCast(_currentSpec.FullName, _currentSpec.UnderlyingType).AppendLine(";")
+                .AddCast(_currentSpec.FullName, _currentSpec.UnderlyingType).AppendLine(";");
+
+
+        //if (Comparer<object>.Default.Compare(_currentSpec.MinValue, 0) > 0)
+        //{
+        //    sb
+        //        .Append(methodBodyIndent).Append("if (resultValue > ").Append(_currentSpec.MaxValue).AppendLine(")")
+        //        .Append(methodBodyIndent).AppendLine("{")
+        //        .Append(nesting1Indent)
+        //}
+
+        sb
             .Append(methodBodyIndent).AppendLine("global::System.Int32 index = 0;")
             .AppendLine()
-            .Append(methodBodyIndent).AppendLine("global::System.Text.StringBuilder sb = new global::System.Text.StringBuilder(MembersCount * 5); // TODO: Calc the longest element length or average element length")
+            .Append(methodBodyIndent).Append("global::System.Text.StringBuilder sb = new global::System.Text.StringBuilder(").Append(_currentSpec.AverageMemberLength).AppendLine(" * 3);")
             .Append(methodBodyIndent).AppendLine("while (index < _underlyingValues.Length)")
             .Append(methodBodyIndent).AppendLine("{")
             .Append(nesting1Indent).Append(_currentSpec.UnderlyingType).AppendLine(" currentValue = _underlyingValues[index];")
