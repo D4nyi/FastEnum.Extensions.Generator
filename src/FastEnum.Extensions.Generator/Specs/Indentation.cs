@@ -2,12 +2,10 @@
 
 internal enum Indentation
 {
-    Namespace = 0,
-    Class = 1,
-    Method = 2,
-    MethodBody = 3,
-    Nesting1 = 4,
-    Nesting2 = 5,
-    Nesting3 = 6,
-    Nesting4 = 7,
+    Method = 1,
+    MethodBody = 2,
+    Nesting1 = 3,
+    Nesting2 = 4,
+    Nesting3 = 5,
+    Nesting4 = 6,
 }

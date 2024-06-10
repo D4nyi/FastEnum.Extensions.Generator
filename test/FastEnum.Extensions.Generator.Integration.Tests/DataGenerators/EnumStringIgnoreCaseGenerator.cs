@@ -20,12 +20,12 @@ internal sealed class EnumStringIgnoreCaseGenerator : IEnumerable<object?[]>
         new object?[] { (Color.Red | Color.Green).ToString().ToUpper(), Color.Red | Color.Green },
         new object?[] { (Color.Blue | Color.Green).ToString().ToUpper(), Color.Blue | Color.Green },
 
-        new object?[] { "1", Color.Red },
+        new object?[] { "1", Color.Blue },
         new object?[] { "2", Color.Green },
-        new object?[] { "4", Color.Blue },
-        new object?[] { "3", Color.Red | Color.Green },
+        new object?[] { "4", Color.Red },
+        new object?[] { "3", Color.Blue | Color.Green },
         new object?[] { "5", Color.Red | Color.Blue },
-        new object?[] { "6", Color.Blue | Color.Green },
+        new object?[] { "6", Color.Red | Color.Green },
         new object?[] { "15", (Color)15 },
     };
 

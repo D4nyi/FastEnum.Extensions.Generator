@@ -1,5 +1,12 @@
 ﻿using BenchmarkDotNet.Running;
+using FastEnum.Extensions.NetCore.Example;
 
-using ToStringExample;
+var switcher = new BenchmarkSwitcher(new[]
+{
+    typeof(ToStringIsDefinedBenchmarks),
+    typeof(ToStringFormatBenchmarks),
+    typeof(TryParseBenchmarks),
+    typeof(TryParseFlagsBenchmarks)
+});
 
-BenchmarkRunner.Run<Benchmarks>();
+switcher.Run(args);

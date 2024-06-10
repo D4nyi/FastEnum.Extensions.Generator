@@ -1,6 +1,4 @@
-﻿using FastEnum;
-
-namespace ToStringExample;
+﻿namespace FastEnum.Extensions.NetCore.Example;
 
 [Extensions]
 public enum Small

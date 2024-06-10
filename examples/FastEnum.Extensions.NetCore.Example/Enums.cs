@@ -1,6 +1,6 @@
-﻿using FastEnum;
+﻿using System.ComponentModel;
 
-namespace ToStringExample;
+namespace FastEnum.Extensions.NetCore.Example;
 
 public class NestingClass
 {
@@ -15,19 +15,23 @@ public class NestingClass
     }
 }
 
-[Extensions]
-public enum Color : Byte
+[Extensions, Flags]
+public enum Color
 {
-    Red = 1,
-    Green = 2,
-    Blue = 4,
+    [Description("Crimson Red")]
+    Red = 0x990000,
+    [Description("Pine")]
+    Green = 0x166138,
+    [Description("Sky")]
+    Blue = 0x87CEEB,
 }
 
 [Extensions, Flags]
-public enum Options
+public enum Options : byte
 {
     None = 0,
     ToString = 1,
+    [Description("Parsssse")]
     Parse = 2,
     HasFlag = 4,
 }

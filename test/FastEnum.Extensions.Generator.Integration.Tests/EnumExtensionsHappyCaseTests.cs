@@ -31,7 +31,7 @@ public sealed class EnumExtensionsHappyCaseTests
         // Assert
         Assert.Equal(expected, actual);
     }
-    
+
     [Theory]
     [InlineData(Color.Red | Color.Blue)]
     [InlineData(Color.Red | Color.Green)]
@@ -101,7 +101,7 @@ public sealed class EnumExtensionsHappyCaseTests
 #endif
 
         // Act
-        int[] actual = ColorExtensions.GetUnderlyingValues();
+        var actual = ColorExtensions.GetUnderlyingValues();
 
         // Assert
         Assert.Equal(expected, actual);

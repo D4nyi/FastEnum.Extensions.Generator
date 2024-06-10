@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
+
 using FastEnum.Extensions.Generator.Specs;
 
 using Microsoft.CodeAnalysis;
@@ -11,10 +12,15 @@ using Microsoft.CodeAnalysis.Text;
 namespace FastEnum.Extensions.Generator;
 
 [Generator]
-public sealed partial class EnumExtensionsGenerator : IIncrementalGenerator
+public sealed class EnumExtensionsGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        //if (!Debugger.IsAttached)
+        //{
+        //    Debugger.Launch();
+        //}
+
         context.RegisterPostInitializationOutput(PostInit);
 
         //context.RegisterImplementationSourceOutput(
@@ -56,7 +62,7 @@ public sealed partial class EnumExtensionsGenerator : IIncrementalGenerator
                 contextClasses,
                 sourceProductionContext.CancellationToken);
 
-            if (spec is null || spec.Count == 0) return;
+            if (spec.Count == 0) return;
 
             EnumExtensionsEmitter emitter = new(in context, spec);
             emitter.Emit();
@@ -94,44 +100,6 @@ public sealed partial class EnumExtensionsGenerator : IIncrementalGenerator
     //    _targetFrameworks = Framework.NetStandard20;
     //}
 
-    //private static Framework ParseFrameworkVersion(string version)
-    //{
-    //    return version switch
-    //    {
-    //        "netFramework4.8" => Framework.NetFramework48,
-    //        "netStandard2.0" => Framework.NetStandard20,
-    //        "net6.0" or "net7.0" or "net8.0" or "net9.0" => Framework.NetCore3OrAbove,
-    //        _ => Framework.NetStandard20,
-    //    };
-    //}
-
-    //private static Framework ParseFrameworkVersions(string targetVersions)
-    //{
-    //    string[] versions = targetVersions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-    //    if (versions.Length == 0)
-    //    {
-    //        return Framework.NetStandard20;
-    //    }
-
-    //    if (versions.Length == 1)
-    //    {
-    //        return ParseFrameworkVersion(versions[0]);
-    //    }
-
-    //    Framework framework = Framework.NetCore3OrAbove;
-    //    foreach (string version in versions)
-    //    {
-    //        Framework temp = ParseFrameworkVersion(version);
-    //        if (temp < framework)
-    //        {
-    //            framework = temp;
-    //        }
-    //    }
-
-    //    return framework;
-    //}
-
     internal readonly struct EnumSourceGenerationContext
     {
         private readonly SourceProductionContext _context;
@@ -152,26 +120,3 @@ public sealed partial class EnumExtensionsGenerator : IIncrementalGenerator
         }
     }
 }
-
-/*
-    /// <summary>
-    /// Choose the default behaviour of the `FastToString` method if no matching value is found.<br/>
-    /// <strong>You may override the global default behaviour!</strong>
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "{{Assembly.Version}}")]
-    public enum ToStringDefault
-    {
-        /// <summary>
-        /// Like the built-in `ToString` will convert the enum to its numeric representation
-        /// </summary>
-        Default,
-        /// <summary>
-        /// The first value in the enum will be used if no matching value is found
-        /// </summary>
-        First,
-        /// <summary>
-        /// Will throw an <see cref="global::System.ArgumentOutOfRangeException"/> if no matching value is found
-        /// </summary>
-        Throw
-    }
-*/

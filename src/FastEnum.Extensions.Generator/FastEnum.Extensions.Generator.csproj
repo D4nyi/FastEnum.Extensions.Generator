@@ -11,6 +11,7 @@
 		<AnalysisLevel>latest-all</AnalysisLevel>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+		<EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>
 
 		<PackageId>$(AssemblyName)</PackageId>
 		<Authors>Dániel Szöllősi</Authors>
@@ -22,13 +23,15 @@
 		<Description>Source Generator generating extension methods for enums</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-		<PackageReleaseNotes>First working preview version</PackageReleaseNotes>
+		<PackageReleaseNotes>
+			Rework of some internals and generated code. Major update on FastToString with format 'F'.
+			With this fix it will be faster and allocates les memory.
+			Test cases extended.
+		</PackageReleaseNotes>
 
 		<DebugType>portable</DebugType>
 
-		<EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>
-
-		<PackageVersion>1.0.0-preview.3</PackageVersion>
+		<PackageVersion>1.0.0-preview.4</PackageVersion>
 		<Version>1.0.0</Version>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -49,8 +52,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0"/>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>
 	</ItemGroup>
 
 	<ItemGroup>

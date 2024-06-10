@@ -61,11 +61,9 @@ internal sealed class EnumExtensionsParser
         CancellationToken cancellationToken)
     {
         INamedTypeSymbol? extensionsAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.ExtensionsAttributeFullName);
-        INamedTypeSymbol? flagsAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.FlagsAttributeFullName);
         INamedTypeSymbol? descriptionAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.DescriptionAttributeFullName);
 
         Debug.Assert(extensionsAttributeSymbol is not null);
-        Debug.Assert(flagsAttributeSymbol is not null);
         Debug.Assert(descriptionAttributeSymbol is not null);
 
         List<EnumGenerationSpec> enumToGenerateList = new List<EnumGenerationSpec>();
@@ -77,27 +75,24 @@ internal sealed class EnumExtensionsParser
         {
             SyntaxTree syntaxTree = group.Key;
             SemanticModel compilationSemanticModel = _compilation.GetSemanticModel(syntaxTree);
-            //CompilationUnitSyntax compilationUnitSyntax = (CompilationUnitSyntax)syntaxTree.GetRoot(cancellationToken);
 
             foreach (EnumDeclarationSyntax enumDeclarationSyntax in group)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                (AttributeSyntax? Extensions, bool HasFlags) attributeSyntax = GetToStringAttribute(
+                bool isExtensionsDefined = HasExtensionsAttributeDefined(
                     enumDeclarationSyntax.AttributeLists,
                     compilationSemanticModel,
                     extensionsAttributeSymbol!,
-                    flagsAttributeSymbol!,
                     cancellationToken);
 
-                if (attributeSyntax.Extensions is null)
+                if (!isExtensionsDefined)
                 {
                     // the type is not indicated with [Extensions]
                     continue;
                 }
                 
-                INamedTypeSymbol? contextTypeSymbol =
-                    compilationSemanticModel.GetDeclaredSymbol(enumDeclarationSyntax, cancellationToken);
+                INamedTypeSymbol? contextTypeSymbol = compilationSemanticModel.GetDeclaredSymbol(enumDeclarationSyntax, cancellationToken);
                 Debug.Assert(contextTypeSymbol is not null);
 
                 if (IsNestedInGenericType(contextTypeSymbol!))
@@ -129,7 +124,7 @@ internal sealed class EnumExtensionsParser
                     continue;
                 }
 
-                string name = contextTypeSymbol.ToString();
+                string typeName = contextTypeSymbol.ToString();
 
                 // Get all the members in the enum
                 ImmutableArray<EnumMemberSpec> members = contextTypeSymbol.GetMembers()
@@ -139,17 +134,17 @@ internal sealed class EnumExtensionsParser
                     {
                         var desc = x.ReadDescriptionValue(descriptionAttributeSymbol!);
                         
-                        return new EnumMemberSpec(name, x.Name, x.ConstantValue!, desc);
+                        return new EnumMemberSpec(typeName, x.Name, x.ConstantValue!, desc);
                     })
+                    .OrderBy(x => x.Value)
                     .ToImmutableArray();
                 
                 EnumGenerationSpec enumToGenerate = new(
-                    name,
+                    typeName,
                     modifier,
                     members,
                     contextTypeSymbol.ContainingNamespace.ToString(),
-                    underlyingTypeName!,
-                    attributeSyntax.HasFlags
+                    underlyingTypeName!
                 );
 
                 enumToGenerateList.Add(enumToGenerate);
@@ -159,20 +154,16 @@ internal sealed class EnumExtensionsParser
         return enumToGenerateList;
     }
     
-    private static (AttributeSyntax? Extensions, bool HasFlags) GetToStringAttribute(
+    private static bool HasExtensionsAttributeDefined(
         SyntaxList<AttributeListSyntax> attributeList,
         SemanticModel compilationSemanticModel,
         ISymbol extensionsAttribute,
-        ISymbol flagsAttributeSymbol,
         CancellationToken cancellationToken)
     {
-        (AttributeSyntax? Extensions, bool HasFlags) result = (null, false);
-
         if (attributeList.Count == 0)
         {
-            return result;
+            return false;
         }
-
 
         var attributes = attributeList.SelectMany(x => x.Attributes);
         foreach (var appliedAttribute in attributes)
@@ -186,15 +177,11 @@ internal sealed class EnumExtensionsParser
             INamedTypeSymbol attributeContainingTypeSymbol = attributeSymbol.ContainingType;
             if (extensionsAttribute.Equals(attributeContainingTypeSymbol, SymbolEqualityComparer.Default))
             {
-                result.Extensions = appliedAttribute;
-            }
-            else if (flagsAttributeSymbol.Equals(attributeContainingTypeSymbol, SymbolEqualityComparer.Default))
-            {
-                result.HasFlags = true;
+                return appliedAttribute is not null;
             }
         }
 
-        return result;
+        return false;
     }
 
     private static bool IsNestedInGenericType(ISymbol typeSymbol)
@@ -216,119 +203,9 @@ internal sealed class EnumExtensionsParser
         return isNestedInGenericType;
     }
 
-    private static string GenerateGenericTypeParameters(ISymbol typeSymbol)
-    {
-        INamedTypeSymbol? containingType = typeSymbol.ContainingType;
-        if (containingType is null || containingType.TypeArguments.IsDefaultOrEmpty)
-        {
-            return "";
-        }
-
-        ImmutableArray<ITypeSymbol> typeArguments = containingType.TypeArguments;
-        if (typeArguments.Length == 1)
-        {
-            return $"<{typeArguments[0].Name}>";
-        }
-
-        StringBuilder sb = StringBuilderPool.Get();
-        sb.Append('<');
-
-        bool first = true;
-        foreach (ITypeSymbol typeArg in typeArguments)
-        {
-            if (!first)
-            {
-                sb.Append(", ");
-            }
-            else
-            {
-                first = false;
-            }
-
-            sb.Append(typeArg.Name);
-        }
-
-        sb.Append('>');
-
-        return StringBuilderPool.Return(sb);
-    }
-
-    private static string GetGenericTypeConstraints(SyntaxNode enumDeclaration)
-    {
-        const int maxDepth = 3;
-        int i = 0;
-        SyntaxNode? parentDeclaration = enumDeclaration.Parent;
-        while (parentDeclaration is not ClassDeclarationSyntax && i < maxDepth)
-        {
-            parentDeclaration = parentDeclaration?.Parent;
-            i++;
-        }
-
-        if (parentDeclaration is null)
-        {
-            return " ";
-        }
-
-        ClassDeclarationSyntax classDeclaration = (ClassDeclarationSyntax)parentDeclaration;
-
-        string constraints = classDeclaration.ConstraintClauses.ToString();
-
-        if (String.IsNullOrEmpty(constraints))
-        {
-            return " ";
-        }
-
-        string[] constraintsArr =
-            constraints.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-        if (constraintsArr.Length == 1)
-        {
-            return $" {constraints} ";
-        }
-
-        StringBuilder sb = StringBuilderPool.Get().AppendLine();
-        const string constraintsIndent = "            ";
-        const string switchIndent = "        ";
-
-        foreach (string constraint in constraintsArr.Select(x => x.Trim()))
-        {
-            sb.Append(constraintsIndent).AppendLine(constraint);
-        }
-
-        sb.Append(switchIndent);
-
-        return StringBuilderPool.Return(sb);
-    }
-
-    private static int GetToStringArgumentValue(
-        AttributeSyntax attributeSyntax,
-        SemanticModel compilationSemanticModel,
-        CancellationToken cancellationToken)
-    {
-        if (!HasArgument(attributeSyntax))
-        {
-            return -2;
-        }
-
-        AttributeArgumentSyntax overrideArg = attributeSyntax.ArgumentList!.Arguments[0];
-        ExpressionSyntax overrideExpr = overrideArg.Expression;
-        Optional<object?> routeTemplate =
-            compilationSemanticModel.GetConstantValue(overrideExpr, cancellationToken);
-        if (!routeTemplate.HasValue || routeTemplate.Value is null ||
-            !Int32.TryParse(routeTemplate.Value.ToString(), out int overridenDefault))
-        {
-            return -2;
-        }
-
-        return overridenDefault;
-    }
-
     private static string GetAccessModifier(MemberDeclarationSyntax enumDeclarationSyntax) =>
         enumDeclarationSyntax.Modifiers.Count > 0 ? enumDeclarationSyntax.Modifiers[0].Text : "internal";
 
     private static Location GetLocation(ISymbol contextTypeSymbol) =>
         contextTypeSymbol.Locations.Length > 0 ? contextTypeSymbol.Locations[0] : Location.None;
-
-    private static bool HasArgument(AttributeSyntax? syntax) =>
-        syntax?.ArgumentList is not null && syntax.ArgumentList.Arguments.Count > 0;
 }

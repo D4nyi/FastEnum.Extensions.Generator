@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
 
@@ -8,34 +9,35 @@ internal sealed partial class EnumExtensionsEmitter
 {
     private void AddTryParseString(StringBuilder sb)
     {
-        string methodIndent = Get(Indentation.Method);
         string methodBodyIndent = Get(Indentation.MethodBody);
         string nesting1Indent = Get(Indentation.Nesting1);
 
         sb
-            .Append(methodIndent).AppendLine("/// <summary>")
-            .Append(methodIndent).Append("/// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref=\"")
-                .Append(_currentSpec.FullName).AppendLine("\" />.")
-            .Append(methodIndent).AppendLine("/// This method using case-sensitive parsing.")
-            .Append(methodIndent).AppendLine("/// </summary>")
-            .Append(methodIndent).AppendLine("/// <param name=\"value\">The string representation of the name or numeric value of one or more enumerated constants.</param>")
-            .Append(methodIndent).AppendLine("/// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>")
-            .Append(methodIndent).AppendLine("/// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>")
-            .Append(methodIndent).Append("public static global::System.Boolean TryParse([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out ")
-                .Append(_currentSpec.FullName).AppendLine(" result)")
-            .Append(methodIndent).AppendLine("{")
-            .Append(methodBodyIndent).AppendLine("if (global::System.String.IsNullOrEmpty(value))")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).AppendLine("result = default;")
-            .Append(nesting1Indent).AppendLine("return false;")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("if (CheckIfNumber(value))")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).AppendLine("global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);")
-            .Append(nesting1Indent).AppendLine("return TryParseAsNumber(value, out result);")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine();
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                    /// <summary>
+                    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="{0}" />.
+                    /// This method using case-sensitive parsing.
+                    /// </summary>
+                    /// <param name="value">The string representation of the name or numeric value of one or more enumerated constants.</param>
+                    /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
+                    /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
+                    public static global::System.Boolean TryParse([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out {0} result)
+                    {{
+                        if (global::System.String.IsNullOrEmpty(value))
+                        {{
+                            result = default;
+                            return false;
+                        }}
+                        
+                        if (CheckIfNumber(value))
+                        {{
+                            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                            return TryParseAsNumber(value, out result);
+                        }}
+                
+                
+                """, _currentSpec.FullName);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
         {
@@ -48,33 +50,34 @@ internal sealed partial class EnumExtensionsEmitter
         }
 
         sb
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("return TryParseByName(value, false, out result);")
-            .Append(methodIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodIndent).AppendLine("/// <summary>")
-            .Append(methodIndent).Append("/// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref=\"")
-                .Append(_currentSpec.FullName).AppendLine("\" />.")
-            .Append(methodIndent).AppendLine("/// This method using case-insensitive parsing.")
-            .Append(methodIndent).AppendLine("/// </summary>")
-            .Append(methodIndent).AppendLine("/// <param name=\"value\">The string representation of the name or numeric value of one or more enumerated constants.</param>")
-            .Append(methodIndent).AppendLine("/// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>")
-            .Append(methodIndent).AppendLine("/// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>")
-            .Append(methodIndent).Append("public static global::System.Boolean TryParseIgnoreCase([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out ")
-                .Append(_currentSpec.FullName).AppendLine(" result)")
-            .Append(methodIndent).AppendLine("{")
-            .Append(methodBodyIndent).AppendLine("if (global::System.String.IsNullOrEmpty(value))")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).AppendLine("result = default;")
-            .Append(nesting1Indent).AppendLine("return false;")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("if (CheckIfNumber(value))")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).AppendLine("global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);")
-            .Append(nesting1Indent).AppendLine("return TryParseAsNumber(value, out result);")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine();
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                        return TryParseByName(value, false, out result);
+                    }}
+                    
+                    /// <summary>
+                    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="{0}" />.
+                    /// This method using case-insensitive parsing.
+                    /// </summary>
+                    /// <param name="value">The string representation of the name or numeric value of one or more enumerated constants.</param>
+                    /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
+                    /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
+                    public static global::System.Boolean TryParseIgnoreCase([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out {0} result)
+                    {{
+                        if (global::System.String.IsNullOrEmpty(value))
+                        {{
+                            result = default;
+                            return false;
+                        }}
+                        
+                        if (CheckIfNumber(value))
+                        {{
+                            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                            return TryParseAsNumber(value, out result);
+                        }}
+
+
+                """, _currentSpec.FullName);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
         {
@@ -87,10 +90,13 @@ internal sealed partial class EnumExtensionsEmitter
                 .Append(methodBodyIndent).AppendLine("}");
         }
 
-        sb
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("return TryParseByName(value, true, out result);")
-            .Append(methodIndent).AppendLine("}").AppendLine();
+        sb.Append(
+                """
+                
+                        return TryParseByName(value, true, out result);
+                    }
+                
+                
+                """);
     }
-
 }

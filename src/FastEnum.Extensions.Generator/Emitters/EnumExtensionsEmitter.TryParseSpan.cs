@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
 
@@ -8,61 +9,58 @@ internal sealed partial class EnumExtensionsEmitter
 {
     private void AddTryParseSpan(StringBuilder sb)
     {
-        string methodIndent = Get(Indentation.Method);
-        string methodBodyIndent = Get(Indentation.MethodBody);
-
         sb
-            .Append(methodIndent).AppendLine("/// <summary>")
-            .Append(methodIndent).Append("/// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref=\"")
-                .Append(_currentSpec.FullName).AppendLine("\" />.")
-            .Append(methodIndent).AppendLine("/// This method using case-sensitive parsing.")
-            .Append(methodIndent).AppendLine("/// </summary>")
-            .Append(methodIndent).AppendLine("/// <param name=\"value\">The span representation of the name or numeric value of one or more enumerated constants.</param>")
-            .Append(methodIndent).AppendLine("/// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>")
-            .Append(methodIndent).AppendLine("/// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>")
-            .Append(methodIndent).Append("public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out ").Append(_currentSpec.FullName).AppendLine(" result) =>")
-            .Append(methodBodyIndent).AppendLine("TryParseSpan(value, global::System.StringComparison.Ordinal, out result);")
-            .AppendLine()
-            .Append(methodIndent).AppendLine("/// <summary>")
-            .Append(methodIndent).Append("/// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref=\"")
-                .Append(_currentSpec.FullName).AppendLine("\" />.")
-            .Append(methodIndent).AppendLine("/// This method using case-insensitive parsing.")
-            .Append(methodIndent).AppendLine("/// A parameter specifies whether the operation is case-insensitive.")
-            .Append(methodIndent).AppendLine("/// </summary>")
-            .Append(methodIndent).AppendLine("/// <param name=\"value\">The span representation of the name or numeric value of one or more enumerated constants.</param>")
-            .Append(methodIndent).AppendLine("/// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>")
-            .Append(methodIndent).AppendLine("/// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>")
-            .Append(methodIndent).Append("public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out ").Append(_currentSpec.FullName).AppendLine(" result) =>")
-            .Append(methodBodyIndent).AppendLine("TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);")
-            .AppendLine();
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                    /// <summary>
+                    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="{0}" />.
+                    /// This method using case-sensitive parsing.
+                    /// </summary>
+                    /// <param name=\"value\">The span representation of the name or numeric value of one or more enumerated constants.</param>
+                    /// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>
+                    /// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>
+                    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out {0} result) =>
+                        TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
+                    
+                    /// <summary>
+                    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="{0}" />.
+                    /// This method using case-insensitive parsing.
+                    /// A parameter specifies whether the operation is case-insensitive.
+                    /// </summary>
+                    /// <param name=\"value\">The span representation of the name or numeric value of one or more enumerated constants.</param>
+                    /// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>
+                    /// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>
+                    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out {0} result) =>
+                        TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
+                
+                
+                """, _currentSpec.FullName);
     }
 
     private void AddTryParsePrivate(StringBuilder sb)
     {
-        string methodIndent = Get(Indentation.Method);
         string methodBodyIndent = Get(Indentation.MethodBody);
         string nesting1Indent = Get(Indentation.Nesting1);
-        string nesting2Indent = Get(Indentation.Nesting2);
-        string nesting3Indent = Get(Indentation.Nesting3);
-        string nesting4Indent = Get(Indentation.Nesting4);
 
         sb
-            .Append(methodIndent).AppendLine(AggressiveInliningAttribute)
-            .Append(methodIndent).Append("private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.StringComparison comparison, out ")
-                .Append(_currentSpec.FullName).AppendLine(" result)")
-            .Append(methodIndent).AppendLine("{")
-            .Append(methodBodyIndent).AppendLine("if (value.IsEmpty)")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).AppendLine("result = default;")
-            .Append(nesting1Indent).AppendLine("return false;")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("if (CheckIfNumber(value))")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).AppendLine("global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);")
-            .Append(nesting1Indent).AppendLine("return TryParseAsNumber(value, out result);")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine();
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.StringComparison comparison, out {0} result)
+                    {{
+                        if (value.IsEmpty)
+                        {{
+                            result = default;
+                            return false;
+                        }}
+                        
+                        if (CheckIfNumber(value))
+                        {{
+                            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                            return TryParseAsNumber(value, out result);
+                        }}
+                        
+                """, _currentSpec.FullName);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
         {
@@ -75,120 +73,120 @@ internal sealed partial class EnumExtensionsEmitter
         }
 
         sb
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);")
-            .Append(methodBodyIndent).AppendLine("return TryParseByName(value, comparison == global::System.StringComparison.OrdinalIgnoreCase, out result);")
-            .Append(methodIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodIndent).AppendLine(AggressiveInliningAttribute)
-            .Append(methodIndent).AppendLine("private static global::System.Boolean CheckIfNumber(global::System.ReadOnlySpan<global::System.Char> value)")
-            .Append(methodIndent).AppendLine("{")
-            .Append(methodBodyIndent).AppendLine("global::System.Char c = value[0];")
-            .Append(methodBodyIndent).AppendLine("if (global::System.Char.IsWhiteSpace(c))")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).AppendLine("value = value.TrimStart();")
-            .Append(nesting1Indent).AppendLine("if (value.IsEmpty)")
-            .Append(nesting2Indent).AppendLine("throw CreateInvalidEmptyParseArgument();")
-            .AppendLine()
-            .Append(nesting1Indent).AppendLine("c = value[0];")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("return IsAsciiDigit(c) || c == '-' || c == '+';")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("static bool IsAsciiDigit(global::System.Char c) => (global::System.UInt32)(c - '0') <= '9' - '0';")
-            .Append(methodIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodIndent).Append("private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out ").Append(_currentSpec.FullName).AppendLine(" result)")
-            .Append(methodIndent).AppendLine("{")
-            .Append(methodBodyIndent).AppendLine("const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;")
-            .Append(methodBodyIndent).AppendLine("global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;")
-            .Append(methodBodyIndent).Append("global::System.Boolean status = ").Append(_currentSpec.UnderlyingType).AppendLine(".TryParse(value, NumberStyle, numberFormat, out var parseResult);")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("if (status)")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).Append("result = global::System.Runtime.CompilerServices.Unsafe.As<").Append(_currentSpec.UnderlyingType).Append(", ").Append(_currentSpec.FullName).AppendLine(">(ref parseResult);")
-            .Append(nesting1Indent).AppendLine("return true;")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("result = default;")
-            .Append(methodBodyIndent).AppendLine("return false;")
-            .Append(methodIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodIndent).Append("private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out ").Append(_currentSpec.FullName).AppendLine(" result)")
-            .Append(methodIndent).AppendLine("{")
-            .Append(methodBodyIndent).AppendLine("global::System.ReadOnlySpan<global::System.Char> originalValue = value;")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("global::System.String[] enumNames = GetNames();")
-            .Append(methodBodyIndent).Append(_currentSpec.UnderlyingType).AppendLine("[] enumValues = GetUnderlyingValues();")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("global::System.Boolean parsed = true;")
-            .Append(methodBodyIndent).Append(_currentSpec.UnderlyingType).AppendLine(" localResult = default;")
-            .Append(methodBodyIndent).AppendLine("while (value.Length > 0)")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).AppendLine("// Find the next separator")
-            .Append(nesting1Indent).AppendLine("global::System.ReadOnlySpan<global::System.Char> subvalue;")
-            .Append(nesting1Indent).AppendLine("global::System.Int32 endIndex = value.IndexOf(',');")
-            .Append(nesting1Indent).AppendLine("if (endIndex < 0)")
-            .Append(nesting1Indent).AppendLine("{")
-            .Append(nesting2Indent).AppendLine("// No next separator; use the remainder as the next value")
-            .Append(nesting2Indent).AppendLine("subvalue = value.Trim();")
-            .Append(nesting2Indent).AppendLine("value = default;")
-            .Append(nesting1Indent).AppendLine("}")
-            .Append(nesting1Indent).AppendLine("else if (endIndex != value.Length - 1)")
-            .Append(nesting1Indent).AppendLine("{")
-            .Append(nesting2Indent).AppendLine("// Found a separator before the last char")
-            .Append(nesting2Indent).AppendLine("subvalue = value[..endIndex].Trim();")
-            .Append(nesting2Indent).AppendLine("value = value[(endIndex + 1)..];")
-            .Append(nesting1Indent).AppendLine("}")
-            .Append(nesting1Indent).AppendLine("else")
-            .Append(nesting1Indent).AppendLine("{")
-            .Append(nesting2Indent).AppendLine("// Last char was a separator, which is invalid")
-            .Append(nesting2Indent).AppendLine("parsed = false;")
-            .Append(nesting2Indent).AppendLine("break;")
-            .Append(nesting1Indent).AppendLine("}")
-            .AppendLine()
-            .Append(nesting1Indent).AppendLine("// Try to match this substring against each enum name")
-            .Append(nesting1Indent).AppendLine("global::System.Boolean success = false;")
-            .Append(nesting1Indent).AppendLine("if (ignoreCase)")
-            .Append(nesting1Indent).AppendLine("{")
-            .Append(nesting2Indent).AppendLine("for (global::System.Int32 i = 0; i < enumNames.Length; i++)")
-            .Append(nesting2Indent).AppendLine("{")
-            .Append(nesting3Indent).AppendLine("if (subvalue.Equals(enumNames[i], global::System.StringComparison.OrdinalIgnoreCase))")
-            .Append(nesting3Indent).AppendLine("{")
-            .Append(nesting4Indent).AppendLine("localResult |= enumValues[i];")
-            .Append(nesting4Indent).AppendLine("success = true;")
-            .Append(nesting4Indent).AppendLine("break;")
-            .Append(nesting3Indent).AppendLine("}")
-            .Append(nesting2Indent).AppendLine("}")
-            .Append(nesting1Indent).AppendLine("}")
-            .Append(nesting1Indent).AppendLine("else")
-            .Append(nesting1Indent).AppendLine("{")
-            .Append(nesting2Indent).AppendLine("for (global::System.Int32 i = 0; i < enumNames.Length; i++)")
-            .Append(nesting2Indent).AppendLine("{")
-            .Append(nesting3Indent).AppendLine("if (subvalue.SequenceEqual(enumNames[i]))")
-            .Append(nesting3Indent).AppendLine("{")
-            .Append(nesting4Indent).AppendLine("localResult |= enumValues[i];")
-            .Append(nesting4Indent).AppendLine("success = true;")
-            .Append(nesting4Indent).AppendLine("break;")
-            .Append(nesting3Indent).AppendLine("}")
-            .Append(nesting2Indent).AppendLine("}")
-            .Append(nesting1Indent).AppendLine("}")
-            .AppendLine()
-            .Append(nesting1Indent).AppendLine("if (!success)")
-            .Append(nesting1Indent).AppendLine("{")
-            .Append(nesting2Indent).AppendLine("parsed = false;")
-            .Append(nesting2Indent).AppendLine("break;")
-            .Append(nesting1Indent).AppendLine("}")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("if (parsed)")
-            .Append(methodBodyIndent).AppendLine("{")
-            .Append(nesting1Indent).Append("result = global::System.Runtime.CompilerServices.Unsafe.As<").Append(_currentSpec.UnderlyingType).Append(", ").Append(_currentSpec.FullName).AppendLine(">(ref localResult);")
-            .Append(nesting1Indent).AppendLine("return true;")
-            .Append(methodBodyIndent).AppendLine("}")
-            .AppendLine()
-            .Append(methodBodyIndent).AppendLine("throw CreateValueNotFoundArgument(originalValue.ToString());")
-            .Append(methodIndent).AppendLine("}")
-            .AppendLine();
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                        return TryParseByName(value, comparison == global::System.StringComparison.OrdinalIgnoreCase, out result);
+                    }}
+                    
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    private static global::System.Boolean CheckIfNumber(global::System.ReadOnlySpan<global::System.Char> value)
+                    {{
+                        global::System.Char c = value[0];
+                        if (global::System.Char.IsWhiteSpace(c))
+                        {{
+                            value = value.TrimStart();
+                            if (value.IsEmpty) throw CreateInvalidEmptyParseArgument();
+                            c = value[0];
+                        }}
+                        
+                        return IsAsciiDigit(c) || c == '-' || c == '+';
+                        
+                        static bool IsAsciiDigit(global::System.Char c) => (global::System.UInt32)(c - '0') <= '9' - '0';
+                    }}
+                    
+                     private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out {0} result)
+                     {{
+                        const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
+                        global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
+                        global::System.Boolean status = {1}.TryParse(value, NumberStyle, numberFormat, out var parseResult);
+                
+                        if (status)
+                        {{
+                            result = global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref parseResult);
+                            return true;
+                        }}
+                        
+                        result = default;
+                        return false;
+                    }}
+                    
+                    private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out {0} result)
+                    {{
+                        global::System.ReadOnlySpan<global::System.Char> originalValue = value;
+                        global::System.String[] enumNames = _names;
+                        {1}[] enumValues = _underlyingValues;
+                        global::System.Boolean parsed = true;
+                        {1} localResult = default;
+                
+                        while (value.Length > 0)
+                        {{
+                            // Find the next separator
+                            global::System.ReadOnlySpan<global::System.Char> subvalue;
+                            global::System.Int32 endIndex = value.IndexOf(',');
+                            if (endIndex < 0)
+                            {{
+                                // No next separator; use the remainder as the next value
+                                subvalue = value.Trim();
+                                value = default;
+                            }}
+                            else if (endIndex != value.Length - 1)
+                            {{
+                                // Found a separator before the last char
+                                subvalue = value[..endIndex].Trim();
+                                value = value[(endIndex + 1)..];
+                            }}
+                            else
+                            {{
+                                // Last char was a separator, which is invalid
+                                parsed = false;
+                                break;
+                            }}
+                            
+                            // Try to match this substring against each enum name
+                            global::System.Boolean success = false;
+                            if (ignoreCase)
+                            {{
+                                for (global::System.Int32 i = 0; i < enumNames.Length; i++)
+                                {{
+                                    if (subvalue.Equals(enumNames[i], global::System.StringComparison.OrdinalIgnoreCase))
+                                    {{
+                                        localResult |= enumValues[i];
+                                        success = true;
+                                        break;
+                                    }}
+                                }}
+                            }}
+                            else
+                            {{
+                                for (global::System.Int32 i = 0; i < enumNames.Length; i++)
+                                {{
+                                    if (subvalue.SequenceEqual(enumNames[i]))
+                                    {{
+                                        localResult |= enumValues[i];
+                                        success = true;
+                                        break;
+                                    }}
+                                }}
+                            }}
+                            
+                            if (!success)
+                            {{
+                                parsed = false;
+                                break;
+                            }}
+                        }}
+                            
+                        if (parsed)
+                        {{
+                            result = global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref localResult);
+                            return true;
+                        }}
+                
+                        throw CreateValueNotFoundArgument(originalValue.ToString());
+                    }}
+
+
+                """, _currentSpec.FullName, _currentSpec.UnderlyingType);
     }
 }

@@ -1,6 +1,4 @@
-﻿using FastEnumToString.Tests;
-
-namespace FastEnum.Extensions.Generator.Tests;
+﻿namespace FastEnum.Extensions.Generator.Tests;
 
 public sealed class EnumToStringGeneratorTests
 {

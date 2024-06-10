@@ -1,10 +1,9 @@
 ﻿namespace FastEnum.Extensions.Generator;
 
-internal sealed class Constants
+internal static class Constants
 {
     internal const string DescriptionAttributeFullName = "System.ComponentModel.DescriptionAttribute";
     
-    internal const string FlagsAttributeFullName = "System.FlagsAttribute";
     internal const string FastEnumToStringGenerator = "FastEnumToString.EnumToStringGenerator";
     internal const string PrivateAccessModifier = "private";
 
@@ -17,9 +16,7 @@ $$"""
 
 namespace FastEnum
 {
-    /// <summary>
-    /// Marks an enum to generate optimized extensions for it
-    /// </summary>
+    /// <summary>Marks an enum to generate optimized extensions for it.</summary>
     [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumExtensionsGenerator", "{{Assembly.Version}}")]
     [global::System.AttributeUsage(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
     internal sealed class ExtensionsAttribute : global::System.Attribute { }

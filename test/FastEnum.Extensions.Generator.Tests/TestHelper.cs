@@ -1,8 +1,7 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis;
-using FastEnum.Extensions.Generator;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
-namespace FastEnumToString.Tests;
+namespace FastEnum.Extensions.Generator.Tests;
 
 internal static class TestHelper
 {

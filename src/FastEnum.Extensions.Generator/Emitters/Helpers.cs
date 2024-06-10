@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 namespace FastEnum.Extensions.Generator.Emitters;
@@ -10,6 +12,8 @@ internal static class Helpers
     private static readonly ParameterModifier[] _modifiers = { new(1) };
     private static readonly Type[] _argTypes = { typeof(string) };
     private const BindingFlags binding = BindingFlags.Public | BindingFlags.Instance;
+
+    private static readonly Dictionary<Type, MethodInfo> _toStringFormats = new();
     
     internal static StringBuilder AddCorrectBitwiseOperation(this StringBuilder sb, string underlyingTypeName)
     {
@@ -48,13 +52,21 @@ internal static class Helpers
 
     internal static MethodInfo GetToStringFormat(Type membersType)
     {
-        MethodInfo? toString = membersType.GetMethod("ToString", binding, null, CallingConventions.Any, _argTypes, _modifiers);
-
-        if (toString is null)
+        if (!_toStringFormats.TryGetValue(membersType, out MethodInfo? toString) || toString is null)
         {
-            throw new UnreachableException("'ToString' method is not found!");
+            toString = membersType.GetMethod(nameof(ToString), binding, null, CallingConventions.Any, _argTypes, _modifiers)
+                    ?? throw new InvalidOperationException("'ToString' method is not found!");
+            
+            _toStringFormats.Add(membersType, toString);
         }
         
         return toString;
+    }
+
+    internal static object GetCorrectZero(this Type numberType)
+    {
+        return numberType == typeof(int)
+            ? 0
+            : Convert.ChangeType(0, numberType, CultureInfo.InvariantCulture);
     }
 }
