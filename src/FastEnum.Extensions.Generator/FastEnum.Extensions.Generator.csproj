@@ -25,7 +25,7 @@
 
 		<PackageReleaseNotes>
 			Rework of some internals and generated code. Major update on FastToString with format 'F'.
-			With this fix it will be faster and allocates les memory.
+			With this fix it will be faster and allocates less memory.
 			Test cases extended.
 		</PackageReleaseNotes>
 
