@@ -1,7 +1,11 @@
-﻿using BenchmarkDotNet.Running;
+﻿using System.Diagnostics.CodeAnalysis;
+using BenchmarkDotNet.Running;
 using FastEnum.Extensions.NetCore.Example;
 
-var switcher = new BenchmarkSwitcher(new[]
+[assembly: SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Scope = "module")]
+
+
+BenchmarkSwitcher switcher = new(new[]
 {
     typeof(ToStringIsDefinedBenchmarks),
     typeof(ToStringFormatBenchmarks),
