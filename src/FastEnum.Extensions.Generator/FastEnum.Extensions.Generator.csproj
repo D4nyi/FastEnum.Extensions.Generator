@@ -33,9 +33,9 @@
 		<PackageIcon>enum.png</PackageIcon>
 		<PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
 		<DevelopmentDependency>True</DevelopmentDependency>
-<!--		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>-->
-<!--		<IncludeBuildOutput>False</IncludeBuildOutput>-->
-<!--		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>-->
+		<!--		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>-->
+		<!--		<IncludeBuildOutput>False</IncludeBuildOutput>-->
+		<!--		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>-->
 
 		<WarningsAsErrors>CA2021</WarningsAsErrors>
 	</PropertyGroup>
@@ -45,8 +45,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp"/>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
 	</ItemGroup>
 
 	<ItemGroup>
