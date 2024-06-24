@@ -122,18 +122,18 @@ internal sealed partial class EnumExtensionsEmitter
                         while (value.Length > 0)
                         {{
                             // Find the next separator
-                            global::System.ReadOnlySpan<global::System.Char> subvalue;
+                            global::System.ReadOnlySpan<global::System.Char> subValue;
                             global::System.Int32 endIndex = value.IndexOf(',');
                             if (endIndex < 0)
                             {{
                                 // No next separator; use the remainder as the next value
-                                subvalue = value.Trim();
+                                subValue = value.Trim();
                                 value = default;
                             }}
                             else if (endIndex != value.Length - 1)
                             {{
                                 // Found a separator before the last char
-                                subvalue = value[..endIndex].Trim();
+                                subValue = value[..endIndex].Trim();
                                 value = value[(endIndex + 1)..];
                             }}
                             else
@@ -149,7 +149,7 @@ internal sealed partial class EnumExtensionsEmitter
                             {{
                                 for (global::System.Int32 i = 0; i < enumNames.Length; i++)
                                 {{
-                                    if (subvalue.Equals(enumNames[i], global::System.StringComparison.OrdinalIgnoreCase))
+                                    if (subValue.Equals(enumNames[i], global::System.StringComparison.OrdinalIgnoreCase))
                                     {{
                                         localResult |= enumValues[i];
                                         success = true;
@@ -161,7 +161,7 @@ internal sealed partial class EnumExtensionsEmitter
                             {{
                                 for (global::System.Int32 i = 0; i < enumNames.Length; i++)
                                 {{
-                                    if (subvalue.SequenceEqual(enumNames[i]))
+                                    if (subValue.SequenceEqual(enumNames[i]))
                                     {{
                                         localResult |= enumValues[i];
                                         success = true;

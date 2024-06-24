@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
+﻿using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading;
 using FastEnum.Extensions.Generator.Specs;
 using FastEnum.Extensions.Generator.Utils;
 using Microsoft.CodeAnalysis;
@@ -21,7 +13,7 @@ internal sealed class EnumExtensionsParser
 {
     #region Static & Const fields
 
-    private static readonly DiagnosticDescriptor EnumCannotBePrivate = new(
+    private static readonly DiagnosticDescriptor _enumCannotBePrivate = new(
         id: "ETS1001",
         title: "Enum cannot be private",
         messageFormat: "For private enums we are currently unable to create extensions",
@@ -29,7 +21,7 @@ internal sealed class EnumExtensionsParser
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor EnumUnderlyingTypeCannotBeDetermined = new(
+    private static readonly DiagnosticDescriptor _enumUnderlyingTypeCannotBeDetermined = new(
         id: "ETS1002",
         title: "Enum's underlying type cannot be determined",
         messageFormat: "Enum's underlying type cannot be determined therefore we are unable to create extensions",
@@ -37,7 +29,7 @@ internal sealed class EnumExtensionsParser
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor GenericTypeNestingRestrictions = new(
+    private static readonly DiagnosticDescriptor _genericTypeNestingRestrictions = new(
         id: "ETS1003",
         title: "Extension generation restriction",
         messageFormat: "Extension generation for enum's nested in generic types are restricted",
@@ -66,7 +58,7 @@ internal sealed class EnumExtensionsParser
         Debug.Assert(extensionsAttributeSymbol is not null);
         Debug.Assert(descriptionAttributeSymbol is not null);
 
-        List<EnumGenerationSpec> enumToGenerateList = new List<EnumGenerationSpec>();
+        List<EnumGenerationSpec> enumToGenerateList = [];
 
         IEnumerable<IGrouping<SyntaxTree, EnumDeclarationSyntax>> grouped = classDeclarationSyntaxList
             .GroupBy(c => c.SyntaxTree);
@@ -98,7 +90,7 @@ internal sealed class EnumExtensionsParser
                 if (IsNestedInGenericType(contextTypeSymbol!))
                 {
                     _sourceGenerationContext.ReportDiagnostic(
-                        GenericTypeNestingRestrictions,
+                        _genericTypeNestingRestrictions,
                         GetLocation(contextTypeSymbol!),
                         contextTypeSymbol!.Name);
                     continue;
@@ -108,7 +100,7 @@ internal sealed class EnumExtensionsParser
                 if (modifier == Constants.PrivateAccessModifier)
                 {
                     _sourceGenerationContext.ReportDiagnostic(
-                        EnumCannotBePrivate,
+                        _enumCannotBePrivate,
                         GetLocation(contextTypeSymbol!),
                         contextTypeSymbol!.Name);
                     continue;
@@ -118,7 +110,7 @@ internal sealed class EnumExtensionsParser
                 if (String.IsNullOrEmpty(underlyingTypeName))
                 {
                     _sourceGenerationContext.ReportDiagnostic(
-                        EnumUnderlyingTypeCannotBeDetermined,
+                        _enumUnderlyingTypeCannotBeDetermined,
                         GetLocation(contextTypeSymbol),
                         contextTypeSymbol.Name);
                     continue;
@@ -132,7 +124,7 @@ internal sealed class EnumExtensionsParser
                     .Cast<IFieldSymbol>()
                     .Select(x =>
                     {
-                        var desc = x.ReadDescriptionValue(descriptionAttributeSymbol!);
+                        string? desc = x.ReadDescriptionValue(descriptionAttributeSymbol!);
                         
                         return new EnumMemberSpec(typeName, x.Name, x.ConstantValue!, desc);
                     })

@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using FastEnum.Extensions.Generator;
 
-[assembly: System.CLSCompliant(false)]
+[assembly: CLSCompliant(false)]
 [assembly: System.Reflection.AssemblyVersion(Assembly.CorrectVersion)]
 [assembly: System.Reflection.AssemblyInformationalVersion(Assembly.Version)]
 [assembly: System.Reflection.AssemblyFileVersion(Assembly.CorrectVersion)]

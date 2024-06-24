@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Text;
 
 namespace FastEnum.Extensions.Generator.Utils;
 
@@ -8,7 +6,7 @@ namespace FastEnum.Extensions.Generator.Utils;
 /// .NET Core-like object pool for StringBuilder
 /// </summary>
 /// <remarks>
-/// Our own cheezy object pool since we can't use the .NET core version
+/// Our own cheesy object pool since we can't use the .NET core version
 /// Logic borrowed from:
 /// https://github.com/davidfowl/LoggingGenerator/blob/939125e726d4b67cfb827c36dbbbaefea767fb69/Microsoft.Helpers.Logging.Generators/LoggingGenerator.cs#L346
 /// </remarks>
@@ -18,7 +16,7 @@ internal static class StringBuilderPool
     private const int DefaultBuilderCapacity = 4 * 1024;
     private static StringBuilder? _fastItem;
 
-    private static readonly Stack<StringBuilder> Builders = new(DefaultStackCapacity);
+    private static readonly Stack<StringBuilder> _builders = new(DefaultStackCapacity);
 
     /// <summary>
     /// Initializes the object pool with a few items.
@@ -27,18 +25,18 @@ internal static class StringBuilderPool
     {
         for (int i = 0; i < DefaultStackCapacity; i++)
         {
-            Builders.Push(new StringBuilder(DefaultBuilderCapacity));
+            _builders.Push(new StringBuilder(DefaultBuilderCapacity));
         }
     }
 
     /// <summary>
     /// Retrieves a <see cref="StringBuilder"/> from the object pool.
-    /// If the pool is empty the a new one will be created.
+    /// If the pool is empty a new one will be created.
     /// </summary>
     /// <returns>The retrieved or the new created <see cref="StringBuilder"/>.</returns>
     internal static StringBuilder Get()
     {
-        if (Builders.Count == 0)
+        if (_builders.Count == 0)
         {
             return new StringBuilder(DefaultBuilderCapacity);
         }
@@ -46,7 +44,7 @@ internal static class StringBuilderPool
         StringBuilder? item = _fastItem;
         if (item is null || Interlocked.CompareExchange(ref _fastItem, null, item) != item)
         {
-            item = Builders.Pop();
+            item = _builders.Pop();
         }
 
         return item;
@@ -71,7 +69,7 @@ internal static class StringBuilderPool
         }
         else
         {
-            Builders.Push(sb);
+            _builders.Push(sb);
         }
 
         string tmp = sb.ToString();

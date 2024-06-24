@@ -2,16 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<LangVersion>preview</LangVersion>
+		<LangVersion>Preview</LangVersion>
 
-		<Nullable>enable</Nullable>
-
-		<EnableNETAnalyzers>True</EnableNETAnalyzers>
-		<AnalysisMode>All</AnalysisMode>
-		<AnalysisLevel>latest-all</AnalysisLevel>
-		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-		<RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
-		<EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>
+		<IsRoslynComponent>True</IsRoslynComponent>
 
 		<PackageId>$(AssemblyName)</PackageId>
 		<Authors>Dániel Szöllősi</Authors>
@@ -34,34 +27,29 @@
 		<PackageVersion>1.0.0-preview.4</PackageVersion>
 		<Version>1.0.0</Version>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<DevelopmentDependency>true</DevelopmentDependency>
-		<IsPackable>true</IsPackable>
+		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+		<IsPackable>False</IsPackable>
 		<ApplicationIcon>enum.ico</ApplicationIcon>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 		<PackageIcon>enum.png</PackageIcon>
 		<PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
+		<DevelopmentDependency>True</DevelopmentDependency>
+<!--		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>-->
+<!--		<IncludeBuildOutput>False</IncludeBuildOutput>-->
+<!--		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>-->
 
 		<WarningsAsErrors>CA2021</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces"/>
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="$(OutputPath)\$(AssemblyName).dll">
-			<Pack>True</Pack>
-			<PackagePath>/analyzers/dotnet/cs</PackagePath>
-			<Visible>False</Visible>
-		</None>
 		<None Include="..\..\README.md" Link="README.md">
 			<PackagePath>\</PackagePath>
 			<Pack>True</Pack>

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
+﻿using System.Globalization;
 using System.Text;
 
 using FastEnum.Extensions.Generator.Emitters;
 using FastEnum.Extensions.Generator.Specs;
-using Microsoft.CodeAnalysis.Operations;
 
 namespace FastEnum.Extensions.Generator;
 
@@ -200,7 +196,7 @@ internal sealed partial class EnumExtensionsEmitter
 
         var membersType = _currentSpec.Members[0].Value.GetType(); // an enum has only one backing type
         var toStringFormat = Helpers.GetToStringFormat(membersType);
-        object[] toStringParam = { _currentSpec.Type.GetFormat() };
+        object[] toStringParam = [_currentSpec.Type.GetFormat()];
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
         {

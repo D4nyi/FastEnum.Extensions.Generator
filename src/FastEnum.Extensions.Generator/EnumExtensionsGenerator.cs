@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
@@ -58,7 +56,7 @@ public sealed class EnumExtensionsGenerator : IIncrementalGenerator
         {
             EnumSourceGenerationContext context = new(sourceProductionContext);
             EnumExtensionsParser parser = new(compilation, context);
-            List<EnumGenerationSpec>? spec = parser.GetGenerationSpec(
+            List<EnumGenerationSpec> spec = parser.GetGenerationSpec(
                 contextClasses,
                 sourceProductionContext.CancellationToken);
 
@@ -100,14 +98,9 @@ public sealed class EnumExtensionsGenerator : IIncrementalGenerator
     //    _targetFrameworks = Framework.NetStandard20;
     //}
 
-    internal readonly struct EnumSourceGenerationContext
+    internal readonly struct EnumSourceGenerationContext(in SourceProductionContext context)
     {
-        private readonly SourceProductionContext _context;
-
-        public EnumSourceGenerationContext(in SourceProductionContext context)
-        {
-            _context = context;
-        }
+        private readonly SourceProductionContext _context = context;
 
         public void ReportDiagnostic(DiagnosticDescriptor descriptor, Location? location, params object?[]? args)
         {

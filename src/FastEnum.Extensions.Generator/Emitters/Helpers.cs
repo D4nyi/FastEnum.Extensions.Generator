@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -9,11 +8,11 @@ namespace FastEnum.Extensions.Generator.Emitters;
 
 internal static class Helpers
 {
-    private static readonly ParameterModifier[] _modifiers = { new(1) };
-    private static readonly Type[] _argTypes = { typeof(string) };
-    private const BindingFlags binding = BindingFlags.Public | BindingFlags.Instance;
+    private static readonly ParameterModifier[] Modifiers = [new(1)];
+    private static readonly Type[] ArgTypes = [typeof(string)];
+    private const BindingFlags Binding = BindingFlags.Public | BindingFlags.Instance;
 
-    private static readonly Dictionary<Type, MethodInfo> _toStringFormats = new();
+    private static readonly Dictionary<Type, MethodInfo> ToStringFormats = new();
     
     internal static StringBuilder AddCorrectBitwiseOperation(this StringBuilder sb, string underlyingTypeName)
     {
@@ -52,12 +51,12 @@ internal static class Helpers
 
     internal static MethodInfo GetToStringFormat(Type membersType)
     {
-        if (!_toStringFormats.TryGetValue(membersType, out MethodInfo? toString) || toString is null)
+        if (!ToStringFormats.TryGetValue(membersType, out MethodInfo? toString) || toString is null)
         {
-            toString = membersType.GetMethod(nameof(ToString), binding, null, CallingConventions.Any, _argTypes, _modifiers)
+            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, ArgTypes, Modifiers)
                     ?? throw new InvalidOperationException("'ToString' method is not found!");
             
-            _toStringFormats.Add(membersType, toString);
+            ToStringFormats.Add(membersType, toString);
         }
         
         return toString;
