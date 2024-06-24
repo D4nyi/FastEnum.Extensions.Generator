@@ -5,8 +5,6 @@ namespace FastEnum.Extensions.Generator.Tests;
 public static class ModuleInitializer
 {
     [ModuleInitializer]
-    public static void Init()
-    {
+    public static void Init() =>
         VerifySourceGenerators.Initialize();
-    }
 }

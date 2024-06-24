@@ -1,3 +1,4 @@
+using System.Globalization;
 using FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;
 
 namespace FastEnum.Extensions.Generator.IntegrationTests;
@@ -114,7 +115,7 @@ public sealed class EnumExtensionsHappyCaseTests
             Color[] values = Enum.GetValues<Color>();
 
             return values
-                .Select(x => Convert.ChangeType(x, underlyingType))
+                .Select(x => Convert.ChangeType(x, underlyingType, CultureInfo.InvariantCulture))
                 .ToArray();
         }
 #endif

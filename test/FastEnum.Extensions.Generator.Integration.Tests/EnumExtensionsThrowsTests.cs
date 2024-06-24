@@ -8,8 +8,8 @@ public sealed class EnumExtensionsThrowsTests
     public void Extension_FastToStringFormat_ThrowsWhenFormatIsNotOneChar(string format, Color color)
     {
         // Act, Assert
-        var expected = Assert.Throws<FormatException>(() => color.ToString(format));
-        var actual = Assert.Throws<FormatException>(() => color.FastToString(format));
+        FormatException expected = Assert.Throws<FormatException>(() => color.ToString(format));
+        FormatException actual = Assert.Throws<FormatException>(() => color.FastToString(format));
 
         Assert.Equal(expected.Message, actual.Message);
     }

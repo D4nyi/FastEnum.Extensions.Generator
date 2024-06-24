@@ -7,14 +7,9 @@ internal sealed class DescriptionDataGenerator : IEnumerable<object?[]>
 {
     private static readonly Type _colorType = typeof(Color);
 
-    private static readonly List<object?[]> _testData;
-
-    static DescriptionDataGenerator()
-    {
-        var colors = new[] { Color.Red, Color.Green, Color.Blue, (Color)15, (Color)0 };
-
-        _testData = colors.Select(GetEnumDescription).ToList();
-    }
+    private static readonly List<object?[]> _testData =
+        new[] { Color.Red, Color.Green, Color.Blue, (Color)15, (Color)0 }
+            .Select(GetEnumDescription).ToList();
 
     public IEnumerator<object?[]> GetEnumerator() => _testData.GetEnumerator();
 

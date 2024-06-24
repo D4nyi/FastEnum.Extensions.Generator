@@ -3,7 +3,11 @@ using System.ComponentModel;
 namespace FastEnum.Extensions.Generator.IntegrationTests;
 
 [Extensions]
+#pragma warning disable CA1028
+#pragma warning disable CA1027
 public enum Color : short
+#pragma warning restore CA1027
+#pragma warning restore CA1028
 {
     [Description("Bright Red")]
     Red = 4,
