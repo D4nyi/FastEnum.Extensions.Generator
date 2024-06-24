@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using FastEnum.Extensions.Generator;
 
 [assembly: CLSCompliant(false)]
@@ -12,6 +12,6 @@ namespace FastEnum.Extensions.Generator;
 
 internal static class Assembly
 {
-    internal const string Version = "1.0.0-preview.4";
+    internal const string Version = "1.0.0";
     internal const string CorrectVersion = "1.0.0";
 }

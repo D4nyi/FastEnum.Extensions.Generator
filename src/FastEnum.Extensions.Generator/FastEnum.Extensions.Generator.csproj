@@ -24,7 +24,7 @@
 
 		<DebugType>portable</DebugType>
 
-		<PackageVersion>1.0.0-preview.4</PackageVersion>
+		<PackageVersion>1.0.0</PackageVersion>
 		<Version>1.0.0</Version>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
