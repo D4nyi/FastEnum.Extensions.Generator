@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FastEnum.Extensions.Generator.Specs;
 using FastEnum.Extensions.Generator.Utils;
 

@@ -6,7 +6,7 @@ using FastEnum.Extensions.Generator;
 [assembly: System.Reflection.AssemblyInformationalVersion(Assembly.Version)]
 [assembly: System.Reflection.AssemblyFileVersion(Assembly.CorrectVersion)]
 
-[assembly: InternalsVisibleTo("FastEnum.Helpers.Generator.Testst", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("FastEnum.Extensions.Generator", AllInternalsVisible = true)]
 
 namespace FastEnum.Extensions.Generator;
 

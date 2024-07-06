@@ -17,9 +17,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 
 		<PackageReleaseNotes>
-			Rework of some internals and generated code. Major update on FastToString with format 'F'.
-			With this fix it will be faster and allocates less memory.
-			Test cases extended.
+			First stable version release
 		</PackageReleaseNotes>
 
 		<DebugType>portable</DebugType>
@@ -33,9 +31,9 @@
 		<PackageIcon>enum.png</PackageIcon>
 		<PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
 		<DevelopmentDependency>True</DevelopmentDependency>
-		<!--		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>-->
-		<!--		<IncludeBuildOutput>False</IncludeBuildOutput>-->
-		<!--		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>-->
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<!--<IncludeBuildOutput>False</IncludeBuildOutput>-->
+		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 
 		<WarningsAsErrors>CA2021</WarningsAsErrors>
 	</PropertyGroup>
