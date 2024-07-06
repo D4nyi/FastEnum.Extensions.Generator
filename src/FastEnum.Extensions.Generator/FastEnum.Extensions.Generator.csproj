@@ -26,13 +26,13 @@
 		<Version>1.0.0</Version>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-		<IsPackable>False</IsPackable>
+		<IsPackable>True</IsPackable>
 		<ApplicationIcon>enum.ico</ApplicationIcon>
 		<PackageIcon>enum.png</PackageIcon>
 		<PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
 		<DevelopmentDependency>True</DevelopmentDependency>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<!--<IncludeBuildOutput>False</IncludeBuildOutput>-->
+		<IncludeBuildOutput>False</IncludeBuildOutput>
 		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 
 		<WarningsAsErrors>CA2021</WarningsAsErrors>
@@ -48,14 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\..\README.md" Link="README.md">
-			<PackagePath>\</PackagePath>
-			<Pack>True</Pack>
-		</None>
-
-		<None Update="enum.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
+		<None Include="..\..\README.md" Pack="true" PackagePath="."/>
+		<None Update="enum.png" Pack="true" PackagePath="."/>
 	</ItemGroup>
 </Project>
