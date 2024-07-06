@@ -1,6 +1,6 @@
 [![Build & Test](https://github.com/D4nyi/FastEnum.Extensions.Generator/actions/workflows/build.yml/badge.svg)](https://github.com/D4nyi/FastEnum.Extensions.Generator/actions/workflows/build.yml)
 
-# FastEnumToString
+# FastEnum.Extensions.Generator
 Source Generator for enums to create extension methods with basic functionality.
 
 ## Usage
