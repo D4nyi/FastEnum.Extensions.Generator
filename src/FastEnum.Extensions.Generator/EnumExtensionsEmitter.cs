@@ -35,7 +35,7 @@ internal sealed partial class EnumExtensionsEmitter
             AddIsDefined(sb);
             AddToString(sb);
             AddToStringFormat(sb);
-            AddGetDescription(sb);
+            AddAttributeMethods(sb);
             AddTryParseString(sb);
             AddTryParseSpan(sb);
             AddFormatAsHexHelper(sb);

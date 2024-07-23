@@ -19,7 +19,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Generator')) == false">
-        <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">

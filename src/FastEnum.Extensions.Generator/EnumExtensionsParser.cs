@@ -1,10 +1,13 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Diagnostics;
+
 using FastEnum.Extensions.Generator.Specs;
 using FastEnum.Extensions.Generator.Utils;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using static FastEnum.Extensions.Generator.EnumExtensionsGenerator;
 
 namespace FastEnum.Extensions.Generator;
@@ -52,10 +55,14 @@ internal sealed class EnumExtensionsParser
         ImmutableArray<EnumDeclarationSyntax> classDeclarationSyntaxList,
         CancellationToken cancellationToken)
     {
-        INamedTypeSymbol? extensionsAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.ExtensionsAttributeFullName);
+        INamedTypeSymbol? displayAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.DisplayAttributeFullName);
+        INamedTypeSymbol? enumMemberAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.EnumMemberAttributeFullName);
         INamedTypeSymbol? descriptionAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.DescriptionAttributeFullName);
+        INamedTypeSymbol? extensionsAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.ExtensionsAttributeFullName);
 
         Debug.Assert(extensionsAttributeSymbol is not null);
+        Debug.Assert(displayAttributeSymbol is not null);
+        Debug.Assert(enumMemberAttributeSymbol is not null);
         Debug.Assert(descriptionAttributeSymbol is not null);
 
         List<EnumGenerationSpec> enumToGenerateList = [];
@@ -124,9 +131,9 @@ internal sealed class EnumExtensionsParser
                     .Cast<IFieldSymbol>()
                     .Select(x =>
                     {
-                        string? desc = x.ReadDescriptionValue(descriptionAttributeSymbol!);
+                        AttributeValues data = x.ReadAttributeValues(displayAttributeSymbol!, enumMemberAttributeSymbol! ,descriptionAttributeSymbol!);
                         
-                        return new EnumMemberSpec(typeName, x.Name, x.ConstantValue!, desc);
+                        return new EnumMemberSpec(typeName, x.Name, x.ConstantValue!, data);
                     })
                     .OrderBy(x => x.Value)
                     .ToImmutableArray();

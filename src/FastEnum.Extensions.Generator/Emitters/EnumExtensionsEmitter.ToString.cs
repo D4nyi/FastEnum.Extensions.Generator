@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 
 using FastEnum.Extensions.Generator.Emitters;
@@ -16,9 +16,7 @@ internal sealed partial class EnumExtensionsEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
             """
-                /// <summary>
-                /// Converts the value of this instance to its equivalent string representation.")
-                /// </summary>")
+                /// <summary>Converts the value of this instance to its equivalent string representation.</summary>
                 /// <returns>The string representation of the value of this instance.</returns>
                 {0} static global::System.String FastToString(this {1} value) => value switch
                 {{
@@ -44,9 +42,7 @@ internal sealed partial class EnumExtensionsEmitter
         sb
             .Append(
                 """
-                    /// <summary>
-                    /// Converts the value of this instance to its equivalent string representation using the specified format.
-                    /// </summary>
+                    /// <summary>Converts the value of this instance to its equivalent string representation using the specified format.</summary>
                     /// <param name="format">A format string.</param>
                     /// <returns>The string representation of the value of this instance as specified by format.</returns>
                     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>

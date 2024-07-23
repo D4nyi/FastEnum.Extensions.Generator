@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -16,9 +16,11 @@ namespace SnapshotTesting
     [FastEnum.Extensions]
     public enum Color
     {
-        [System.ComponentModel.Description("Crimson red")] // its not detected in testing :/
+        [System.ComponentModel.Description("Crimson red")]
         Red = 0,
-        Green = 1
+        [System.Runtime.Serialization.EnumMember(Value = "Pine")]
+        Green = 1,
+        [System.ComponentModel.DataAnnotations.Display(Name = "Sky", Description = "Sky")]
         Blue = 2,
     }
 }
@@ -71,7 +73,9 @@ namespace SnapshotTesting
         PortableExecutableReference[] references =
         [
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(System.ComponentModel.DescriptionAttribute).Assembly.Location)
+            MetadataReference.CreateFromFile(typeof(System.ComponentModel.DescriptionAttribute).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Runtime.Serialization.EnumMemberAttribute).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute).Assembly.Location),
         ];
 
         // Create a Roslyn compilation for the syntax tree.

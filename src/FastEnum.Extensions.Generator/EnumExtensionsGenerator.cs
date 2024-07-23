@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
@@ -14,9 +14,9 @@ public sealed class EnumExtensionsGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        //if (!Debugger.IsAttached)
+        //if (!System.Diagnostics.Debugger.IsAttached)
         //{
-        //    Debugger.Launch();
+        //    System.Diagnostics.Debugger.Launch();
         //}
 
         context.RegisterPostInitializationOutput(PostInit);
