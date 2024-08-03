@@ -27,6 +27,6 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Pack 
-      run: dotnet pack -c Release --no-restore -o output
+      run:  dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c Release --no-restore -o output
     - name: Push to NuGet 
-      run: dotnet nuget push output/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
