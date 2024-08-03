@@ -47,20 +47,23 @@ public class NestingClass
     }
 }
 
-[Extensions]
-public enum Color : System.Byte
+[Extensions, Flags]
+public enum Color
 {
-    Red,
-    Green,
-    Blue,
+    [Description("Crimson Red")]
+    Red = 0x990000,
+    [Display(Name = "Pine", Description = "Pine")]
+    Green = 0x166138,
+    [EnumMember(Value = "Sky")]
+    Blue = 0x87CEEB
 }
 
 [Extensions, Flags]
-public enum Options
+public enum GenerationOptions : byte
 {
     None = 0,
     ToString = 1,
     Parse = 2,
-    HasFlag = 4,
+    HasFlag = 4
 }
 ```
