@@ -216,9 +216,9 @@ public static class ColorExtensions
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.Color" />.
     /// This method using case-sensitive parsing.
     /// </summary>
-    /// <param name=\"value\">The span representation of the name or numeric value of one or more enumerated constants.</param>
-    /// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>
-    /// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>
+    /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
+    /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
+    /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.Color result) =>
         TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
     
@@ -227,9 +227,9 @@ public static class ColorExtensions
     /// This method using case-insensitive parsing.
     /// A parameter specifies whether the operation is case-insensitive.
     /// </summary>
-    /// <param name=\"value\">The span representation of the name or numeric value of one or more enumerated constants.</param>
-    /// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>
-    /// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>
+    /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
+    /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
+    /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.Color result) =>
         TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
 
@@ -247,7 +247,8 @@ public static class ColorExtensions
         [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         static global::System.String ToHexString(SnapshotTesting.Color data)
         {
-            global::System.Span<global::System.Char> destination = stackalloc global::System.Char[sizeof(global::System.Int32) * 2];            global::System.Int32 value = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.Color, global::System.Int32>(ref data);
+            global::System.Span<global::System.Char> destination = stackalloc global::System.Char[sizeof(global::System.Int32) * 2];
+            global::System.Int32 value = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.Color, global::System.Int32>(ref data);
             ToCharsBuffer((global::System.Byte)(value >> 24), destination, 0);
             ToCharsBuffer((global::System.Byte)(value >> 16), destination, 2);
             ToCharsBuffer((global::System.Byte)(value >> 8), destination, 4);

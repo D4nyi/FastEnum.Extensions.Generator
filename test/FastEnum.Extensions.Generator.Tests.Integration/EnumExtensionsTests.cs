@@ -1,13 +1,12 @@
-using System.Globalization;
 using FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;
 
 namespace FastEnum.Extensions.Generator.IntegrationTests;
 
-public sealed class EnumExtensionsHappyCaseTests
+public sealed class EnumExtensionsTests
 {
     [Theory]
     [ClassData(typeof(DefaultGenerator))]
-    public void Extension_FastToString_GeneratesTheSameResultAsToString(Color value)
+    public void FastToString_GeneratesTheSameResultAsToString(Color value)
     {
         // Arrange
         string expected = value.ToString();
@@ -21,7 +20,7 @@ public sealed class EnumExtensionsHappyCaseTests
 
     [Theory]
     [ClassData(typeof(FormattingGenerator))]
-    public void Extension_ToStringFormat_GeneratesTheSameResultAsToStringFormat(Color value, string format)
+    public void ToStringFormat_GeneratesTheSameResultAsToStringFormat(Color value, string format)
     {
         // Arrange
         string expected = value.ToString(format);
@@ -37,11 +36,11 @@ public sealed class EnumExtensionsHappyCaseTests
     [InlineData(Color.Red | Color.Blue)]
     [InlineData(Color.Red | Color.Green)]
     [InlineData(Color.Blue | Color.Green)]
-    public void Extension_HasFlag_GeneratesTheSameResultAsHasFlag(Color value)
+    public void HasFlag_GeneratesTheSameResultAsHasFlag(Color value)
     {
         // Arrange
         const Color color = Color.Blue;
-        
+
         bool expected = value.HasFlag(flag: color);
 
         // Act
@@ -53,7 +52,7 @@ public sealed class EnumExtensionsHappyCaseTests
 
     [Theory]
     [ClassData(typeof(DefaultGenerator))]
-    public void Extension_IsDefined_GeneratesTheSameResultAsIsDefined(Color value)
+    public void IsDefined_GeneratesTheSameResultAsIsDefined(Color value)
     {
         // Arrange
         bool expected = Enum.IsDefined(value);
@@ -64,9 +63,9 @@ public sealed class EnumExtensionsHappyCaseTests
         // Assert
         Assert.Equal(expected, actual);
     }
-    
+
     [Fact]
-    public void Extension_GetValues_GeneratesTheSameResultAsGetValues()
+    public void GetValues_GeneratesTheSameResultAsGetValues()
     {
         // Arrange
         Color[] expected = Enum.GetValues<Color>();
@@ -79,7 +78,7 @@ public sealed class EnumExtensionsHappyCaseTests
     }
 
     [Fact]
-    public void Extension_GetNames_GeneratesTheSameResultAsGetNames()
+    public void GetNames_GeneratesTheSameResultAsGetNames()
     {
         // Arrange
         string[] expected = Enum.GetNames<Color>();
@@ -92,37 +91,20 @@ public sealed class EnumExtensionsHappyCaseTests
     }
 
     [Fact]
-    public void Extension_GetUnderlyingValues_GeneratesTheSameResultAsGetValuesAsUnderlyingType()
+    public void GetUnderlyingValues_GeneratesTheSameResultAsGetValuesAsUnderlyingType()
     {
         // Arrange
-#if NET7_0_OR_GREATER
         Array expected = Enum.GetValuesAsUnderlyingType<Color>();
-#else
-        Array expected = GetValuesAsUnderlyingType();
-#endif
 
         // Act
         var actual = ColorExtensions.GetUnderlyingValues();
 
         // Assert
         Assert.Equal(expected, actual);
-
-#if NET6_0
-        static object[] GetValuesAsUnderlyingType()
-        {
-            Type underlyingType = Enum.GetUnderlyingType(typeof(Color));
-
-            Color[] values = Enum.GetValues<Color>();
-
-            return values
-                .Select(x => Convert.ChangeType(x, underlyingType, CultureInfo.InvariantCulture))
-                .ToArray();
-        }
-#endif
     }
 
     [Fact]
-    public void Extension_MembersCount_GetsTheCorrectAmountOfMembersCount()
+    public void MembersCount_GetsTheCorrectAmountOfMembersCount()
     {
         // Arrange
         int expected = Enum.GetValues<Color>().Length;
@@ -136,7 +118,7 @@ public sealed class EnumExtensionsHappyCaseTests
 
     [Theory]
     [ClassData(typeof(EnumStringGenerator))]
-    public void Extension_TryParseString_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
+    public void TryParseString_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
         // Act
         bool success1 = ColorExtensions.TryParse(name, out Color color1);
@@ -152,7 +134,7 @@ public sealed class EnumExtensionsHappyCaseTests
 
     [Theory]
     [ClassData(typeof(EnumStringIgnoreCaseGenerator))]
-    public void Extension_TryParseStringIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
+    public void TryParseStringIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
         // Act
         bool success1 = ColorExtensions.TryParseIgnoreCase(name, out Color color1);
@@ -168,11 +150,11 @@ public sealed class EnumExtensionsHappyCaseTests
 
     [Theory]
     [ClassData(typeof(EnumStringGenerator))]
-    public void Extension_TryParseSpan_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
+    public void TryParseSpan_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
         // Arrange
         ReadOnlySpan<char> spanName = name.AsSpan();
-        
+
         // Act
         bool success1 = ColorExtensions.TryParse(spanName, out Color color1);
         bool success2 = Enum.TryParse(spanName, out Color color2);
@@ -187,7 +169,7 @@ public sealed class EnumExtensionsHappyCaseTests
 
     [Theory]
     [ClassData(typeof(EnumStringIgnoreCaseGenerator))]
-    public void Extension_TryParseSpanIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
+    public void TryParseSpanIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
         // Arrange
         ReadOnlySpan<char> spanName = name.AsSpan();
@@ -204,12 +186,97 @@ public sealed class EnumExtensionsHappyCaseTests
         Assert.Equal(color1, color2);
     }
 
+    [Fact]
+    public void GetDescription()
+    {
+        // Arrange
+        Color[] members = ColorExtensions.GetValues();
+
+        // Act && Assert
+        foreach (Color member in members)
+        {
+            Assert.Equal(ColorNames.Lookup[member], member.GetDescription());
+        }
+    }
+
     [Theory]
-    [ClassData(typeof(DescriptionDataGenerator))]
-    public void Extension_GetDescription_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
+    [ClassData(typeof(DescriptionDataGenerators))]
+    public void GetDescription_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
     {
         // Act
         string? actualDescription = input.GetDescription();
+
+        // Assert
+        Assert.Equal(expectedDescription, actualDescription);
+    }
+
+    [Fact]
+    public void GetEnumMemberValue()
+    {
+        // Arrange
+        Color[] members = ColorExtensions.GetValues();
+
+        // Act && Assert
+        foreach (Color member in members)
+        {
+            Assert.Equal(ColorNames.Lookup[member], member.GetEnumMemberValue());
+        }
+    }
+
+    [Theory]
+    [ClassData(typeof(EnumMemberValueDataGenerator))]
+    public void GetEnumMemberValue_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
+    {
+        // Act
+        string? actualDescription = input.GetEnumMemberValue();
+
+        // Assert
+        Assert.Equal(expectedDescription, actualDescription);
+    }
+
+    [Fact]
+    public void GetDisplayDescription()
+    {
+        // Arrange
+        Color[] members = ColorExtensions.GetValues();
+
+        // Act && Assert
+        foreach (Color member in members)
+        {
+            Assert.Equal(ColorNames.Lookup[member], member.GetDisplayDescription());
+        }
+    }
+
+    [Theory]
+    [ClassData(typeof(DisplayDescriptionDataGenerator))]
+    public void GetDisplayDescription_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
+    {
+        // Act
+        string? actualDescription = input.GetEnumMemberValue();
+
+        // Assert
+        Assert.Equal(expectedDescription, actualDescription);
+    }
+
+    [Fact]
+    public void GetDisplayName()
+    {
+        // Arrange
+        Color[] members = ColorExtensions.GetValues();
+
+        // Act && Assert
+        foreach (Color member in members)
+        {
+            Assert.Equal(ColorNames.Lookup[member], member.GetDisplayName());
+        }
+    }
+
+    [Theory]
+    [ClassData(typeof(DisplayNameDataGenerator))]
+    public void GetDisplayName_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
+    {
+        // Act
+        string? actualDescription = input.GetEnumMemberValue();
 
         // Assert
         Assert.Equal(expectedDescription, actualDescription);

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;

@@ -97,12 +97,12 @@ internal sealed partial class EnumExtensionsEmitter
         // otherwise the Equals will return false, no matter what the actual first value is in the enum
         // because of the type miss match  
         object zero = _currentSpec.Members[0].Value.GetType().GetCorrectZero();
-        
+
         if (!_currentSpec.Members[0].Value.Equals(zero))
         {
             sb.AppendLine("        0 => \"0\",");
         }
-        
+
         foreach (EnumMemberSpec member in _currentSpec.Members)
         {
             sb
@@ -131,7 +131,43 @@ internal sealed partial class EnumExtensionsEmitter
                 
                 """, _currentSpec.FullName);
 
-        AddFormatNumberAsHexBufferGeneration(sb);
+        AddHexValuesForKnonwFields(sb);
+
+        if (_currentSpec.OriginalUnderlyingType == "byte" || _currentSpec.OriginalUnderlyingType == "sbyte")
+        {
+            sb
+                .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                            _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), (buffer, value) =>
+                            {{
+                                global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
+                                global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                                buffer[1] = (global::System.Char)(packedResult & 0xFFU);
+                                buffer[0] = (global::System.Char)(packedResult >> 8);
+                            }})
+                        }};
+                    }}
+
+
+                """, _currentSpec.UnderlyingType, _currentSpec.FullName);
+
+            return;
+        }
+
+        sb
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                            _ => ToHexString(data)
+                        }};
+                        
+                        [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                        static global::System.String ToHexString({0} data)
+                        {{
+                            global::System.Span<global::System.Char> destination = stackalloc global::System.Char[sizeof({1}) * 2];
+                            {1} value = global::System.Runtime.CompilerServices.Unsafe.As<{0}, {1}>(ref data);
+
+                """, _currentSpec.FullName, _currentSpec.UnderlyingType);
 
         int shiftValue = _currentSpec.OriginalUnderlyingType switch
         {
@@ -161,12 +197,6 @@ internal sealed partial class EnumExtensionsEmitter
                 startIndex += 2;
             }
         }
-        else
-        {
-            sb
-                .Append("            ToCharsBuffer((")
-                .Append(_currentSpec.UnderlyingType).AppendLine(")data, destination, 0);");
-        }
 
         sb
             .Append(
@@ -179,7 +209,7 @@ internal sealed partial class EnumExtensionsEmitter
                 """);
     }
 
-    private void AddFormatNumberAsHexBufferGeneration(StringBuilder sb)
+    private void AddHexValuesForKnonwFields(StringBuilder sb)
     {
         string nesting1Indent = Get(Indentation.Nesting1);
 
@@ -200,26 +230,6 @@ internal sealed partial class EnumExtensionsEmitter
 
             sb
                 .Append(nesting1Indent).Append(member.FullName).Append(" => \"").Append(hex).AppendLine("\",");
-        }
-
-        sb
-            .AppendFormat(CultureInfo.InvariantCulture,
-                """
-                            _ => ToHexString(data)
-                        }};
-                        
-                        [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                        static global::System.String ToHexString({0} data)
-                        {{
-                            global::System.Span<global::System.Char> destination = stackalloc global::System.Char[sizeof({1}) * 2];
-                """, _currentSpec.FullName, _currentSpec.UnderlyingType);
-
-        if (_currentSpec.OriginalUnderlyingType is not ("byte" or "sbyte"))
-        {
-            sb
-                .Append(nesting1Indent)
-                    .Append(_currentSpec.UnderlyingType).Append(" value = global::System.Runtime.CompilerServices.Unsafe.As<")
-                    .Append(_currentSpec.FullName).Append(", ").Append(_currentSpec.UnderlyingType).AppendLine(">(ref data);");
         }
     }
 }

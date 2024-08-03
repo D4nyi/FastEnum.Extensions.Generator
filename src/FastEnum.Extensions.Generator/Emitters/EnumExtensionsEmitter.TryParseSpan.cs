@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
@@ -16,9 +16,9 @@ internal sealed partial class EnumExtensionsEmitter
                     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="{0}" />.
                     /// This method using case-sensitive parsing.
                     /// </summary>
-                    /// <param name=\"value\">The span representation of the name or numeric value of one or more enumerated constants.</param>
-                    /// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>
-                    /// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>
+                    /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
+                    /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
+                    /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
                     public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out {0} result) =>
                         TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
                     
@@ -27,9 +27,9 @@ internal sealed partial class EnumExtensionsEmitter
                     /// This method using case-insensitive parsing.
                     /// A parameter specifies whether the operation is case-insensitive.
                     /// </summary>
-                    /// <param name=\"value\">The span representation of the name or numeric value of one or more enumerated constants.</param>
-                    /// <param name=\"result\">When this method returns <see langword=\"true\"/>, an object containing an enumeration constant representing the parsed value.</param>
-                    /// <returns><see langword=\"true\"/> if the conversion succeeded; <see langword=\"false\"/> otherwise.</returns>
+                    /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
+                    /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
+                    /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
                     public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out {0} result) =>
                         TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
                 
