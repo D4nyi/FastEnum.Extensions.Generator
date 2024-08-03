@@ -17,13 +17,14 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 
 		<PackageReleaseNotes>
-			First stable version release
+			Optimized HEX format generation for byte backed enums.
+			Added suppurt for Display and EnumMember attributes.
 		</PackageReleaseNotes>
 
 		<DebugType>portable</DebugType>
 
-		<PackageVersion>1.0.0</PackageVersion>
-		<Version>1.0.0</Version>
+		<PackageVersion>1.1.0</PackageVersion>
+		<Version>1.1.0</Version>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 		<IsPackable>True</IsPackable>
