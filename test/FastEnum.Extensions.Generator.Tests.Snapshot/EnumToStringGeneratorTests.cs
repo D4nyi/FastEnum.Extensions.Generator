@@ -3,7 +3,7 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace FastEnum.Extensions.Generator.Tests;
+namespace FastEnum.Extensions.Generator.Tests.Snapshot;
 
 public sealed class EnumToStringGeneratorTests
 {
@@ -41,7 +41,7 @@ namespace SnapshotTesting
     public Task RunResults()
     {
         GeneratorDriverRunResult runResults = _generatorDriver.GetRunResult();
-        
+
         return Verify(runResults).UseDirectory(_snapshotDirectory);
     }
 
@@ -49,10 +49,10 @@ namespace SnapshotTesting
     public Task RunResult()
     {
         GeneratorRunResult runResult = _generatorDriver.GetRunResult().Results.Single();
-        
+
         return Verify(runResult).UseDirectory(_snapshotDirectory);
     }
-    
+
     /// <summary>Create subdirectory for each .Net framework version</summary>
     private static string CreateDirectoryPath()
     {
@@ -62,7 +62,7 @@ namespace SnapshotTesting
 
         return versionString.IsEmpty ? "Snapshots/netX" : $"Snapshots/net{versionString[0]}";
     }
-    
+
     private static GeneratorDriver CreateGeneratorDriver(string source)
     {
         // Parse the provided string into a C# syntax tree

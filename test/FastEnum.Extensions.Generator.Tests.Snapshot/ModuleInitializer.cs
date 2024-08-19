@@ -1,6 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
-namespace FastEnum.Extensions.Generator.Tests;
+namespace FastEnum.Extensions.Generator.Tests.Snapshot;
 
 public static class ModuleInitializer
 {

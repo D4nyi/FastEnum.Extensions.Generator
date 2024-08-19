@@ -1,19 +1,13 @@
-using System.Collections;
+namespace FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
-namespace FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;
-
-internal sealed class DefaultGenerator : IEnumerable<object?[]>
+internal sealed class DefaultGenerator : TheoryData<Color>
 {
-    private static readonly List<object?[]> _testData = new()
+    public DefaultGenerator()
     {
-        new object?[] { Color.Red },
-        new object?[] { Color.Blue },
-        new object?[] { Color.Green },
-        new object?[] { (Color)15 },
-        new object?[] { (Color)0 },
-    };
-
-    public IEnumerator<object?[]> GetEnumerator() => _testData.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        Add(Color.Red);
+        Add(Color.Blue);
+        Add(Color.Green);
+        Add((Color)15);
+        Add(0);
+    }
 }

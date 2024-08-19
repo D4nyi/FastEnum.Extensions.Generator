@@ -1,27 +1,21 @@
-using System.Collections;
+namespace FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
-namespace FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;
-
-internal sealed class EnumStringGenerator : IEnumerable<object?[]>
+internal sealed class EnumStringGenerator : TheoryData<string, Color>
 {
-    private static readonly List<object?[]> _testData = new()
+    public EnumStringGenerator()
     {
-        new object?[] { nameof(Color.Red), Color.Red },
-        new object?[] { nameof(Color.Green), Color.Green },
-        new object?[] { nameof(Color.Blue), Color.Blue },
-        new object?[] { (Color.Red | Color.Blue).ToString(), Color.Red | Color.Blue },
-        new object?[] { (Color.Red | Color.Green).ToString(), Color.Red | Color.Green },
-        new object?[] { (Color.Blue | Color.Green).ToString(), Color.Blue | Color.Green },
-        new object?[] { "1", Color.Blue },
-        new object?[] { "2", Color.Green },
-        new object?[] { "4", Color.Red },
-        new object?[] { "3", Color.Blue | Color.Green },
-        new object?[] { "5", Color.Red | Color.Blue },
-        new object?[] { "6", Color.Red | Color.Green },
-        new object?[] { "15", (Color)15 },
-    };
-
-    public IEnumerator<object?[]> GetEnumerator() => _testData.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        Add(nameof(Color.Red), Color.Red);
+        Add(nameof(Color.Green), Color.Green);
+        Add(nameof(Color.Blue), Color.Blue);
+        Add((Color.Red | Color.Blue).ToString(), Color.Red | Color.Blue);
+        Add((Color.Red | Color.Green).ToString(), Color.Red | Color.Green);
+        Add((Color.Blue | Color.Green).ToString(), Color.Blue | Color.Green);
+        Add("1", Color.Blue);
+        Add("2", Color.Green);
+        Add("4", Color.Red);
+        Add("3", Color.Blue | Color.Green);
+        Add("5", Color.Red | Color.Blue);
+        Add("6", Color.Red | Color.Green);
+        Add("15", (Color)15);
+    }
 }

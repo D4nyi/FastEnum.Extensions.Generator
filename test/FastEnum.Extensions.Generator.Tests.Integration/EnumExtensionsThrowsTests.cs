@@ -1,4 +1,4 @@
-namespace FastEnum.Extensions.Generator.IntegrationTests;
+namespace FastEnum.Extensions.Generator.Tests.Integration;
 
 public sealed class EnumExtensionsThrowsTests
 {

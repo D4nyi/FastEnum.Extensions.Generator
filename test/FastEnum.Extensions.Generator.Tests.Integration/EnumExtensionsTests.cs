@@ -1,6 +1,6 @@
-using FastEnum.Extensions.Generator.IntegrationTests.DataGenerators;
+using FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
-namespace FastEnum.Extensions.Generator.IntegrationTests;
+namespace FastEnum.Extensions.Generator.Tests.Integration;
 
 public sealed class EnumExtensionsTests
 {
