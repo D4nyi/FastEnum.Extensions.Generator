@@ -51,10 +51,8 @@ internal sealed partial class EnumExtensionsEmitter
             .Append(_currentSpec.Modifier).Append(" static global::System.String FastToString(this ").Append(_currentSpec.FullName).AppendLine(" value,")
             .Append(
                 """
-                #if NET7_0_OR_GREATER
-                    [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
-                #endif
-                    global::System.String? format)
+                        [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
+                        global::System.String? format)
                     {
                         if (global::System.String.IsNullOrEmpty(format)) return value.FastToString();
                         

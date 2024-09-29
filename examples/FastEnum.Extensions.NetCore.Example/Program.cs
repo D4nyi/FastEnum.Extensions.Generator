@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using BenchmarkDotNet.Running;
 using FastEnum.Extensions.NetCore.Example;
 

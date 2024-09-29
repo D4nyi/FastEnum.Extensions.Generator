@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using FastEnum.Extensions.Generator.Emitters;
 using FastEnum.Extensions.Generator.Specs;
@@ -37,7 +37,7 @@ internal sealed partial class EnumExtensionsEmitter
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
                 
-                    private static readonly {0}[] _underlyingValues = 
+                    private static readonly {0}[] _underlyingValues =
                     {{
                 
                 """, _currentSpec.UnderlyingType);
@@ -296,15 +296,6 @@ internal sealed partial class EnumExtensionsEmitter
                     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
                     private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
                         new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
-                
-                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
-                #if NET7_0_OR_GREATER
-                    private static global::System.Diagnostics.UnreachableException CreateUnreachableException(global::System.Int32 value) =>
-                        new global::System.Diagnostics.UnreachableException($"Tried to access a non-existent value: {value}");
-                #else
-                    private static global::System.IndexOutOfRangeException CreateUnreachableException(global::System.Int32 value) =>
-                        new global::System.IndexOutOfRangeException($"Tried to access a non-existent value: {value}");
-                #endif
                 
                     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
                     private static global::System.ArgumentException CreateInvalidEmptyParseArgument() =>

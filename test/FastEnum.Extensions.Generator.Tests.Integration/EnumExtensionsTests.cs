@@ -94,10 +94,10 @@ public sealed class EnumExtensionsTests
     public void GetUnderlyingValues_GeneratesTheSameResultAsGetValuesAsUnderlyingType()
     {
         // Arrange
-        Array expected = Enum.GetValuesAsUnderlyingType<Color>();
+        short[] expected = (short[])Enum.GetValuesAsUnderlyingType<Color>();
 
         // Act
-        var actual = ColorExtensions.GetUnderlyingValues();
+        short[] actual = ColorExtensions.GetUnderlyingValues();
 
         // Assert
         Assert.Equal(expected, actual);

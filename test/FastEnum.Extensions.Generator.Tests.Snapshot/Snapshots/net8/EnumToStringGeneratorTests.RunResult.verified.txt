@@ -30,7 +30,7 @@ namespace SnapshotTesting;
 [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.1.0")]
 public static class ColorExtensions
 {
-    private static readonly global::System.Int32[] _underlyingValues = 
+    private static readonly global::System.Int32[] _underlyingValues =
     {
         0,
         1,
@@ -104,10 +104,8 @@ public static class ColorExtensions
     /// <returns>The string representation of the value of this instance as specified by format.</returns>
     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
     public static global::System.String FastToString(this SnapshotTesting.Color value,
-#if NET7_0_OR_GREATER
-    [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
-#endif
-    global::System.String? format)
+        [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
+        global::System.String? format)
     {
         if (global::System.String.IsNullOrEmpty(format)) return value.FastToString();
         
@@ -540,15 +538,6 @@ public static class ColorExtensions
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
     private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
         new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
-#if NET7_0_OR_GREATER
-    private static global::System.Diagnostics.UnreachableException CreateUnreachableException(global::System.Int32 value) =>
-        new global::System.Diagnostics.UnreachableException($"Tried to access a non-existent value: {value}");
-#else
-    private static global::System.IndexOutOfRangeException CreateUnreachableException(global::System.Int32 value) =>
-        new global::System.IndexOutOfRangeException($"Tried to access a non-existent value: {value}");
-#endif
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
     private static global::System.ArgumentException CreateInvalidEmptyParseArgument() =>
