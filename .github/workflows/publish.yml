@@ -33,6 +33,6 @@ jobs:
             return;
           }
 
-          const regex = new RegExp("?<=<Version>)[^<]+");
+          const regex = new RegExp("(?<=<Version>)[^<]+");
           const version = regex.exec(file);
           console.log(version);
