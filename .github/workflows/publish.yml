@@ -20,14 +20,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Pack 
-      run:  dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c Release --no-restore -o output
     - name: Git Tag
       uses: actions/github-script@v5
       with:
@@ -35,11 +27,3 @@ jobs:
           $version = grep -oPm1 "(?<=<Version>)[^<]+" < ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj
           $ref = "refs/tags/${version}"
           echo $ref
-          github.rest.git.createRef({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: $ref,
-            sha: context.sha
-          })
-    - name: Push to NuGet 
-      run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
