@@ -28,7 +28,6 @@ jobs:
           let file;
           try {
             file = fs.readFileSync('./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj', 'utf8');
-            console.log(data);
           } catch (err) {
             console.error(err);
             return;
