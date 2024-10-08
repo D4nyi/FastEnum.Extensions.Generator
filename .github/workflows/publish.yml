@@ -24,6 +24,16 @@ jobs:
       uses: actions/github-script@v5
       with:
         script: |
-          $version = grep -oPm1 "(?<=<Version>)[^<]+" < ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj
-          $ref = "refs/tags/${version}"
-          echo $ref
+          const fs = require('node:fs');
+          let file;
+          try {
+            file = fs.readFileSync('./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj', 'utf8');
+            console.log(data);
+          } catch (err) {
+            console.error(err);
+            return;
+          }
+
+          const regex = new RegExp("?<=<Version>)[^<]+");
+          const version = regex.exec(file);
+          console.log(version);
