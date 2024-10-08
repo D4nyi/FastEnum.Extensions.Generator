@@ -33,11 +33,12 @@ jobs:
       with:
         script: |
           $version = grep -oPm1 "(?<=<Version>)[^<]+" < ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj
-          echo $version
+          $ref = "refs/tags/${version}"
+          echo $ref
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: "refs/tags/${version}",
+            ref: $ref,
             sha: context.sha
           })
     - name: Push to NuGet 
