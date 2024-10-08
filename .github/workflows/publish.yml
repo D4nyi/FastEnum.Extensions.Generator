@@ -20,19 +20,38 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Pack 
+      run:  dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c Release --no-restore -o output
     - name: Git Tag
       uses: actions/github-script@v5
       with:
         script: |
-          const fs = require('node:fs');
-          let file;
           try {
-            file = fs.readFileSync('./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj', 'utf8');
+            const fs = require('node:fs');
+
+            const file = fs.readFileSync('./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj', 'utf8');
+
+            const version = /(?<=<Version>)[^<]+/m.exec(file)[0];
+
+            console.log(version);
+
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${version}`,
+              sha: context.sha
+            });
+
           } catch (err) {
             console.error(err);
-            return;
           }
+    - name: Push to NuGet 
+      run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
 
-          const regex = new RegExp("(?<=<Version>)[^<]+");
-          const version = regex.exec(file);
-          console.log(version);
+          
