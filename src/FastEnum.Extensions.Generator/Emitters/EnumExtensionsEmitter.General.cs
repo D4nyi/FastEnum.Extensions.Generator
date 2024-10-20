@@ -280,6 +280,7 @@ internal sealed partial class EnumExtensionsEmitter
                 [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
                 private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
                     new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
+
             """);
     }
 
