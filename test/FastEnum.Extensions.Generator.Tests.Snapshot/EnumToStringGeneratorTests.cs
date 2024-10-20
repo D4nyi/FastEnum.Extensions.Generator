@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Reflection;
 
 using Microsoft.CodeAnalysis;
@@ -7,9 +8,7 @@ namespace FastEnum.Extensions.Generator.Tests.Snapshot;
 
 public sealed class EnumToStringGeneratorTests
 {
-    // The source code to test
-    private const string Source =
-/*lang=csharp*/
+    private const string Color =
 """
 namespace SnapshotTesting
 {
@@ -26,8 +25,55 @@ namespace SnapshotTesting
 }
 """;
 
+    private const string GenerationOptions =
+"""
+namespace SnapshotTesting
+{
+    [FastEnum.Extensions, System.Flags]
+    public enum GenerationOptions : byte
+    {
+        None = 0,
+        [System.ComponentModel.Description("generate ToString")]
+        ToString = 1,
+        [System.Runtime.Serialization.EnumMember(Value = "generate Parse")]
+        Parse = 2,
+        [System.ComponentModel.DataAnnotations.Display(Name = "generate HasFlag", Description = "generate HasFlag")]
+        HasFlag = 4
+    }
+}
+""";
+
+    private const string NestedInGenericClass =
+"""
+namespace SnapshotTesting
+{
+    public static class NestingClass<T>
+    {
+        [FastEnum.Extensions]
+        public enum NestedInClass
+        {
+            None
+        }
+    }
+
+}
+""";
+
+    private const string PrivateEnum =
+"""
+namespace SnapshotTesting
+{
+    [FastEnum.Extensions]
+    private enum GenerationOptions
+    {
+        None = 0
+    }
+}
+""";
+
     private static readonly string _snapshotDirectory = CreateDirectoryPath();
-    private readonly GeneratorDriver _generatorDriver = CreateGeneratorDriver(Source);
+    private static readonly GeneratorDriver _generatorDriver = CreateGeneratorDriver();
+
 
     [Fact]
     public Task GeneratesEnumExtensionsCorrectly()
@@ -37,22 +83,15 @@ namespace SnapshotTesting
     }
 
     [Fact]
-    public Task RunResults()
-    {
-        GeneratorDriverRunResult runResults = _generatorDriver.GetRunResult();
-
-        return Verify(runResults).UseDirectory(_snapshotDirectory);
-    }
-
-    [Fact]
     public Task RunResult()
     {
-        GeneratorRunResult runResult = _generatorDriver.GetRunResult().Results.Single();
+        ImmutableArray<GeneratorRunResult> results = _generatorDriver.GetRunResult().Results;
+        
+        Assert.Single(results);
 
-        return Verify(runResult).UseDirectory(_snapshotDirectory);
+        return Verify(results[0]).UseDirectory(_snapshotDirectory);
     }
 
-    /// <summary>Create subdirectory for each .Net framework version</summary>
     private static string CreateDirectoryPath()
     {
         ReadOnlySpan<char> versionString = typeof(object).Assembly
@@ -62,10 +101,13 @@ namespace SnapshotTesting
         return versionString.IsEmpty ? "Snapshots/netX" : $"Snapshots/net{versionString[0]}";
     }
 
-    private static GeneratorDriver CreateGeneratorDriver(string source)
+    private static GeneratorDriver CreateGeneratorDriver()
     {
         // Parse the provided string into a C# syntax tree
-        SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
+        SyntaxTree colorSyntaxTree = CSharpSyntaxTree.ParseText(Color);
+        SyntaxTree generationOptionsSyntaxTree = CSharpSyntaxTree.ParseText(GenerationOptions);
+        SyntaxTree nestedInGenericClassSyntaxTree = CSharpSyntaxTree.ParseText(NestedInGenericClass);
+        SyntaxTree privateEnumSyntaxTree = CSharpSyntaxTree.ParseText(PrivateEnum);
 
         // Create references for assemblies we require
         // We could add multiple references if required
@@ -80,7 +122,7 @@ namespace SnapshotTesting
         // Create a Roslyn compilation for the syntax tree.
         CSharpCompilation compilation = CSharpCompilation.Create(
             assemblyName: "GeneratorTests",
-            syntaxTrees: [syntaxTree],
+            syntaxTrees: [colorSyntaxTree, generationOptionsSyntaxTree, nestedInGenericClassSyntaxTree, privateEnumSyntaxTree],
             references: references); // pass the references to the compilation
 
         // Create an instance of our EnumGenerator incremental source generator

@@ -9,7 +9,7 @@ namespace SnapshotTesting;
 /// <summary>
 /// Extension methods for <see cref="SnapshotTesting.Color" />
 /// </summary>
-[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.1.1")]
+[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.2.0")]
 public static class ColorExtensions
 {
     private static readonly global::System.Int32[] _underlyingValues =
@@ -247,28 +247,19 @@ public static class ColorExtensions
         TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.String FormatNumberAsHex(SnapshotTesting.Color data)
+    private static global::System.String FormatNumberAsHex(SnapshotTesting.Color data) => data switch
     {
-        return data switch
+        SnapshotTesting.Color.Red => "00000000",
+        SnapshotTesting.Color.Green => "00000001",
+        SnapshotTesting.Color.Blue => "00000002",
+        _ => global::System.String.Create(sizeof(global::System.Int32) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.Color, global::System.Int32>(ref data), (buffer, value) =>
         {
-            SnapshotTesting.Color.Red => "00000000",
-            SnapshotTesting.Color.Green => "00000001",
-            SnapshotTesting.Color.Blue => "00000002",
-            _ => ToHexString(data)
-        };
-        
-        [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        static global::System.String ToHexString(SnapshotTesting.Color data)
-        {
-            global::System.Span<global::System.Char> destination = stackalloc global::System.Char[sizeof(global::System.Int32) * 2];
-            global::System.Int32 value = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.Color, global::System.Int32>(ref data);
-            ToCharsBuffer((global::System.Byte)(value >> 24), destination, 0);
-            ToCharsBuffer((global::System.Byte)(value >> 16), destination, 2);
-            ToCharsBuffer((global::System.Byte)(value >> 8), destination, 4);
-            ToCharsBuffer((global::System.Byte)value, destination, 6);
-            return new global::System.String(destination);
-        }
-    }
+             ToCharsBuffer((global::System.Byte)(value >> 24), buffer, 0);
+             ToCharsBuffer((global::System.Byte)(value >> 16), buffer, 2);
+             ToCharsBuffer((global::System.Byte)(value >> 8), buffer, 4);
+             ToCharsBuffer((global::System.Byte)value, buffer, 6);
+        })
+    };
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.StringComparison comparison, out SnapshotTesting.Color result)
@@ -285,7 +276,7 @@ public static class ColorExtensions
             return TryParseAsNumber(value, out result);
         }
 
-                if (value.Equals(nameof(SnapshotTesting.Color.Red).AsSpan(), comparison))
+        if (value.Equals(nameof(SnapshotTesting.Color.Red).AsSpan(), comparison))
         {
             result = SnapshotTesting.Color.Red;
             return true;
@@ -503,4 +494,5 @@ public static class ColorExtensions
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
     private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
-        new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");}
+        new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
+}
