@@ -12,6 +12,6 @@ namespace FastEnum.Extensions.Generator;
 
 internal static class Assembly
 {
-    internal const string Version = "1.1.1";
-    internal const string CorrectVersion = "1.1.1";
+    internal const string Version = "1.2.0";
+    internal const string CorrectVersion = "1.2.0";
 }

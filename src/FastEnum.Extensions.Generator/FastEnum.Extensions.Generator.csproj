@@ -17,14 +17,16 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 
 		<PackageReleaseNotes>
-			Optimized HEX format generation for byte backed enums.
-			Added suppurt for Display and EnumMember attributes.
+			- Fixed several behaviour differences between the generated code and .NET counter part.
+			- Optimized HEX string generation for non-byte/sbyte backed enums.
+			- Fixed bugs and performance issues.
+			- Removed unnecessary generated code.
 		</PackageReleaseNotes>
 
 		<DebugType>portable</DebugType>
 
-		<PackageVersion>1.1.1</PackageVersion>
-		<Version>1.1.1</Version>
+		<PackageVersion>1.2.0</PackageVersion>
+		<Version>1.2.0</Version>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 		<IsPackable>True</IsPackable>
