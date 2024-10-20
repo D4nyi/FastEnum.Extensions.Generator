@@ -1,0 +1,22 @@
+name: "Build & Test"
+description: "Builds and Tests the C# source generator"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+      shell: bash
+    - name: Build
+      run: dotnet build --no-restore
+      shell: bash
+    - name: Integration Tests
+      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build
+      shell: bash
+    - name: Snapshot Tests
+      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build
+      shell: bash

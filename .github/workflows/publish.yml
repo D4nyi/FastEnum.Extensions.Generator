@@ -15,43 +15,35 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Pack 
-      run:  dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c Release --no-restore -o output
-    - name: Git Tag
-      uses: actions/github-script@v7
-      with:
-        script: |
-          try {
-            const fs = require('node:fs');
+      - name: Checkout Git
+        uses: actions/checkout@v4
+      - name: Build & Test
+        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@3287b0512d6302304c3b836683b723301be4ff77
 
-            const file = fs.readFileSync('./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj', 'utf8');
+      - name: Pack
+        run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c Release --no-restore -o output
+      - name: Git Tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              const fs = require('node:fs');
 
-            const version = /(?<=<Version>)[^<]+/m.exec(file)[0];
+              const file = fs.readFileSync('./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj', 'utf8');
 
-            console.log(version);
+              const version = /(?<=<Version>)[^<]+/m.exec(file)[0];
 
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `refs/tags/v${version}`,
-              sha: context.sha
-            });
+              console.log(version);
 
-          } catch (err) {
-            console.error(err);
-          }
-    - name: Push to NuGet 
-      run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+              github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/v${version}`,
+                sha: context.sha
+              });
 
-          
+            } catch (err) {
+              console.error(err);
+            }
+      - name: Push to NuGet
+        run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate

@@ -5,19 +5,16 @@ name: Build & Test
 
 on: [push, pull_request]
 
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+
 jobs:
-  build:
+  build_n_test:
     name: Build & Test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - name: Checkout Git
+        uses: actions/checkout@v4
+      - name: Build & Test
+        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@3287b0512d6302304c3b836683b723301be4ff77
