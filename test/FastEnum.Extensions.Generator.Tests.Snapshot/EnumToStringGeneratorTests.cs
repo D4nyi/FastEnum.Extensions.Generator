@@ -111,8 +111,7 @@ namespace SnapshotTesting
 
         // Create references for assemblies we require
         // We could add multiple references if required
-        PortableExecutableReference[] references =
-        [
+        PortableExecutableReference[] references = [
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(System.ComponentModel.DescriptionAttribute).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(System.Runtime.Serialization.EnumMemberAttribute).Assembly.Location),
@@ -122,7 +121,12 @@ namespace SnapshotTesting
         // Create a Roslyn compilation for the syntax tree.
         CSharpCompilation compilation = CSharpCompilation.Create(
             assemblyName: "GeneratorTests",
-            syntaxTrees: [colorSyntaxTree, generationOptionsSyntaxTree, nestedInGenericClassSyntaxTree, privateEnumSyntaxTree],
+            syntaxTrees: [
+                colorSyntaxTree,
+                generationOptionsSyntaxTree,
+                nestedInGenericClassSyntaxTree,
+                privateEnumSyntaxTree
+            ],
             references: references); // pass the references to the compilation
 
         // Create an instance of our EnumGenerator incremental source generator
