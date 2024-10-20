@@ -255,8 +255,11 @@ internal sealed partial class EnumExtensionsEmitter
                     }
 
 
-                """)
-            .Append(
+                """);
+
+        if (!_currentSpec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase))
+        { 
+            sb.Append(
                 """
                     [global::System.Security.SecuritySafeCriticalAttribute, global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     private static void ToCharsBuffer(global::System.Byte value, global::System.Span<global::System.Char> buffer, global::System.Int32 startingIndex)
@@ -267,11 +270,17 @@ internal sealed partial class EnumExtensionsEmitter
                         buffer[startingIndex + 1] = (global::System.Char)(packedResult & 0xFFU);
                         buffer[startingIndex] = (global::System.Char)(packedResult >> 8);
                     }
-                
-                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
-                    private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
-                        new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
+
+
                 """);
+        }
+
+        sb.Append(
+            """
+                [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
+                private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
+                    new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
+            """);
     }
 
     private static void CloseClassAndNamespace(StringBuilder sb)

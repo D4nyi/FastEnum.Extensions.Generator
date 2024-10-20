@@ -124,28 +124,33 @@ internal sealed partial class EnumExtensionsEmitter
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
                     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    private static global::System.String FormatNumberAsHex({0} data)
+                    private static global::System.String FormatNumberAsHex({0} data) => data switch
                     {{
                 
                 """, _currentSpec.FullName);
 
         AddHexValuesForKnonwFields(sb);
 
-        if (_currentSpec.OriginalUnderlyingType == "byte" || _currentSpec.OriginalUnderlyingType == "sbyte")
+       sb
+               .AppendFormat(CultureInfo.InvariantCulture,
+               """
+                        _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), (buffer, value) =>
+                        {{
+
+                """, _currentSpec.UnderlyingType, _currentSpec.FullName);
+
+        if (_currentSpec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase))
         {
             sb
                 .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                            _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), (buffer, value) =>
-                            {{
-                                global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
-                                global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+                            global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
+                            global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
 
-                                buffer[1] = (global::System.Char)(packedResult & 0xFFU);
-                                buffer[0] = (global::System.Char)(packedResult >> 8);
-                            }})
-                        }};
-                    }}
+                            buffer[1] = (global::System.Char)(packedResult & 0xFFU);
+                            buffer[0] = (global::System.Char)(packedResult >> 8);
+                        }})
+                    }};
 
 
                 """, _currentSpec.UnderlyingType, _currentSpec.FullName);
@@ -153,70 +158,12 @@ internal sealed partial class EnumExtensionsEmitter
             return;
         }
 
-        sb
-            .AppendFormat(CultureInfo.InvariantCulture,
-                """
-                            _ => ToHexString(data)
-                        }};
-                        
-                        [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                        static global::System.String ToHexString({0} data)
-                        {{
-                            global::System.Span<global::System.Char> destination = stackalloc global::System.Char[sizeof({1}) * 2];
-                            {1} value = global::System.Runtime.CompilerServices.Unsafe.As<{0}, {1}>(ref data);
-
-                """, _currentSpec.FullName, _currentSpec.UnderlyingType);
-
-        int shiftValue = _currentSpec.OriginalUnderlyingType switch
-        {
-            "ulong" or "long" => 56,
-            "uint" or "int" => 24,
-            "ushort" or "short" => 8,
-            _ => 0
-        };
-
-        if (shiftValue != 0)
-        {
-            int startIndex = 0;
-            for (; shiftValue >= 0; shiftValue -= 8)
-            {
-                sb.Append("            ToCharsBuffer((global::System.Byte)");
-                if (shiftValue >= 8)
-                {
-                    sb.Append("(value >> ").Append(shiftValue).Append(')');
-                }
-                else
-                {
-                    sb.Append("value");
-                }
-
-                sb.Append(", destination, ").Append(startIndex).AppendLine(");");
-
-                startIndex += 2;
-            }
-        }
-
-        sb
-            .Append(
-                """
-                            return new global::System.String(destination);
-                        }
-                    }
-                
-                
-                """);
+        UseToCharsBufferHelper(sb, _currentSpec.OriginalUnderlyingType);
     }
 
     private void AddHexValuesForKnonwFields(StringBuilder sb)
     {
-        string nesting1Indent = Get(Indentation.Nesting1);
-
-        sb
-            .AppendLine(
-                """
-                        return data switch
-                        {
-                """);
+        string nesting1Indent = Get(Indentation.MethodBody);
 
         var membersType = _currentSpec.Members[0].Value.GetType(); // an enum has only one backing type
         var toStringFormat = Helpers.GetToStringFormat(membersType);
@@ -229,5 +176,46 @@ internal sealed partial class EnumExtensionsEmitter
             sb
                 .Append(nesting1Indent).Append(member.FullName).Append(" => \"").Append(hex).AppendLine("\",");
         }
+    }
+
+    private static void UseToCharsBufferHelper(StringBuilder sb, string originalUnderlyingType)
+    {
+        int shiftValue = originalUnderlyingType switch
+        {
+            "ulong" or "long" => 56,
+            "uint" or "int" => 24,
+            "ushort" or "short" => 8,
+            _ => 0
+        };
+
+        if (shiftValue != 0)
+        {
+            int startIndex = 0;
+            for (; shiftValue >= 0; shiftValue -= 8)
+            {
+                sb.Append("             ToCharsBuffer((global::System.Byte)");
+                if (shiftValue >= 8)
+                {
+                    sb.Append("(value >> ").Append(shiftValue).Append(')');
+                }
+                else
+                {
+                    sb.Append("value");
+                }
+
+                sb.Append(", buffer, ").Append(startIndex).AppendLine(");");
+
+                startIndex += 2;
+            }
+        }
+
+        sb
+            .Append(
+                """
+                        })
+                    };
+                
+                
+                """);
     }
 }

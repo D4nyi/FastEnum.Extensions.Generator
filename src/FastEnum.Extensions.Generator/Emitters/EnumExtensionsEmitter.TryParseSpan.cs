@@ -60,7 +60,7 @@ internal sealed partial class EnumExtensionsEmitter
                             return TryParseAsNumber(value, out result);
                         }}
 
-                        
+
                 """, _currentSpec.FullName);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
