@@ -11,12 +11,8 @@
 
 	<ItemGroup>
 		<ProjectReference
-				Include="..\..\src\FastEnum.Extensions.Generator\FastEnum.Extensions.Generator.csproj"
-				OutputItemType="Analyzer"
-				ReferenceOutputAssembly="false" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="BenchmarkDotNet.Artifacts\results\" />
+			Include="..\..\src\FastEnum.Extensions.Generator\FastEnum.Extensions.Generator.csproj"
+			OutputItemType="Analyzer"
+			ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>
