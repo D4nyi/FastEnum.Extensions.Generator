@@ -35,22 +35,21 @@
 		<PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
 		<DevelopmentDependency>True</DevelopmentDependency>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<IncludeBuildOutput>False</IncludeBuildOutput>
+		<IncludeBuildOutput>False</IncludeBuildOutput> <!-- Do not include the generator as a lib dependency -->
 		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 
 		<WarningsAsErrors>CA2021</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\..\README.md" Pack="true" PackagePath="."/>
-		<None Update="enum.png" Pack="true" PackagePath="."/>
+		<!-- Package the generator in the analyzer directory of the nuget package -->
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="." />
+		<None Update="enum.png" Pack="true" PackagePath="." />
 	</ItemGroup>
 </Project>
