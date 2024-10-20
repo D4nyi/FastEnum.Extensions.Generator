@@ -1,5 +1,6 @@
 name: "Build & Test"
 description: "Builds and Tests the C# source generator"
+
 runs:
   using: "composite"
   steps:
