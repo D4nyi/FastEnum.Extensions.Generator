@@ -18,3 +18,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Build & Test
         uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@b745d6895bf472cc332b311934adf1698ab30eea
+        with:
+          configuration: 'Debug'
