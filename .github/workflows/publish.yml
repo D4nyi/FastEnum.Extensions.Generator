@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: build_n_test
-        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@c087f069613f5c9ecc6d7e6a8b3f04b094778791
+      - name: build_n_test
+        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@3287b0512d6302304c3b836683b723301be4ff77
 
       - name: Pack
         run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c Release --no-restore -o output
