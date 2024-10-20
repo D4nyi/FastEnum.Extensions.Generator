@@ -4,9 +4,10 @@
 		<IsPackable>False</IsPackable>
 		<IsTestProject>True</IsTestProject>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\FastEnum.Extensions.Generator\FastEnum.Extensions.Generator.csproj" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\FastEnum.Extensions.Generator\FastEnum.Extensions.Generator.csproj" />
 	</ItemGroup>
 
 </Project>
