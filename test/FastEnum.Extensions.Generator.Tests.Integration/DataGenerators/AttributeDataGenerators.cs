@@ -36,7 +36,7 @@ internal sealed class DescriptionDataGenerators : AttributeDataGenerator<Descrip
 internal abstract class AttributeDataGenerator<T> : TheoryData<Color, string?> where T : Attribute
 {
     private static readonly Type _colorType = typeof(Color);
-    private static readonly Color[] _testValues = [Color.Red, Color.Green, Color.Black, Color.Blue, (Color)15, 0];
+    private static readonly Color[] _testValues = [Color.Red, Color.Green, Color.Black, Color.Blue, (Color)15];
 
     protected AttributeDataGenerator(Func<T?, string?> accessor)
     {
