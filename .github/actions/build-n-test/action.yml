@@ -18,11 +18,11 @@ runs:
       run: dotnet restore
       shell: bash
     - name: Build
-      run: dotnet build --no-restore -c ${{ inputs.who-to-greet }}
+      run: dotnet build --no-restore -c ${{ inputs.configuration }}
       shell: bash
     - name: Integration Tests
-      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build -c ${{ inputs.who-to-greet }}
+      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build -c ${{ inputs.configuration }}
       shell: bash
     - name: Snapshot Tests
-      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build -c ${{ inputs.who-to-greet }}
+      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build -c ${{ inputs.configuration }}
       shell: bash
