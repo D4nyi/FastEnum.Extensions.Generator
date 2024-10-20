@@ -16,4 +16,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: build_n_test
-        uses: D4nyi/FastEnum.Extensions.Generator@c087f069613f5c9ecc6d7e6a8b3f04b094778791
+        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@c087f069613f5c9ecc6d7e6a8b3f04b094778791
