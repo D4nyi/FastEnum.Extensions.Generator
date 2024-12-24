@@ -19,6 +19,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build & Test
-        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@0c0d5c79df1ee80896439d87966c464d35ccc0ce
+        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@210f26f45838ce238ffad56e1f7d00c16ad84f53
         with:
           configuration: ${{ env.BUILD_CONFIGURATION }}
