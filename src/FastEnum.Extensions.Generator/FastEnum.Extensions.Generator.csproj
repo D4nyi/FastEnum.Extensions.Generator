@@ -1,58 +1,58 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<LangVersion>Preview</LangVersion>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>Preview</LangVersion>
 
-		<IsRoslynComponent>True</IsRoslynComponent>
+        <IsRoslynComponent>True</IsRoslynComponent>
 
-		<PackageId>$(AssemblyName)</PackageId>
-		<Authors>Dániel Szöllősi</Authors>
-		<RepositoryType>git</RepositoryType>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageTags>Enum, Extensions, Enum-Extensions, Fast, Efficient, Source Generator</PackageTags>
-		<RepositoryUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</PackageProjectUrl>
-		<Description>Source Generator generating extension methods for enums</Description>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageId>$(AssemblyName)</PackageId>
+        <Authors>Dániel Szöllősi</Authors>
+        <RepositoryType>git</RepositoryType>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>Enum, Extensions, Enum-Extensions, Fast, Efficient, Source Generator</PackageTags>
+        <RepositoryUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</PackageProjectUrl>
+        <Description>Source Generator generating extension methods for enums</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-		<PackageReleaseNotes>
-			- Fixed NuGet package generation.
-			- Fixed several behaviour differences between the generated code and .NET counter part.
-			- Optimized HEX string generation for non-byte/sbyte backed enums.
-			- Fixed bugs and performance issues.
-			- Removed unnecessary generated code.
-		</PackageReleaseNotes>
+        <PackageReleaseNotes>
+            - Fixed NuGet package generation.
+            - Fixed several behaviour differences between the generated code and .NET counter part.
+            - Optimized HEX string generation for non-byte/sbyte backed enums.
+            - Fixed bugs and performance issues.
+            - Removed unnecessary generated code.
+        </PackageReleaseNotes>
 
         <PackageTags>
             Extension, C#, CSharp, .NET, dotnet, Enum, Source-Generator
         </PackageTags>
 
-		<DebugType>portable</DebugType>
+        <DebugType>portable</DebugType>
 
-		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-		<IsPackable>True</IsPackable>
-		<ApplicationIcon>enum.ico</ApplicationIcon>
-		<PackageIcon>enum.png</PackageIcon>
-		<PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
-		<DevelopmentDependency>True</DevelopmentDependency>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<IncludeBuildOutput>False</IncludeBuildOutput> <!-- Do not include the generator as a lib dependency -->
-		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <IsPackable>True</IsPackable>
+        <ApplicationIcon>enum.ico</ApplicationIcon>
+        <PackageIcon>enum.png</PackageIcon>
+        <PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
+        <DevelopmentDependency>True</DevelopmentDependency>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <IncludeBuildOutput>False</IncludeBuildOutput> <!-- Do not include the generator as a lib dependency -->
+        <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 
-		<WarningsAsErrors>CA2021</WarningsAsErrors>
-	</PropertyGroup>
+        <WarningsAsErrors>CA2021</WarningsAsErrors>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<!-- Package the generator in the analyzer directory of the nuget package -->
-		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-		<None Include="..\..\README.md" Pack="true" PackagePath="." />
-		<None Update="enum.png" Pack="true" PackagePath="." />
-	</ItemGroup>
+    <ItemGroup>
+        <!-- Package the generator in the analyzer directory of the nuget package -->
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\README.md" Pack="true" PackagePath="."/>
+        <None Update="enum.png" Pack="true" PackagePath="."/>
+    </ItemGroup>
 </Project>

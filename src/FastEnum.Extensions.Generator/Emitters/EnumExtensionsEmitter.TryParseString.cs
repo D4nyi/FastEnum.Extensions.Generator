@@ -29,21 +29,21 @@ internal sealed partial class EnumExtensionsEmitter
                             result = default;
                             return false;
                         }}
-
+                
                         global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
                         if (span.IsEmpty)
                         {{
                             result = default;
                             return false;
                         }}
-
+                
                         if (CheckIfNumber(span))
                         {{
                             global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
                             return TryParseAsNumber(span, out result);
                         }}
 
-                
+
                 """, _currentSpec.FullName);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
@@ -59,7 +59,7 @@ internal sealed partial class EnumExtensionsEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
-
+                
                         return TryParseByName(value, false, out result);
                     }}
                     
@@ -91,14 +91,14 @@ internal sealed partial class EnumExtensionsEmitter
                             return TryParseAsNumber(span, out result);
                         }}
 
-                
+
                 """, _currentSpec.FullName);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
         {
             sb
                 .Append(methodBodyIndent).Append("if (value.Equals(nameof(").Append(member.FullName)
-                    .Append("), global::System.StringComparison.OrdinalIgnoreCase").AppendLine("))")
+                .Append("), global::System.StringComparison.OrdinalIgnoreCase").AppendLine("))")
                 .Append(methodBodyIndent).AppendLine("{")
                 .Append(nesting1Indent).Append("result = ").Append(member.FullName).AppendLine(";")
                 .Append(nesting1Indent).AppendLine("return true;")
@@ -106,12 +106,12 @@ internal sealed partial class EnumExtensionsEmitter
         }
 
         sb.Append(
-                """
-                
-                        return TryParseByName(value, true, out result);
-                    }
-                
-                
-                """);
+            """
+            
+                    return TryParseByName(value, true, out result);
+                }
+
+
+            """);
     }
 }

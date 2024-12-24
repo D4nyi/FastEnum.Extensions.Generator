@@ -1,0 +1,44 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+        [FastEnum.Extensions]
+        public enum NestedInClass
+                    ^^^^^^^^^^^^^
+        {
+*/
+ : (5,20)-(5,33),
+      Message: Extension generation for enum's nested in generic types are restricted,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: ETS1003,
+        Title: Extension generation restriction,
+        MessageFormat: Extension generation for enum's nested in generic types are restricted,
+        Category: FastEnumToString.EnumToStringGenerator,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+    [FastEnum.Extensions]
+    private enum GenerationOptions
+                 ^^^^^^^^^^^^^^^^^
+    {
+*/
+ : (3,17)-(3,34),
+      Message: For private enums we are currently unable to create extensions,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: ETS1001,
+        Title: Enum cannot be private,
+        MessageFormat: For private enums we are currently unable to create extensions,
+        Category: FastEnumToString.EnumToStringGenerator,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

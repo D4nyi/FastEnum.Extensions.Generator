@@ -217,7 +217,7 @@ public sealed class EnumExtensionsTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void TryParseString_InvlaidInput(string? name)
+    public void TryParseString_InvalidInput(string? name)
     {
         // Act
         bool success1 = ColorExtensions.TryParse(name, out Color color1);
@@ -268,7 +268,7 @@ public sealed class EnumExtensionsTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void TryParseStringIgnoreCase_InvlaidInput(string? name)
+    public void TryParseStringIgnoreCase_InvalidInput(string? name)
     {
         // Act
         bool success1 = ColorExtensions.TryParseIgnoreCase(name, out Color color1);
@@ -304,7 +304,7 @@ public sealed class EnumExtensionsTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void TryParseSpan_InvlaidInput(string? name)
+    public void TryParseSpan_InvalidInput(string? name)
     {
         // Act
         ReadOnlySpan<char> spanName = name.AsSpan();
@@ -342,7 +342,7 @@ public sealed class EnumExtensionsTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void TryParseSpanIgnoreCase_InvlaidInput(string? name)
+    public void TryParseSpanIgnoreCase_InvalidInput(string? name)
     {
         // Act
         ReadOnlySpan<char> spanName = name.AsSpan();
@@ -411,7 +411,7 @@ public sealed class EnumExtensionsTests
     {
         // Arrange
         Color[] members = ColorExtensions.GetValues();
-        
+
         // Act && Assert
         foreach (Color member in members)
         {

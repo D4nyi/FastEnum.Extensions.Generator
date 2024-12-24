@@ -25,6 +25,7 @@ runs:
 
         version=$(sed -rn "s/^.*Version = \"(.*)\";/\1/p" ./src/FastEnum.Extensions.Generator/Constants.cs)
         sed -i -e "s/<Version>/${version}/" -e "s/<BuildTime>/${buildTime}/" -e "s/<ReleaseYear>/${releaseYear}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
+        sed -i -e "s/1.0.0/${version}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
 
         echo "version=${version}" >> $GITHUB_ENV
       shell: bash

@@ -18,7 +18,7 @@ internal static class AttributeExtensions
         {
             if (SymbolEqualityComparer.Default.Equals(a.AttributeClass, displayAttributeSymbol) && a.NamedArguments.Length > 1)
             {
-                foreach (var argument in a.NamedArguments)
+                foreach (KeyValuePair<string, TypedConstant> argument in a.NamedArguments)
                 {
                     if (argument.Key == "Name")
                     {

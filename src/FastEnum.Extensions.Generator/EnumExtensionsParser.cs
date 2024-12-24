@@ -44,7 +44,7 @@ internal sealed class EnumExtensionsParser
 
     private readonly Compilation _compilation;
     private readonly EnumSourceGenerationContext _sourceGenerationContext;
-    
+
     public EnumExtensionsParser(Compilation compilation, in EnumSourceGenerationContext sourceGenerationContext)
     {
         _compilation = compilation;
@@ -90,7 +90,7 @@ internal sealed class EnumExtensionsParser
                     // the type is not indicated with [Extensions]
                     continue;
                 }
-                
+
                 INamedTypeSymbol? contextTypeSymbol = compilationSemanticModel.GetDeclaredSymbol(enumDeclarationSyntax, cancellationToken);
                 Debug.Assert(contextTypeSymbol is not null);
 
@@ -152,7 +152,7 @@ internal sealed class EnumExtensionsParser
 
         return enumToGenerateList;
     }
-    
+
     private static bool HasExtensionsAttributeDefined(
         SyntaxList<AttributeListSyntax> attributeList,
         SemanticModel compilationSemanticModel,
@@ -164,10 +164,10 @@ internal sealed class EnumExtensionsParser
             return false;
         }
 
-        var attributes = attributeList.SelectMany(x => x.Attributes);
-        foreach (var appliedAttribute in attributes)
+        IEnumerable<AttributeSyntax> attributes = attributeList.SelectMany(x => x.Attributes);
+        foreach (AttributeSyntax? appliedAttribute in attributes)
         {
-            var symbolInfo = compilationSemanticModel.GetSymbolInfo(appliedAttribute, cancellationToken);
+            SymbolInfo symbolInfo = compilationSemanticModel.GetSymbolInfo(appliedAttribute, cancellationToken);
             if (symbolInfo.Symbol is not IMethodSymbol attributeSymbol)
             {
                 continue;

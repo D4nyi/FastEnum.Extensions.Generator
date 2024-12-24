@@ -9,71 +9,70 @@ namespace FastEnum.Extensions.Generator.Tests.Snapshot;
 public sealed class EnumToStringGeneratorTests
 {
     private const string Color =
-"""
-namespace SnapshotTesting
-{
-    [FastEnum.Extensions]
-    public enum Color
-    {
-        [System.ComponentModel.Description("Crimson red")]
-        Red = 0,
-        [System.Runtime.Serialization.EnumMember(Value = "Pine")]
-        Green = 1,
-        [System.ComponentModel.DataAnnotations.Display(Name = "Sky", Description = "Sky")]
-        Blue = 2,
-    }
-}
-""";
+        """
+        namespace SnapshotTesting
+        {
+            [FastEnum.Extensions]
+            public enum Color
+            {
+                [System.ComponentModel.Description("Crimson red")]
+                Red = 0,
+                [System.Runtime.Serialization.EnumMember(Value = "Pine")]
+                Green = 1,
+                [System.ComponentModel.DataAnnotations.Display(Name = "Sky", Description = "Sky")]
+                Blue = 2,
+            }
+        }
+        """;
 
     private const string GenerationOptions =
-"""
-namespace SnapshotTesting
-{
-    [FastEnum.Extensions, System.Flags]
-    public enum GenerationOptions : byte
-    {
-        None = 0,
-        [System.ComponentModel.Description("generate ToString")]
-        ToString = 1,
-        [System.Runtime.Serialization.EnumMember(Value = "generate Parse")]
-        Parse = 2,
-        [System.ComponentModel.DataAnnotations.Display(Name = "generate HasFlag", Description = "generate HasFlag")]
-        HasFlag = 4
-    }
-}
-""";
+        """
+        namespace SnapshotTesting
+        {
+            [FastEnum.Extensions, System.Flags]
+            public enum GenerationOptions : byte
+            {
+                None = 0,
+                [System.ComponentModel.Description("generate ToString")]
+                ToString = 1,
+                [System.Runtime.Serialization.EnumMember(Value = "generate Parse")]
+                Parse = 2,
+                [System.ComponentModel.DataAnnotations.Display(Name = "generate HasFlag", Description = "generate HasFlag")]
+                HasFlag = 4
+            }
+        }
+        """;
 
     private const string NestedInGenericClass =
-"""
-namespace SnapshotTesting
-{
-    public static class NestingClass<T>
-    {
-        [FastEnum.Extensions]
-        public enum NestedInClass
+        """
+        namespace SnapshotTesting
         {
-            None
-        }
-    }
+            public static class NestingClass<T>
+            {
+                [FastEnum.Extensions]
+                public enum NestedInClass
+                {
+                    None
+                }
+            }
 
-}
-""";
+        }
+        """;
 
     private const string PrivateEnum =
-"""
-namespace SnapshotTesting
-{
-    [FastEnum.Extensions]
-    private enum GenerationOptions
-    {
-        None = 0
-    }
-}
-""";
+        """
+        namespace SnapshotTesting
+        {
+            [FastEnum.Extensions]
+            private enum GenerationOptions
+            {
+                None = 0
+            }
+        }
+        """;
 
     private static readonly string _snapshotDirectory = CreateDirectoryPath();
     private static readonly GeneratorDriver _generatorDriver = CreateGeneratorDriver();
-
 
     [Fact]
     public Task GeneratesEnumExtensionsCorrectly()
@@ -86,8 +85,8 @@ namespace SnapshotTesting
     public Task RunResult()
     {
         ImmutableArray<GeneratorRunResult> results = _generatorDriver.GetRunResult().Results;
-        
-        Assert.Single(results);
+
+        _ = Assert.Single(results);
 
         return Verify(results[0]).UseDirectory(_snapshotDirectory);
     }
@@ -121,7 +120,8 @@ namespace SnapshotTesting
         // Create a Roslyn compilation for the syntax tree.
         CSharpCompilation compilation = CSharpCompilation.Create(
             assemblyName: "GeneratorTests",
-            syntaxTrees: [
+            syntaxTrees:
+            [
                 colorSyntaxTree,
                 generationOptionsSyntaxTree,
                 nestedInGenericClassSyntaxTree,
@@ -134,6 +134,6 @@ namespace SnapshotTesting
 
         // The GeneratorDriver is used to run our generator against a compilation
         return CSharpGeneratorDriver.Create(generator)
-            .RunGenerators(compilation);  // Run the source generator!
+            .RunGenerators(compilation); // Run the source generator!
     }
 }

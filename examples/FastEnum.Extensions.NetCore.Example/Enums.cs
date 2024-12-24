@@ -21,8 +21,10 @@ public enum Color
 {
     [Description("Crimson Red")]
     Red = 0x990000,
+
     [Display(Name = "Pine", Description = "Pine")]
     Green = 0x166138,
+
     [EnumMember(Value = "Sky")]
     Blue = 0x87CEEB
 }
