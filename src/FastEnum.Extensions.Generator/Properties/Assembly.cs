@@ -1,8 +1,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-using FastEnum.Extensions.Generator;
-
 [assembly: CLSCompliant(false)]
 
 [assembly: AssemblyVersion("1.0.0")]
@@ -11,6 +9,6 @@ using FastEnum.Extensions.Generator;
 [assembly: AssemblyProduct("FastEnum.Extensions.Generator")]
 [assembly: AssemblyTitle("FastEnum.Extensions.Generator")]
 [assembly: AssemblyCopyright("Copyright © <ReleaseYear>. Dániel Szöllősi")]
-[assembly: AssemblyDescription("Generates enum extensions for core functionalities.")]
+[assembly: AssemblyDescription("Source generates extension methods for enums to work with them easier and faster.")]
 
 [assembly: InternalsVisibleTo("FastEnum.Extensions.Generator", AllInternalsVisible = true)]
