@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/examples/">
+    <Project Path="examples\FastEnum.Extensions.NetCore.Example\FastEnum.Extensions.NetCore.Example.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="coverlet.runsettings.xml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="test.ps1" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src\FastEnum.Extensions.Generator\FastEnum.Extensions.Generator.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test\FastEnum.Extensions.Generator.Data\FastEnum.Extensions.Generator.Data.csproj" />
+    <Project Path="test\FastEnum.Extensions.Generator.Tests.Integration\FastEnum.Extensions.Generator.Tests.Integration.csproj" />
+    <Project Path="test\FastEnum.Extensions.Generator.Tests.Snapshot\FastEnum.Extensions.Generator.Tests.Snapshot.csproj" />
+  </Folder>
+  <Properties Name="Visual Studio">
+    <Property Name="OpenWith" Value="17" />
+  </Properties>
+</Solution>
