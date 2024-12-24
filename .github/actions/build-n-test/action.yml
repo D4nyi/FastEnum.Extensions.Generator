@@ -13,16 +13,23 @@ runs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: |
+          8.0.x
+          9.0.x
+        dotnet-quality: ga
+
     - name: Restore dependencies
       run: dotnet restore
       shell: bash
+
     - name: Build
-      run: dotnet build --no-restore -c ${{ inputs.configuration }}
+      run: dotnet build --no-restore --nologo -c ${{ inputs.configuration }}
       shell: bash
+
     - name: Integration Tests
-      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build -c ${{ inputs.configuration }}
+      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build --no-restore --nologo -c ${{ inputs.configuration }}
       shell: bash
+
     - name: Snapshot Tests
-      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build -c ${{ inputs.configuration }}
+      run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ inputs.configuration }}
       shell: bash
