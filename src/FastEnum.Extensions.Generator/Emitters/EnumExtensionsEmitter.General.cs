@@ -26,7 +26,7 @@ internal sealed partial class EnumExtensionsEmitter
                 [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "{1}")]
                 {2} static class {3}Extensions
                 {{
-                """, _currentSpec.FullName, Assembly.Version, _currentSpec.Modifier, _currentSpec.Name);
+                """, _currentSpec.FullName, Constants.Version, _currentSpec.Modifier, _currentSpec.Name);
     }
 
     private void AddFieldsAndGetMethods(StringBuilder sb)

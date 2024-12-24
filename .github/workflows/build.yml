@@ -3,9 +3,10 @@
 
 name: Build & Test
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 env:
+  BUILD_CONFIGURATION: Debug
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
@@ -16,7 +17,8 @@ jobs:
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
+
       - name: Build & Test
-        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@23e1010845a4cc9f66c9e8fdb31f2a3cbddf91de
+        uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@061189f2b24876fc9b8d3dc47de71fc34eb34e25
         with:
-          configuration: 'Debug'
+          configuration: ${{ env.BUILD_CONFIGURATION }}
