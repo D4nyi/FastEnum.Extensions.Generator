@@ -32,8 +32,8 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
                     public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out {0} result) =>
                         TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
-                
-                
+
+
                 """, _currentSpec.FullName);
     }
 
@@ -76,7 +76,7 @@ internal sealed partial class EnumExtensionsEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
-
+                
                         global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
                         return TryParseByName(value, comparison == global::System.StringComparison.OrdinalIgnoreCase, out result);
                     }}
@@ -85,7 +85,7 @@ internal sealed partial class EnumExtensionsEmitter
                     private static global::System.Boolean CheckIfNumber(global::System.ReadOnlySpan<global::System.Char> value)
                     {{
                         global::System.Char c = value[0];
-
+                
                         return global::System.Char.IsAsciiDigit(c) || c == '-' || c == '+';
                     }}
                     
@@ -175,7 +175,7 @@ internal sealed partial class EnumExtensionsEmitter
                             result = global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref localResult);
                             return true;
                         }}
-
+                
                         result = default;
                         return false;
                     }}

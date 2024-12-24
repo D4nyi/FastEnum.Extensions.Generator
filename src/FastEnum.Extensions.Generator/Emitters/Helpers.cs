@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -12,8 +10,8 @@ internal static class Helpers
     private static readonly Type[] ArgTypes = [typeof(string)];
     private const BindingFlags Binding = BindingFlags.Public | BindingFlags.Instance;
 
-    private static readonly Dictionary<Type, MethodInfo> ToStringFormats = new();
-    
+    private static readonly Dictionary<Type, MethodInfo> ToStringFormats = [];
+
     internal static StringBuilder AddCorrectBitwiseOperation(this StringBuilder sb, string underlyingTypeName)
     {
         if (underlyingTypeName is "int" or "uint" or "long" or "ulong")
@@ -22,7 +20,7 @@ internal static class Helpers
         }
 
         // "byte" or "sbyte" or "short" or "ushort" or others
-        return sb.Append("resultValue = (").Append(underlyingTypeName).AppendLine(")(resultValue & ~currentValue);");
+        return sb.Append("                resultValue = (").Append(underlyingTypeName).AppendLine(")(resultValue & ~currentValue);");
     }
 
     internal static StringBuilder AddCast(this StringBuilder sb, string enumName, string underlyingType)
@@ -38,14 +36,17 @@ internal static class Helpers
         {
             return "X2";
         }
+
         if (type == typeof(short) || type == typeof(ushort))
         {
             return "X4";
         }
+
         if (type == typeof(int) || type == typeof(uint))
         {
             return "X8";
         }
+
         return "X16";
     }
 
@@ -53,19 +54,18 @@ internal static class Helpers
     {
         if (!ToStringFormats.TryGetValue(membersType, out MethodInfo? toString) || toString is null)
         {
-            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, ArgTypes, Modifiers)
-                    ?? throw new InvalidOperationException("'ToString' method is not found!");
-            
+            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, ArgTypes,
+                           Modifiers)
+                       ?? throw new InvalidOperationException("'ToString' method is not found!");
+
             ToStringFormats.Add(membersType, toString);
         }
-        
+
         return toString;
     }
 
-    internal static object GetCorrectZero(this Type numberType)
-    {
-        return numberType == typeof(int)
+    internal static object GetCorrectZero(this Type numberType) =>
+        numberType == typeof(int)
             ? 0
             : Convert.ChangeType(0, numberType, CultureInfo.InvariantCulture);
-    }
 }

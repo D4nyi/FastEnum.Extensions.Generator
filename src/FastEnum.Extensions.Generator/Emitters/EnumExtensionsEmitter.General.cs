@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+
 using FastEnum.Extensions.Generator.Emitters;
 using FastEnum.Extensions.Generator.Specs;
 
@@ -36,10 +37,10 @@ internal sealed partial class EnumExtensionsEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                
+
                     private static readonly {0}[] _underlyingValues =
                     {{
-                
+
                 """, _currentSpec.UnderlyingType);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
@@ -51,10 +52,10 @@ internal sealed partial class EnumExtensionsEmitter
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
                     }};
-                
+
                     private static readonly {0}[] _values =
                     {{
-                
+
                 """, _currentSpec.FullName);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
@@ -66,10 +67,10 @@ internal sealed partial class EnumExtensionsEmitter
             .Append(
                 """
                     };
-                
+
                     private static readonly global::System.String[] _names =
                     {
-                
+
                 """);
 
         foreach (EnumMemberSpec member in _currentSpec.Members)
@@ -81,37 +82,36 @@ internal sealed partial class EnumExtensionsEmitter
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
                     }};
-                    
+
                     /// <summary>
                     /// The number of members in the enum.
                     /// </summary>
                     public const global::System.Int32 MembersCount = {0};
-                    
+
                     /// <summary>
                     /// Retrieves an array of the values of the members defined in <see cref="{1}" />.
                     /// </summary>
                     /// <returns>An array of the values defined in <see cref="{1}" />.</returns>
                     public static {1} [] GetValues() => _values;
-                    
+
                     /// <summary>
                     /// Retrieves an array of the underlying vales of the members defined in <see cref="{1}" />
                     /// </summary>
                     /// <returns>An array of the underlying values defined in <see cref="{1}" />.</returns>
                     public static {2} [] GetUnderlyingValues() => _underlyingValues;
-                    
+
                     /// <summary>
                     /// Retrieves an array of the names of the members defined in <see cref="{1}" />
                     /// </summary>
                     /// <returns>An array of the names of the members defined in <see cref="{1}" />.</returns>
                     public static global::System.String[] GetNames() => _names;
-                
-                
+
+
                 """, _currentSpec.Members.Length, _currentSpec.FullName, _currentSpec.UnderlyingType);
     }
 
     private void AddHasFlag(StringBuilder sb)
     {
-        // TODO: Review parameter names!!!
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -120,8 +120,8 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <param name="flags">The flags that will be looked up in the instance.</param>
                     /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
                     public static global::System.Boolean HasFlag(this {0} instance, {1} flags) => (instance & flags) == flags;
-                
-                
+
+
                 """, _currentSpec.FullName, _currentSpec.FullName);
     }
 
@@ -141,7 +141,7 @@ internal sealed partial class EnumExtensionsEmitter
 
         int length = _currentSpec.Members.Length;
         int last = length - 1;
-        for (int i = 0; i < _currentSpec.Members.Length; i++)
+        for (int i = 0; i < length; i++)
         {
             if (i % 3 == 0)
             {
@@ -161,8 +161,8 @@ internal sealed partial class EnumExtensionsEmitter
              => true,
                     _ => false
                 };
-            
-            
+
+
             """);
     }
 
@@ -174,7 +174,7 @@ internal sealed partial class EnumExtensionsEmitter
                     private static global::System.String? ProcessMultipleFlagsNames({0} value)
                     {{
                         {1} resultValue = global::System.Runtime.CompilerServices.Unsafe.As<{0}, {1}>(ref value);
-                        
+
                         Span<global::System.Int32> foundItems = stackalloc global::System.Int32[{2}];
                         if (!TryFindFlagsNames(resultValue, foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount))
                         {{
@@ -182,27 +182,27 @@ internal sealed partial class EnumExtensionsEmitter
                         }}
 
                         foundItems = foundItems[..foundItemsCount];
-                    
+
                         global::System.Int32 length = checked(resultLength + 2 * (foundItemsCount - 1)); // ", ".Length == 2
-                    
+
                         global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
-                    
+
                         WriteMultipleFoundFlagsNames(_names, foundItems, destination);
-                
+
                         return new global::System.String(destination);
                     }}
-                    
+
                     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     private static global::System.Boolean TryFindFlagsNames({1} resultValue, global::System.Span<global::System.Int32> foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount)
                     {{
                         // Now look for multiple matches, storing the indices of the values into our span.
                         resultLength = 0;
                         foundItemsCount = 0;
-                
+
                         global::System.Int32 index = MembersCount - 1;
                         {1}[] values = _underlyingValues;
                         global::System.String[] names = _names;
-                
+
                         while (true)
                         {{
                             {1} currentValue = values[index];
@@ -210,13 +210,13 @@ internal sealed partial class EnumExtensionsEmitter
                             {{
                                 break;
                             }}
-                
+
                             if ((resultValue & currentValue) == currentValue)
                             {{
-                                
+
                 """, _currentSpec.FullName, _currentSpec.UnderlyingType, _currentSpec.Members.Length > 64 ? 64 : _currentSpec.Members.Length)
-                .AddCorrectBitwiseOperation(_currentSpec.UnderlyingType)
-                .Append(
+            .AddCorrectBitwiseOperation(_currentSpec.UnderlyingType)
+            .Append(
                 """
                                 foundItems[foundItemsCount] = index;
                                 foundItemsCount++;
@@ -226,17 +226,17 @@ internal sealed partial class EnumExtensionsEmitter
                                     break;
                                 }
                             }
-                
+
                             index--;
                         }
-                
+
                         // If we exhausted looking through all the values, and we still have
                         // a non-zero result, we couldn't match the result to only named values.
                         // In that case, we return null and let the call site just generate
                         // a string for the integral value if it desires.
                         return resultValue == 0;
                     }
-                
+
                     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     private static void WriteMultipleFoundFlagsNames(global::System.String[] names, global::System.ReadOnlySpan<global::System.Int32> foundItems, global::System.Span<global::System.Char> destination)
                     {
@@ -258,7 +258,7 @@ internal sealed partial class EnumExtensionsEmitter
                 """);
 
         if (!_currentSpec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase))
-        { 
+        {
             sb.Append(
                 """
                     [global::System.Security.SecuritySafeCriticalAttribute, global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -266,7 +266,7 @@ internal sealed partial class EnumExtensionsEmitter
                     {
                         global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
                         global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-                
+
                         buffer[startingIndex + 1] = (global::System.Char)(packedResult & 0xFFU);
                         buffer[startingIndex] = (global::System.Char)(packedResult >> 8);
                     }

@@ -3,19 +3,25 @@ root = true
 
 [*]
 # New line preferences
-end_of_line = crlf
-insert_final_newline = false
+
+indent_style = space
 charset = utf-8
-tab_width = 4
-indent_size = 4
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*{.yml,.yaml}]
+indent_size = 2
+tab_width = 2
 
 # C# files
 [*.cs]
+tab_width = 4
+indent_size = 4
 
 #### Core EditorConfig Options ####
 
 # Indentation and spacing
-indent_style = space
 
 #### .NET Coding Conventions ####
 
@@ -81,14 +87,14 @@ csharp_style_var_for_built_in_types = false
 csharp_style_var_when_type_is_apparent = false
 
 # Expression-bodied members
-csharp_style_expression_bodied_accessors = true:silent
+csharp_style_expression_bodied_accessors = when_on_single_line:silent
 csharp_style_expression_bodied_constructors = false:silent
-csharp_style_expression_bodied_indexers = true:silent
-csharp_style_expression_bodied_lambdas = true:silent
-csharp_style_expression_bodied_local_functions = true:silent
-csharp_style_expression_bodied_methods = true:silent
-csharp_style_expression_bodied_operators = true:silent
-csharp_style_expression_bodied_properties = true:silent
+csharp_style_expression_bodied_indexers = when_on_single_line:silent
+csharp_style_expression_bodied_lambdas = when_on_single_line:silent
+csharp_style_expression_bodied_local_functions = when_on_single_line:silent
+#csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_operators = when_on_single_line:silent
+csharp_style_expression_bodied_properties = when_on_single_line:silent
 
 # Pattern matching preferences
 csharp_style_pattern_matching_over_as_with_null_check = true

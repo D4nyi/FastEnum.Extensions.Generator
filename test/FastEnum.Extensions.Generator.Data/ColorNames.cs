@@ -12,6 +12,6 @@ public static class ColorNames
         { Color.Red,   Red },
         { Color.Green, Green },
         { Color.Black, Black },
-        { Color.Blue,  Blue },
+        { Color.Blue,  Blue }
     };
 }

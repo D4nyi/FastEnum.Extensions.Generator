@@ -24,7 +24,7 @@ internal readonly struct EnumGenerationSpec
         string modifier,
         ImmutableArray<EnumMemberSpec> members,
         string @namespace,
-        string underlyingTypeName) 
+        string underlyingTypeName)
     {
         FullName = fullName;
         Modifier = modifier;

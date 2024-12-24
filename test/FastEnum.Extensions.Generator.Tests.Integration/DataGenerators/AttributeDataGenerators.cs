@@ -1,46 +1,22 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 
 namespace FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
-internal sealed class EnumMemberValueDataGenerator : AttributeDataGenerator<EnumMemberAttribute>
-{
-    public EnumMemberValueDataGenerator() : base(x => x?.Value)
-    {
-    }
-}
+internal sealed class EnumMemberValueDataGenerator() : AttributeDataGenerator<EnumMemberAttribute>(x => x?.Value);
 
-internal sealed class DisplayNameDataGenerator : AttributeDataGenerator<DisplayAttribute>
-{
-    public DisplayNameDataGenerator() : base(x => x?.Name)
-    {
-    }
-}
+internal sealed class DisplayNameDataGenerator() : AttributeDataGenerator<DisplayAttribute>(x => x?.Name);
 
-internal sealed class DisplayDescriptionDataGenerator : AttributeDataGenerator<DisplayAttribute>
-{
-    public DisplayDescriptionDataGenerator() : base(x => x?.Description)
-    {
-    }
-}
+internal sealed class DisplayDescriptionDataGenerator() : AttributeDataGenerator<DisplayAttribute>(x => x?.Description);
 
-internal sealed class DescriptionDataGenerators : AttributeDataGenerator<DescriptionAttribute>
-{
-    public DescriptionDataGenerators() : base(x => x?.Description)
-    {
-    }
-}
+internal sealed class DescriptionDataGenerators() : AttributeDataGenerator<DescriptionAttribute>(x => x?.Description);
 
 internal abstract class AttributeDataGenerator<T> : TheoryData<Color, string?> where T : Attribute
 {
-    private static readonly Type _colorType = typeof(Color);
-    private static readonly Color[] _testValues = [Color.Red, Color.Green, Color.Black, Color.Blue, (Color)15];
-
     protected AttributeDataGenerator(Func<T?, string?> accessor)
     {
-        foreach (Color color in _testValues)
+        foreach (Color color in Constants.TestValues)
         {
             T? attribute = GetAttribute(color);
 
@@ -48,12 +24,15 @@ internal abstract class AttributeDataGenerator<T> : TheoryData<Color, string?> w
         }
     }
 
-    private static T? GetAttribute(Color color)
-    {
-        T[]? attributes = _colorType
-            .GetField(color.ToString())
-            ?.GetCustomAttributes(typeof(T), false) as T[];
+    private static T? GetAttribute(Color color) => Constants.ColorType
+        .GetField(color.ToString())
+        ?.GetCustomAttributes(typeof(T), false) is T[] { Length: > 0 } attributes
+        ? attributes[0]
+        : null;
+}
 
-        return attributes is { Length: > 0} ? attributes[0] : null;
-    }
+static file class Constants
+{
+    public static readonly Type ColorType = typeof(Color);
+    public static readonly Color[] TestValues = [Color.Red, Color.Green, Color.Black, Color.Blue, (Color)15];
 }

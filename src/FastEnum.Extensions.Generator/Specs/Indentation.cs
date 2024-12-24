@@ -7,5 +7,5 @@ internal enum Indentation
     Nesting1 = 3,
     Nesting2 = 4,
     Nesting3 = 5,
-    Nesting4 = 6,
+    Nesting4 = 6
 }

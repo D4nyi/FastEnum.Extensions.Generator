@@ -1,6 +1,6 @@
 namespace FastEnum.Extensions.Generator.Specs;
 
-internal sealed class AttributeValues
+internal struct AttributeValues
 {
     public string? DisplayName { get; set; }
     public string? DisplayDescription { get; set; }
