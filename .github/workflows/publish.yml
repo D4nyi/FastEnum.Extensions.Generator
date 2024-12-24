@@ -32,16 +32,6 @@ jobs:
       - name: Checkout Git
         uses: actions/checkout@v4
 
-      - name: Update Version
-        run: |
-          releaseYear=$(date -u +"%Y")
-          buildTime=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-          version=$(sed -rn "s/^.*Version = \"(.*)\";/\1/p" ./src/FastEnum.Extensions.Generator/Constants.cs)
-          sed -i -e "s/<Version>/${version}/" -e "s/<BuildTime>/${buildTime}/" -e "s/<ReleaseYear>/${releaseYear}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
-
-          echo "version=${version}" >> $GITHUB_ENV
-
       - name: Build & Test
         uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@061189f2b24876fc9b8d3dc47de71fc34eb34e25
         with:

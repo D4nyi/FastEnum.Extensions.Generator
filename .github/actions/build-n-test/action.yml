@@ -18,6 +18,17 @@ runs:
           9.0.x
         dotnet-quality: ga
 
+    - name: Set Version
+      run: |
+        releaseYear=$(date -u +"%Y")
+        buildTime=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+        version=$(sed -rn "s/^.*Version = \"(.*)\";/\1/p" ./src/FastEnum.Extensions.Generator/Constants.cs)
+        sed -i -e "s/<Version>/${version}/" -e "s/<BuildTime>/${buildTime}/" -e "s/<ReleaseYear>/${releaseYear}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
+
+        echo "version=${version}" >> $GITHUB_ENV
+      shell: bash
+
     - name: Restore dependencies
       run: dotnet restore
       shell: bash
