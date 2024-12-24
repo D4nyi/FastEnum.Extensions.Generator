@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
@@ -17,14 +18,13 @@ internal sealed partial class EnumExtensionsEmitter
     private void AddGetEnumMemberValue(StringBuilder sb)
     {
         sb
-            .Append(
+            .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                    /// <summary>
-                    /// Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.
-                    /// </summary>
+                    /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
+                    /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
-                    public static string? GetEnumMemberValue(this 
-                """);
+                    public static string? GetEnumMemberValue(this
+                """, _currentSpec.FullName);
 
         AddAttributeMethodBody(sb, static x => x.EnumMemberValue);
     }
@@ -32,14 +32,13 @@ internal sealed partial class EnumExtensionsEmitter
     private void AddGetDisplayName(StringBuilder sb)
     {
         sb
-            .Append(
+            .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                    /// <summary>
-                    /// Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-                    /// </summary>
+                    /// <summary>Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
+                    /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> if exists; otherwise null.</returns>
-                    public static string? GetDisplayName(this 
-                """);
+                    public static string? GetDisplayName(this
+                """, _currentSpec.FullName);
 
         AddAttributeMethodBody(sb, static x => x.DisplayName);
     }
@@ -47,14 +46,13 @@ internal sealed partial class EnumExtensionsEmitter
     private void AddGetDisplayDescription(StringBuilder sb)
     {
         sb
-            .Append(
+            .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                    /// <summary>
-                    /// Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-                    /// </summary>
+                    /// <summary>Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
+                    /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
-                    public static string? GetDisplayDescription(this 
-                """);
+                    public static string? GetDisplayDescription(this
+                """, _currentSpec.FullName);
 
         AddAttributeMethodBody(sb, static x => x.DisplayDescription);
     }
@@ -62,21 +60,20 @@ internal sealed partial class EnumExtensionsEmitter
     private void AddGetDescription(StringBuilder sb)
     {
         sb
-            .Append(
+            .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                    /// <summary>
-                    /// Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.
-                    /// </summary>
+                    /// <summary>Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.</summary>
+                    /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
-                    public static string? GetDescription(this 
-                """);
+                    public static string? GetDescription(this
+                """, _currentSpec.FullName);
 
         AddAttributeMethodBody(sb, static x => x.Description);
     }
 
     private void AddAttributeMethodBody(StringBuilder sb, Func<AttributeValues, string?> accessor)
     {
-        sb.Append(_currentSpec.FullName).Append(" value)");
+        sb.Append(' ').Append(_currentSpec.FullName).Append(" value)");
 
         List<EnumMemberSpec> notNulls = _currentSpec.Members.Where(x => accessor(x.Data) is not null).ToList();
         if (notNulls.Count == 0)

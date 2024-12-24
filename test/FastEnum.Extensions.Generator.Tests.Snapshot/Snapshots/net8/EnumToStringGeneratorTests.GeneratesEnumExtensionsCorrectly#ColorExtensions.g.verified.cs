@@ -57,7 +57,7 @@ public static class ColorExtensions
     public static global::System.String[] GetNames() => _names;
 
     /// <summary>Determines whether one or more bit fields are set in the current instance.</summary>
-    /// <param name="instance">The instance in which the the flags are searched.</param>
+    /// <param name="instance">The instance in which the flags are searched.</param>
     /// <param name="flags">The flags that will be looked up in the instance.</param>
     /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
     public static global::System.Boolean HasFlag(this SnapshotTesting.Color instance, SnapshotTesting.Color flags) => (instance & flags) == flags;
@@ -72,6 +72,7 @@ public static class ColorExtensions
     };
 
     /// <summary>Converts the value of this instance to its equivalent string representation.</summary>
+    /// <param name="value">The <see cref="SnapshotTesting.Color"/> value to convert to a string.</param>
     /// <returns>The string representation of the value of this instance.</returns>
     public static global::System.String FastToString(this SnapshotTesting.Color value) => value switch
     {
@@ -82,6 +83,7 @@ public static class ColorExtensions
     };
 
     /// <summary>Converts the value of this instance to its equivalent string representation using the specified format.</summary>
+    /// <param name="value">The <see cref="SnapshotTesting.Color"/> value to convert to a string.</param>
     /// <param name="format">A format string.</param>
     /// <returns>The string representation of the value of this instance as specified by format.</returns>
     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
@@ -90,9 +92,9 @@ public static class ColorExtensions
         global::System.String? format)
     {
         if (global::System.String.IsNullOrEmpty(format)) return value.FastToString();
-        
+
         if (format.Length != 1) throw CreateInvalidFormatSpecifierException();
-        
+
         global::System.Char formatChar = format[0];
         switch (formatChar | 0x20)
         {
@@ -107,27 +109,23 @@ public static class ColorExtensions
         }
     }
 
-    /// <summary>
-    /// Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.
-    /// </summary>
+    /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
+    /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
     public static string? GetEnumMemberValue(this SnapshotTesting.Color value) => null;
 
-    /// <summary>
-    /// Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-    /// </summary>
+    /// <summary>Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
+    /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> if exists; otherwise null.</returns>
     public static string? GetDisplayName(this SnapshotTesting.Color value) => null;
 
-    /// <summary>
-    /// Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-    /// </summary>
+    /// <summary>Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
+    /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
     public static string? GetDisplayDescription(this SnapshotTesting.Color value) => null;
 
-    /// <summary>
-    /// Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.
-    /// </summary>
+    /// <summary>Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.</summary>
+    /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>
     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
     public static string? GetDescription(this SnapshotTesting.Color value) => null;
 

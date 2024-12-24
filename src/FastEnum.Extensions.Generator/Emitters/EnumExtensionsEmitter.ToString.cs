@@ -18,6 +18,7 @@ internal sealed partial class EnumExtensionsEmitter
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
                     /// <summary>Converts the value of this instance to its equivalent string representation.</summary>
+                    /// <param name="value">The <see cref="{1}"/> value to convert to a string.</param>
                     /// <returns>The string representation of the value of this instance.</returns>
                     {0} static global::System.String FastToString(this {1} value) => value switch
                     {{
@@ -40,31 +41,34 @@ internal sealed partial class EnumExtensionsEmitter
 
     private void AddToStringFormat(StringBuilder sb)
     {
+        string methodIndent = Get(Indentation.Method);
+
         sb
-            .Append(
+            .AppendFormat(CultureInfo.InvariantCulture,
                 """
                     /// <summary>Converts the value of this instance to its equivalent string representation using the specified format.</summary>
+                    /// <param name="value">The <see cref="{0}"/> value to convert to a string.</param>
                     /// <param name="format">A format string.</param>
                     /// <returns>The string representation of the value of this instance as specified by format.</returns>
                     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
-                    
-                """)
-            .Append(_currentSpec.Modifier).Append(" static global::System.String FastToString(this ").Append(_currentSpec.FullName).AppendLine(" value,")
+
+                """, _currentSpec.FullName)
+            .Append(methodIndent).Append(_currentSpec.Modifier).Append(" static global::System.String FastToString(this ").Append(_currentSpec.FullName).AppendLine(" value,")
             .Append(
                 """
                         [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
                         global::System.String? format)
                     {
                         if (global::System.String.IsNullOrEmpty(format)) return value.FastToString();
-                        
+
                         if (format.Length != 1) throw CreateInvalidFormatSpecifierException();
-                        
+
                         global::System.Char formatChar = format[0];
                         switch (formatChar | 0x20)
                         {
                             case 'g': return value.FastToString();
-                            case 'd': return 
-                """).AddCast(_currentSpec.FullName, _currentSpec.UnderlyingType).AppendLine(".ToString();")
+                            case 'd': return
+                """).Append(' ').AddCast(_currentSpec.FullName, _currentSpec.UnderlyingType).AppendLine(".ToString();")
             .Append(
                 """
                             case 'x': return FormatNumberAsHex(value);
@@ -147,7 +151,7 @@ internal sealed partial class EnumExtensionsEmitter
                     """
                                 global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
                                 global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-                    
+
                                 buffer[1] = (global::System.Char)(packedResult & 0xFFU);
                                 buffer[0] = (global::System.Char)(packedResult >> 8);
                             })

@@ -116,7 +116,7 @@ internal sealed partial class EnumExtensionsEmitter
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
                     /// <summary>Determines whether one or more bit fields are set in the current instance.</summary>
-                    /// <param name="instance">The instance in which the the flags are searched.</param>
+                    /// <param name="instance">The instance in which the flags are searched.</param>
                     /// <param name="flags">The flags that will be looked up in the instance.</param>
                     /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
                     public static global::System.Boolean HasFlag(this {0} instance, {1} flags) => (instance & flags) == flags;
