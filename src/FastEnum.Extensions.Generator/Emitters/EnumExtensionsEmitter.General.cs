@@ -283,9 +283,4 @@ internal sealed partial class EnumExtensionsEmitter
 
             """);
     }
-
-    private static void CloseClassAndNamespace(StringBuilder sb)
-    {
-        sb.AppendLine("}");
-    }
 }

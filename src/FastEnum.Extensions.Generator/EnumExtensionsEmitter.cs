@@ -31,19 +31,28 @@ internal sealed partial class EnumExtensionsEmitter
             StringBuilder sb = StringBuilderPool.Get();
 
             AddFileAndClassHeader(sb);
-            AddFieldsAndGetMethods(sb);
-            AddHasFlag(sb);
-            AddIsDefined(sb);
-            AddToString(sb);
-            AddToStringFormat(sb);
-            AddAttributeMethods(sb);
-            AddTryParseString(sb);
-            AddTryParseSpan(sb);
-            AddFormatAsHexHelper(sb);
-            AddTryParsePrivate(sb);
-            AddFormatFlagNames(sb);
-            AddPrivateHelperMethods(sb);
-            CloseClassAndNamespace(sb);
+
+            if (_currentSpec.Members.IsEmpty)
+            {
+                sb.Append(Constants.EmptyEnum);
+            }
+            else
+            {
+                AddFieldsAndGetMethods(sb);
+                AddHasFlag(sb);
+                AddIsDefined(sb);
+                AddToString(sb);
+                AddToStringFormat(sb);
+                AddAttributeMethods(sb);
+                AddTryParseString(sb);
+                AddTryParseSpan(sb);
+                AddFormatAsHexHelper(sb);
+                AddTryParsePrivate(sb);
+                AddFormatFlagNames(sb);
+                AddPrivateHelperMethods(sb);
+            }
+
+            sb.AppendLine("}");
 
             string generatedClass = StringBuilderPool.Return(sb);
 

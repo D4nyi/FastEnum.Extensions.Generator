@@ -35,4 +35,11 @@ internal static class Constants
         #nullable disable warnings
 
         """;
+
+    internal const string EmptyEnum =
+        """
+
+            // There is no member defined for this enum.
+
+        """;
 }

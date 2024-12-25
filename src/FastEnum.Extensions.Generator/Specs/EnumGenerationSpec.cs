@@ -33,8 +33,16 @@ internal readonly struct EnumGenerationSpec
         OriginalUnderlyingType = underlyingTypeName;
         IsGlobalNamespace = Namespace == GlobalNamespace;
 
-        Type = members[0].Value.GetType();
-        UnderlyingType = "global::" + Type.FullName;
+        if (members.IsEmpty)
+        {
+            Type = null!;
+            UnderlyingType = null!;
+        }
+        else
+        {
+            Type = members[0].Value.GetType();
+            UnderlyingType = "global::" + Type.FullName;
+        }
 
         int lastIndexOfDot = FullName.LastIndexOf('.');
         Name = FullName.Substring(lastIndexOfDot + 1);
