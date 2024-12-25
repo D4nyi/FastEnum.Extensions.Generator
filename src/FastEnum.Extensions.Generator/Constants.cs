@@ -2,7 +2,7 @@ namespace FastEnum.Extensions.Generator;
 
 internal static class Constants
 {
-    internal const string Version = "1.3.1";
+    internal const string Version = "1.3.2";
 
     internal const string EnumMemberAttributeFullName = "System.Runtime.Serialization.EnumMemberAttribute";
     internal const string DisplayAttributeFullName = "System.ComponentModel.DataAnnotations.DisplayAttribute";
@@ -33,6 +33,13 @@ internal static class Constants
 
         #nullable enable annotations
         #nullable disable warnings
+
+        """;
+
+    internal const string EmptyEnum =
+        """
+
+            // There is no member defined for this enum.
 
         """;
 }

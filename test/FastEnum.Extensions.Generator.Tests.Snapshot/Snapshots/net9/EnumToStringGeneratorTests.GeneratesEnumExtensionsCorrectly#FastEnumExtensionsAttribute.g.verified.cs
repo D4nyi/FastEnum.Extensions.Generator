@@ -4,7 +4,7 @@
 namespace FastEnum
 {
     /// <summary>Marks an enum to generate optimized extensions for it.</summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumExtensionsGenerator", "1.3.1")]
+    [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumExtensionsGenerator", "1.3.2")]
     [global::System.AttributeUsage(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
     internal sealed class ExtensionsAttribute : global::System.Attribute { }
 }

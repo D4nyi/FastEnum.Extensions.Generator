@@ -9,7 +9,7 @@
 namespace FastEnum
 {
     /// <summary>Marks an enum to generate optimized extensions for it.</summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumExtensionsGenerator", "1.3.1")]
+    [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumExtensionsGenerator", "1.3.2")]
     [global::System.AttributeUsage(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
     internal sealed class ExtensionsAttribute : global::System.Attribute { }
 }
@@ -27,7 +27,7 @@ namespace SnapshotTesting;
 /// <summary>
 /// Extension methods for <see cref="SnapshotTesting.Color" />
 /// </summary>
-[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.3.1")]
+[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.3.2")]
 public static class ColorExtensions
 {
     private static readonly global::System.Int32[] _underlyingValues =
@@ -527,7 +527,7 @@ namespace SnapshotTesting;
 /// <summary>
 /// Extension methods for <see cref="SnapshotTesting.GenerationOptions" />
 /// </summary>
-[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.3.1")]
+[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.3.2")]
 public static class GenerationOptionsExtensions
 {
     private static readonly global::System.Byte[] _underlyingValues =
