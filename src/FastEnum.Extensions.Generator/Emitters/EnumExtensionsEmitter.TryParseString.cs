@@ -29,14 +29,14 @@ internal sealed partial class EnumExtensionsEmitter
                             result = default;
                             return false;
                         }}
-                
+
                         global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
                         if (span.IsEmpty)
                         {{
                             result = default;
                             return false;
                         }}
-                
+
                         if (CheckIfNumber(span))
                         {{
                             global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
@@ -59,10 +59,10 @@ internal sealed partial class EnumExtensionsEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                
+
                         return TryParseByName(value, false, out result);
                     }}
-                    
+
                     /// <summary>
                     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="{0}" />.
                     /// This method using case-insensitive parsing.
@@ -77,14 +77,14 @@ internal sealed partial class EnumExtensionsEmitter
                             result = default;
                             return false;
                         }}
-                
+
                         global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
                         if (span.IsEmpty)
                         {{
                             result = default;
                             return false;
                         }}
-                
+
                         if (CheckIfNumber(span))
                         {{
                             global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
@@ -107,7 +107,7 @@ internal sealed partial class EnumExtensionsEmitter
 
         sb.Append(
             """
-            
+
                     return TryParseByName(value, true, out result);
                 }
 

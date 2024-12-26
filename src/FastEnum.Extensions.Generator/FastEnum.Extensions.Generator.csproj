@@ -17,11 +17,11 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
         <PackageReleaseNotes>
-            - Fixed NuGet package generation.
-            - Fixed several behaviour differences between the generated code and .NET counter part.
-            - Optimized HEX string generation for non-byte/sbyte backed enums.
-            - Fixed bugs and performance issues.
-            - Removed unnecessary generated code.
+            - Rework of analyzer warnings.
+            - Disabled generation for deeply nested enums (i.e. nested more then one type).
+            - Disabled genreation when nested enum's accessibility modifier is inconsistnet with its parent's.
+            - Handling non-unique enum values (i.e. when multiple enum members has the same value).
+            - Cosmetic changes in generated code.
         </PackageReleaseNotes>
 
         <PackageTags>

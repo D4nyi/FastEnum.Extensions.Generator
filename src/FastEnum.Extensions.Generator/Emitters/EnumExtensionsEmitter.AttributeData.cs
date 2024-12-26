@@ -75,7 +75,7 @@ internal sealed partial class EnumExtensionsEmitter
     {
         sb.Append(' ').Append(_currentSpec.FullName).Append(" value)");
 
-        List<EnumMemberSpec> notNulls = _currentSpec.Members.Where(x => accessor(x.Data) is not null).ToList();
+        List<EnumMemberSpec> notNulls = _currentSpec.DistinctMembers.Where(x => accessor(x.Data) is not null).ToList();
         if (notNulls.Count == 0)
         {
             sb.AppendLine(" => null;").AppendLine();

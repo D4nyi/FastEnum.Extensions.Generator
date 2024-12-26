@@ -15,5 +15,9 @@
 [Cc]overage[Rr]eport*
 [Tt]est[Rr]esult*
 
+# Verify
+*.received.*
+*.received/
+
 # Benchmark Results
 BenchmarkDotNet.Artifacts/

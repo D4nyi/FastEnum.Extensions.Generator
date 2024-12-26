@@ -11,3 +11,7 @@
 # Note: This is only used by command line
 ###############################################################################
 *.cs     diff=csharp
+
+# Verify
+*.verified.cs text eol=lf working-tree-encoding=UTF-8
+*.verified.json text eol=lf working-tree-encoding=UTF-8

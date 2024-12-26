@@ -1,38 +1,50 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
-internal sealed class EnumMemberValueDataGenerator() : AttributeDataGenerator<EnumMemberAttribute>(x => x?.Value);
+internal sealed class EnumMemberValueDataGenerator<TEnum>() : AttributeDataGenerator<EnumMemberAttribute, TEnum>(x => x?.Value) where TEnum : Enum;
 
-internal sealed class DisplayNameDataGenerator() : AttributeDataGenerator<DisplayAttribute>(x => x?.Name);
+internal sealed class DisplayNameDataGenerator<TEnum>() : AttributeDataGenerator<DisplayAttribute, TEnum>(x => x?.Name) where TEnum : Enum;
 
-internal sealed class DisplayDescriptionDataGenerator() : AttributeDataGenerator<DisplayAttribute>(x => x?.Description);
+internal sealed class DisplayDescriptionDataGenerator<TEnum>() : AttributeDataGenerator<DisplayAttribute, TEnum>(x => x?.Description) where TEnum : Enum;
 
-internal sealed class DescriptionDataGenerators() : AttributeDataGenerator<DescriptionAttribute>(x => x?.Description);
+internal sealed class DescriptionDataGenerators<TEnum>() : AttributeDataGenerator<DescriptionAttribute, TEnum>(x => x?.Description) where TEnum : Enum;
 
-internal abstract class AttributeDataGenerator<T> : TheoryData<Color, string?> where T : Attribute
+internal abstract class AttributeDataGenerator<T, TEnum> : TheoryData<TEnum, string?>
+    where T : Attribute
+    where TEnum : Enum
 {
     protected AttributeDataGenerator(Func<T?, string?> accessor)
     {
-        foreach (Color color in Constants.TestValues)
-        {
-            T? attribute = GetAttribute(color);
+        Type backingType = Enum.GetUnderlyingType(typeof(TEnum));
 
-            Add(color, accessor(attribute));
+        for (int index = 0; index < Constants.TestValues.Length; index++)
+        {
+            short value = Constants.TestValues[index];
+
+            TEnum @enum;
+            if (backingType == typeof(int))
+            {
+                int tmp = value;
+                @enum = Unsafe.As<int, TEnum>(ref tmp);
+            }
+            else
+            {
+                @enum = Unsafe.As<short, TEnum>(ref value);
+            }
+
+            T? attribute = GetAttribute(@enum);
+
+            Add(@enum, accessor(attribute));
         }
     }
 
-    private static T? GetAttribute(Color color) => Constants.ColorType
-        .GetField(color.ToString())
+    private static T? GetAttribute(TEnum @enum) => typeof(TEnum)
+        .GetField(@enum.ToString())
         ?.GetCustomAttributes(typeof(T), false) is T[] { Length: > 0 } attributes
         ? attributes[0]
         : null;
-}
-
-static file class Constants
-{
-    public static readonly Type ColorType = typeof(Color);
-    public static readonly Color[] TestValues = [Color.Red, Color.Green, Color.Black, Color.Blue, (Color)15];
 }

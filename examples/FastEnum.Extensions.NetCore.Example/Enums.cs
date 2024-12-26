@@ -12,7 +12,9 @@ public static class NestingClass
     [Extensions]
     public enum NestedInClass
     {
-        None
+        None = 0,
+        One = 1,
+        One2 = One
     }
 }
 
@@ -30,7 +32,7 @@ public enum Color
 }
 
 [Extensions, Flags]
-public enum GenerationOptions : byte
+public enum GenerationOptions : SByte
 {
     None = 0,
     ToString = 1,

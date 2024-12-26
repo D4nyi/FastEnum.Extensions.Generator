@@ -21,7 +21,7 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
                     public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out {0} result) =>
                         TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
-                    
+
                     /// <summary>
                     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="{0}" />.
                     /// This method using case-insensitive parsing.
@@ -53,7 +53,7 @@ internal sealed partial class EnumExtensionsEmitter
                             result = default;
                             return false;
                         }}
-                        
+
                         if (CheckIfNumber(value))
                         {{
                             global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
@@ -76,42 +76,42 @@ internal sealed partial class EnumExtensionsEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                
+
                         global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
                         return TryParseByName(value, comparison == global::System.StringComparison.OrdinalIgnoreCase, out result);
                     }}
-                    
+
                     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     private static global::System.Boolean CheckIfNumber(global::System.ReadOnlySpan<global::System.Char> value)
                     {{
                         global::System.Char c = value[0];
-                
+
                         return global::System.Char.IsAsciiDigit(c) || c == '-' || c == '+';
                     }}
-                    
-                     private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out {0} result)
-                     {{
+
+                    private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out {0} result)
+                    {{
                         const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
                         global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
                         global::System.Boolean status = {1}.TryParse(value, NumberStyle, numberFormat, out var parseResult);
-                
+
                         if (status)
                         {{
                             result = global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref parseResult);
                             return true;
                         }}
-                        
+
                         result = default;
                         return false;
                     }}
-                    
+
                     private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out {0} result)
                     {{
                         global::System.String[] enumNames = _names;
                         {1}[] enumValues = _underlyingValues;
                         global::System.Boolean parsed = true;
                         {1} localResult = 0;
-                
+
                         while (value.Length > 0)
                         {{
                             // Find the next separator
@@ -135,7 +135,7 @@ internal sealed partial class EnumExtensionsEmitter
                                 parsed = false;
                                 break;
                             }}
-                            
+
                             // Try to match this substring against each enum name
                             global::System.Boolean success = false;
                             if (ignoreCase)
@@ -162,20 +162,20 @@ internal sealed partial class EnumExtensionsEmitter
                                     }}
                                 }}
                             }}
-                            
+
                             if (!success)
                             {{
                                 parsed = false;
                                 break;
                             }}
                         }}
-                            
+
                         if (parsed)
                         {{
                             result = global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref localResult);
                             return true;
                         }}
-                
+
                         result = default;
                         return false;
                     }}

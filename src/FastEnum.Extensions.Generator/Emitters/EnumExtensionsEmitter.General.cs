@@ -24,10 +24,10 @@ internal sealed partial class EnumExtensionsEmitter
                 /// <summary>
                 /// Extension methods for <see cref="{0}" />
                 /// </summary>
-                [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "{1}")]
-                {2} static class {3}Extensions
+                [global::System.CodeDom.Compiler.GeneratedCode("{1}", "{2}")]
+                {3} static class {4}Extensions
                 {{
-                """, _currentSpec.FullName, Constants.Version, _currentSpec.Modifier, _currentSpec.Name);
+                """, _currentSpec.FullName, Constants.EnumExtensionsGenerator, Constants.Version, _currentSpec.Modifier, _currentSpec.Name);
     }
 
     private void AddFieldsAndGetMethods(StringBuilder sb)
@@ -92,13 +92,13 @@ internal sealed partial class EnumExtensionsEmitter
                     /// Retrieves an array of the values of the members defined in <see cref="{1}" />.
                     /// </summary>
                     /// <returns>An array of the values defined in <see cref="{1}" />.</returns>
-                    public static {1} [] GetValues() => _values;
+                    public static {1}[] GetValues() => _values;
 
                     /// <summary>
                     /// Retrieves an array of the underlying vales of the members defined in <see cref="{1}" />
                     /// </summary>
                     /// <returns>An array of the underlying values defined in <see cref="{1}" />.</returns>
-                    public static {2} [] GetUnderlyingValues() => _underlyingValues;
+                    public static {2}[] GetUnderlyingValues() => _underlyingValues;
 
                     /// <summary>
                     /// Retrieves an array of the names of the members defined in <see cref="{1}" />

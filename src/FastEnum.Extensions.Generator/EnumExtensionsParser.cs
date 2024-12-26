@@ -14,31 +14,47 @@ namespace FastEnum.Extensions.Generator;
 
 internal sealed class EnumExtensionsParser
 {
-    #region Static & Const fields
+    #region Warnings
 
-    private static readonly DiagnosticDescriptor _enumCannotBePrivate = new(
-        id: "ETS1001",
-        title: "Enum cannot be private",
-        messageFormat: "For private enums we are currently unable to create extensions",
-        category: Constants.FastEnumToStringGenerator,
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+    private static readonly DiagnosticDescriptor _invalidVisibilityModifier = new(
+        id: "EEG1001",
+        title: "Invalid visibility modifier",
+        messageFormat: "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Current generation strategy only supports extension generation for enums with `public` or `internal` visibility modifiers.",
+        helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier");
 
-    private static readonly DiagnosticDescriptor _enumUnderlyingTypeCannotBeDetermined = new(
-        id: "ETS1002",
-        title: "Enum's underlying type cannot be determined",
-        messageFormat: "Enum's underlying type cannot be determined therefore we are unable to create extensions",
-        category: Constants.FastEnumToStringGenerator,
+    private static readonly DiagnosticDescriptor _genericParentType = new(
+        id: "EEG1002",
+        title: "Invalid nesting type",
+        messageFormat: "Extension generation for {0} is disabled, because it is nested in a generic type",
+        category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "Please define your enum not inside a generic type.",
+        helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1002-invalid-backing-type");
 
-    private static readonly DiagnosticDescriptor _genericTypeNestingRestrictions = new(
-        id: "ETS1003",
-        title: "Extension generation restriction",
-        messageFormat: "Extension generation for enum's nested in generic types are restricted",
-        category: Constants.FastEnumToStringGenerator,
+    private static readonly DiagnosticDescriptor _multipleParentType = new(
+        id: "EEG1003",
+        title: "Multiple nesting type",
+        messageFormat: "Extension generation for {0} is disabled, because it has multiple parent types",
+        category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "Please define your enum as a standalone type or reduce nesting.",
+        helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1003-invalid-nesting-type");
+
+    private static readonly DiagnosticDescriptor _inconsistentAccessibilityWithParentType = new(
+        id: "EEG1004",
+        title: "Multiple nesting type",
+        messageFormat: "Extension generation for {0} is disabled, because its accessibility modifier is inconsistent with its parent's",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Please define your enum as a standalone type or define the same accessibility modifier as its parent.",
+        helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1004-multiple-nesting-type");
 
     #endregion
 
@@ -59,16 +75,17 @@ internal sealed class EnumExtensionsParser
         INamedTypeSymbol? enumMemberAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.EnumMemberAttributeFullName);
         INamedTypeSymbol? descriptionAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.DescriptionAttributeFullName);
         INamedTypeSymbol? extensionsAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.ExtensionsAttributeFullName);
+        INamedTypeSymbol? flagsAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.FlagsAttributeFullName);
 
         Debug.Assert(extensionsAttributeSymbol is not null);
         Debug.Assert(displayAttributeSymbol is not null);
         Debug.Assert(enumMemberAttributeSymbol is not null);
         Debug.Assert(descriptionAttributeSymbol is not null);
+        Debug.Assert(flagsAttributeSymbol is not null);
 
         List<EnumGenerationSpec> enumToGenerateList = [];
 
-        IEnumerable<IGrouping<SyntaxTree, EnumDeclarationSyntax>> grouped = classDeclarationSyntaxList
-            .GroupBy(c => c.SyntaxTree);
+        IEnumerable<IGrouping<SyntaxTree, EnumDeclarationSyntax>> grouped = classDeclarationSyntaxList.GroupBy(c => c.SyntaxTree);
 
         foreach (IGrouping<SyntaxTree, EnumDeclarationSyntax> group in grouped)
         {
@@ -79,48 +96,49 @@ internal sealed class EnumExtensionsParser
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                bool isExtensionsDefined = HasExtensionsAttributeDefined(
+                (bool hasExtensions, bool hasFlags) = HasExtensionsAttributeDefined(
                     enumDeclarationSyntax.AttributeLists,
                     compilationSemanticModel,
                     extensionsAttributeSymbol!,
+                    flagsAttributeSymbol!,
                     cancellationToken);
 
-                if (!isExtensionsDefined)
+                if (!hasExtensions)
                 {
-                    // the type is not indicated with [Extensions]
                     continue;
                 }
 
                 INamedTypeSymbol? contextTypeSymbol = compilationSemanticModel.GetDeclaredSymbol(enumDeclarationSyntax, cancellationToken);
                 Debug.Assert(contextTypeSymbol is not null);
 
-                if (IsNestedInGenericType(contextTypeSymbol!))
+                NestingState nestingState = GetNesting(contextTypeSymbol!);
+                string modifier = GetAccessModifier(enumDeclarationSyntax);
+
+                if (nestingState > NestingState.SingleParentType)
                 {
-                    _sourceGenerationContext.ReportDiagnostic(
-                        _genericTypeNestingRestrictions,
+                    ReportNestingWarnings(
+                        nestingState,
+                        modifier,
                         GetLocation(contextTypeSymbol!),
                         contextTypeSymbol!.Name);
+
                     continue;
                 }
 
-                string modifier = GetAccessModifier(enumDeclarationSyntax);
-                if (modifier == Constants.PrivateAccessModifier)
+                if (Array.Exists(Constants.UnsupportedVisibilityModifiers, x => x == modifier))
                 {
                     _sourceGenerationContext.ReportDiagnostic(
-                        _enumCannotBePrivate,
+                        _invalidVisibilityModifier,
                         GetLocation(contextTypeSymbol!),
                         contextTypeSymbol!.Name);
+
                     continue;
                 }
 
                 string? underlyingTypeName = contextTypeSymbol!.EnumUnderlyingType?.ToString();
-                if (String.IsNullOrEmpty(underlyingTypeName))
+                if (String.IsNullOrWhiteSpace(underlyingTypeName))
                 {
-                    _sourceGenerationContext.ReportDiagnostic(
-                        _enumUnderlyingTypeCannotBeDetermined,
-                        GetLocation(contextTypeSymbol),
-                        contextTypeSymbol.Name);
-                    continue;
+                    underlyingTypeName = "int";
                 }
 
                 string typeName = contextTypeSymbol.ToString();
@@ -131,19 +149,20 @@ internal sealed class EnumExtensionsParser
                     .Cast<IFieldSymbol>()
                     .Select(x =>
                     {
-                        AttributeValues data = x.ReadAttributeValues(displayAttributeSymbol!, enumMemberAttributeSymbol! ,descriptionAttributeSymbol!);
-                        
+                        AttributeValues data = x.ReadAttributeValues(displayAttributeSymbol!, enumMemberAttributeSymbol!, descriptionAttributeSymbol!);
+
                         return new EnumMemberSpec(typeName, x.Name, x.ConstantValue!, data);
                     })
                     .OrderBy(x => x.Value)
                     .ToImmutableArray();
-                
+
                 EnumGenerationSpec enumToGenerate = new(
                     typeName,
                     modifier,
                     members,
                     contextTypeSymbol.ContainingNamespace.ToString(),
-                    underlyingTypeName!
+                    underlyingTypeName!,
+                    hasFlags
                 );
 
                 enumToGenerateList.Add(enumToGenerate);
@@ -153,53 +172,107 @@ internal sealed class EnumExtensionsParser
         return enumToGenerateList;
     }
 
-    private static bool HasExtensionsAttributeDefined(
+    private void ReportNestingWarnings(NestingState nestingState, string modifier, Location location, string name)
+    {
+        if (HasFlag(nestingState, NestingState.GenericParentType))
+        {
+            _sourceGenerationContext.ReportDiagnostic(
+                _genericParentType,
+                location,
+                name);
+        }
+
+        if (HasFlag(nestingState, NestingState.MultipleParentType))
+        {
+            _sourceGenerationContext.ReportDiagnostic(
+                _multipleParentType,
+                location,
+                name);
+        }
+
+        if (HasFlag(nestingState, NestingState.InternalSingleParentType) && modifier != "internal")
+        {
+            _sourceGenerationContext.ReportDiagnostic(
+                _inconsistentAccessibilityWithParentType,
+                location,
+                name);
+        }
+    }
+
+    private static (bool hasExtensions, bool hasFlags) HasExtensionsAttributeDefined(
         SyntaxList<AttributeListSyntax> attributeList,
         SemanticModel compilationSemanticModel,
         ISymbol extensionsAttribute,
+        ISymbol flagsAttribute,
         CancellationToken cancellationToken)
     {
         if (attributeList.Count == 0)
         {
-            return false;
+            return (false, false);
         }
 
-        IEnumerable<AttributeSyntax> attributes = attributeList.SelectMany(x => x.Attributes);
-        foreach (AttributeSyntax? appliedAttribute in attributes)
+        bool hasExtensions = false;
+        bool hasFlags = false;
+
+        foreach (AttributeSyntax? appliedAttribute in attributeList.SelectMany(x => x.Attributes))
         {
             SymbolInfo symbolInfo = compilationSemanticModel.GetSymbolInfo(appliedAttribute, cancellationToken);
-            if (symbolInfo.Symbol is not IMethodSymbol attributeSymbol)
-            {
-                continue;
-            }
 
-            INamedTypeSymbol attributeContainingTypeSymbol = attributeSymbol.ContainingType;
+            INamedTypeSymbol? attributeContainingTypeSymbol = symbolInfo.Symbol?.ContainingType;
+
             if (extensionsAttribute.Equals(attributeContainingTypeSymbol, SymbolEqualityComparer.Default))
             {
-                return appliedAttribute is not null;
+                hasExtensions = true;
+            }
+            else if (flagsAttribute.Equals(attributeContainingTypeSymbol, SymbolEqualityComparer.Default))
+            {
+                hasFlags = true;
             }
         }
 
-        return false;
+        return (hasExtensions, hasFlags);
     }
 
-    private static bool IsNestedInGenericType(ISymbol typeSymbol)
+    private static NestingState GetNesting(ISymbol typeSymbol)
     {
         INamedTypeSymbol containingType = typeSymbol.ContainingType;
 
-        bool isNestedInGenericType = false;
+        int nestingLevel = 0;
+        NestingState nestingState = NestingState.Namespace;
+
         while (containingType is not null && containingType.Kind != SymbolKind.Namespace)
         {
+            nestingLevel++;
+
             if (containingType is
-                { Kind: SymbolKind.NamedType, TypeKind: TypeKind.Interface or TypeKind.Struct or TypeKind.Class })
+                {
+                    Kind: SymbolKind.NamedType,
+                    TypeKind: TypeKind.Interface or TypeKind.Struct or TypeKind.Class,
+                    TypeArguments.IsDefaultOrEmpty: false
+                })
             {
-                isNestedInGenericType |= !containingType.TypeArguments.IsDefaultOrEmpty;
+                nestingState |= NestingState.GenericParentType;
             }
 
             containingType = containingType.ContainingType;
         }
 
-        return isNestedInGenericType;
+        if (nestingLevel == 1)
+        {
+            nestingState |= NestingState.SingleParentType;
+
+            Accessibility accessibility = typeSymbol.ContainingType.DeclaredAccessibility;
+            if (accessibility != Accessibility.Public)
+            {
+                nestingState |= NestingState.InternalSingleParentType;
+            }
+        }
+        else if (nestingLevel > 1)
+        {
+            nestingState |= NestingState.MultipleParentType;
+        }
+
+        return nestingState;
     }
 
     private static string GetAccessModifier(MemberDeclarationSyntax enumDeclarationSyntax) =>
@@ -207,4 +280,16 @@ internal sealed class EnumExtensionsParser
 
     private static Location GetLocation(ISymbol contextTypeSymbol) =>
         contextTypeSymbol.Locations.Length > 0 ? contextTypeSymbol.Locations[0] : Location.None;
+
+    private static bool HasFlag(NestingState instance, NestingState flag) => (instance & flag) == flag;
+
+    [Flags]
+    private enum NestingState
+    {
+        Namespace = 0,
+        SingleParentType = 1,
+        MultipleParentType = 2,
+        GenericParentType = 4,
+        InternalSingleParentType = 8
+    }
 }
