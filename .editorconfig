@@ -1,8 +1,26 @@
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
-[*]
-# New line preferences
+# [*]
+# indent_style = space
+# charset = utf-8
+# end_of_line = crlf
+# insert_final_newline = true
+# trim_trailing_whitespace = true
+
+# Verify
+[*.{received,verified}.{cs,json}]
+charset = utf-8-bom
+end_of_line = lf
+indent_size = unset
+indent_style = unset
+insert_final_newline = false
+tab_width = unset
+trim_trailing_whitespace = false
+
+[*{.yml,.yaml}]
+indent_size = 2
+tab_width = 2
 
 indent_style = space
 charset = utf-8
@@ -10,14 +28,17 @@ end_of_line = crlf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*{.yml,.yaml}]
-indent_size = 2
-tab_width = 2
 
 # C# files
 [*.cs]
 tab_width = 4
 indent_size = 4
+
+indent_style = space
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
 
 #### Core EditorConfig Options ####
 

@@ -91,6 +91,21 @@ public sealed class EnumExtensionsTests
     }
 
     [Fact]
+    public void GetUnderlyingType_ExtractedCorrectly()
+    {
+        // Arrange
+        Type expected = Enum.GetValuesAsUnderlyingType<Color>()
+            .GetValue(0)!
+            .GetType();
+
+        // Act
+        Type actual = ColorExtensions.GetUnderlyingValues()[0].GetType();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
     public void GetUnderlyingValues_GeneratesTheSameResultAsGetValuesAsUnderlyingType()
     {
         // Arrange
