@@ -175,7 +175,7 @@ public static class ColorExtensions
 
         return TryParseByName(value, false, out result);
     }
-    
+
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.Color" />.
     /// This method using case-insensitive parsing.
@@ -232,7 +232,7 @@ public static class ColorExtensions
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.Color result) =>
         TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
-    
+
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.Color" />.
     /// This method using case-insensitive parsing.
@@ -267,7 +267,7 @@ public static class ColorExtensions
             result = default;
             return false;
         }
-        
+
         if (CheckIfNumber(value))
         {
             global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
@@ -293,7 +293,7 @@ public static class ColorExtensions
         global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
         return TryParseByName(value, comparison == global::System.StringComparison.OrdinalIgnoreCase, out result);
     }
-    
+
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.Boolean CheckIfNumber(global::System.ReadOnlySpan<global::System.Char> value)
     {
@@ -301,9 +301,9 @@ public static class ColorExtensions
 
         return global::System.Char.IsAsciiDigit(c) || c == '-' || c == '+';
     }
-    
-     private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.Color result)
-     {
+
+    private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.Color result)
+    {
         const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
         global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
         global::System.Boolean status = global::System.Int32.TryParse(value, NumberStyle, numberFormat, out var parseResult);
@@ -313,11 +313,11 @@ public static class ColorExtensions
             result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Int32, SnapshotTesting.Color>(ref parseResult);
             return true;
         }
-        
+
         result = default;
         return false;
     }
-    
+
     private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.Color result)
     {
         global::System.String[] enumNames = _names;
@@ -348,7 +348,7 @@ public static class ColorExtensions
                 parsed = false;
                 break;
             }
-            
+
             // Try to match this substring against each enum name
             global::System.Boolean success = false;
             if (ignoreCase)
@@ -375,14 +375,14 @@ public static class ColorExtensions
                     }
                 }
             }
-            
+
             if (!success)
             {
                 parsed = false;
                 break;
             }
         }
-            
+
         if (parsed)
         {
             result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Int32, SnapshotTesting.Color>(ref localResult);

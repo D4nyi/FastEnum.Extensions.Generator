@@ -18,6 +18,7 @@
 
         <PackageReleaseNotes>
             - Rework of analyzer warnings.
+            - Cosmetic changes in generated code.
         </PackageReleaseNotes>
 
         <PackageTags>
