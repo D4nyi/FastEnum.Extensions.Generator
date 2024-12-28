@@ -7,16 +7,26 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-ETS1001 | Design   | Warning  | Enum cannot be private, we are currently unable to create extensions.
-ETS1002 | Design   | Warning  | Enum's underlying type cannot be determined  therefore we are unable to create extensions.
-ETS1003 | Design   | Warning  | Extension generation restriction, extension generation for enum's nested in generic types are available.
+ETS1001 | Design   | Warning  | Enum cannot be private, we are currently unable to create extensions
+ETS1002 | Design   | Warning  | Enum's underlying type cannot be determined  therefore we are unable to create extensions
+ETS1003 | Design   | Warning  | Extension generation restriction, extension generation for enum's nested in generic types are available
 
 ## Release 2.0
 
 ### Changed Rules
 
 Rule ID | New Category                           | New Severity | Old Category | Old Severity | Notes
---------|----------------------------------------|--------------|--------------|--------------|------
-ETS1001 | FastEnumToString.EnumToStringGenerator | Warning      | Design       | Warning      | Enum cannot be private, we are currently unable to create extensions.
-ETS1002 | FastEnumToString.EnumToStringGenerator | Warning      | Design       | Warning      | Enum's underlying type cannot be determined  therefore we are unable to create extensions.
-ETS1003 | FastEnumToString.EnumToStringGenerator | Warning      | Design       | Warning      | Extension generation restriction, extension generation for enum's nested in generic types are available.
+--------|----------------------------------------|--------------|--------------|--------------|-------
+ETS1001 | FastEnumToString.EnumToStringGenerator | Warning      | Design       | Warning      | Enum cannot be private, we are currently unable to create extensions
+ETS1002 | FastEnumToString.EnumToStringGenerator | Warning      | Design       | Warning      | Enum's underlying type cannot be determined  therefore we are unable to create extensions
+ETS1003 | FastEnumToString.EnumToStringGenerator | Warning      | Design       | Warning      | Extension generation restriction, extension generation for enum's nested in generic types are available
+
+## Release 3.0
+
+### Changed Rules
+
+Rule ID | New Category | New Severity | Old Category                           | Old Severity | Notes
+--------|--------------|--------------|----------------------------------------|--------------|-------
+ETS1001 | Usage        | Error        | FastEnumToString.EnumToStringGenerator | Warning      | Extension generation is disabled because it has an unsupported visibility modifier
+ETS1002 | Usage        | Error        | FastEnumToString.EnumToStringGenerator | Warning      | Extension generation is disabled because it has an invalid backing type
+ETS1003 | Usage        | Warning      | FastEnumToString.EnumToStringGenerator | Warning      | Extension generation is disabled because it is nested in a generic type

@@ -9,7 +9,7 @@ namespace SnapshotTesting;
 /// <summary>
 /// Extension methods for <see cref="SnapshotTesting.EmptyEnum" />
 /// </summary>
-[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.3.2")]
+[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Extensions.Generator.EnumExtensionsGenerator", "1.3.2")]
 public static class EmptyEnumExtensions
 {
     // There is no member defined for this enum.

@@ -17,11 +17,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
         <PackageReleaseNotes>
-            - Fixed NuGet package generation.
-            - Fixed several behaviour differences between the generated code and .NET counter part.
-            - Optimized HEX string generation for non-byte/sbyte backed enums.
-            - Fixed bugs and performance issues.
-            - Removed unnecessary generated code.
+            - Rework of analyzer warnings.
         </PackageReleaseNotes>
 
         <PackageTags>

@@ -24,10 +24,10 @@ internal sealed partial class EnumExtensionsEmitter
                 /// <summary>
                 /// Extension methods for <see cref="{0}" />
                 /// </summary>
-                [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "{1}")]
-                {2} static class {3}Extensions
+                [global::System.CodeDom.Compiler.GeneratedCode("{1}", "{2}")]
+                {3} static class {4}Extensions
                 {{
-                """, _currentSpec.FullName, Constants.Version, _currentSpec.Modifier, _currentSpec.Name);
+                """, _currentSpec.FullName, Constants.EnumExtensionsGenerator, Constants.Version, _currentSpec.Modifier, _currentSpec.Name);
     }
 
     private void AddFieldsAndGetMethods(StringBuilder sb)
