@@ -8,14 +8,15 @@
         {
 */
  ": (5,20)-(5,40)",
-      "Message": "Extension generation for enum's nested in generic types are restricted",
+      "Message": "Extension generation for NestedInGenericClass is disabled because it is nested in a generic type",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
         "Id": "ETS1003",
-        "Title": "Extension generation restriction",
-        "MessageFormat": "Extension generation for enum's nested in generic types are restricted",
-        "Category": "FastEnumToString.EnumToStringGenerator",
+        "Title": "Invalid nesting type",
+        "Description": "Please define your enum outside a generic type.",
+        "MessageFormat": "Extension generation for {0} is disabled because it is nested in a generic type",
+        "Category": "Usage",
         "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true
       }
@@ -28,15 +29,15 @@
         {
 */
  ": (5,21)-(5,32)",
-      "Message": "For private enums we are currently unable to create extensions",
-      "Severity": "Warning",
-      "WarningLevel": 1,
+      "Message": "Extension generation for PrivateEnum is disabled because it has an unsupported visibility modifier",
+      "Severity": "Error",
       "Descriptor": {
         "Id": "ETS1001",
-        "Title": "Enum cannot be private",
-        "MessageFormat": "For private enums we are currently unable to create extensions",
-        "Category": "FastEnumToString.EnumToStringGenerator",
-        "DefaultSeverity": "Warning",
+        "Title": "Invalid visibility modifier",
+        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.",
+        "MessageFormat": "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        "Category": "Usage",
+        "DefaultSeverity": "Error",
         "IsEnabledByDefault": true
       }
     }

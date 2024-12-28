@@ -8,11 +8,13 @@ internal static class Constants
     internal const string DisplayAttributeFullName = "System.ComponentModel.DataAnnotations.DisplayAttribute";
     internal const string DescriptionAttributeFullName = "System.ComponentModel.DescriptionAttribute";
 
-    internal const string FastEnumToStringGenerator = "FastEnumToString.EnumToStringGenerator";
-    internal const string PrivateAccessModifier = "private";
+    internal const string EnumExtensionsGenerator = "FastEnum.Extensions.Generator.EnumExtensionsGenerator";
 
     internal const string ExtensionsAttributeFullName = "FastEnum.ExtensionsAttribute";
     internal const string AttributesFile = "FastEnumExtensionsAttribute.g.cs";
+
+    internal static readonly string[] UnsupportedVisibilityModifiers = ["private", "protected", "protected internal"];
+    internal static readonly string[] SupportedBackingTypes = ["byte", "sbyte", "short", "ushort", "int", "uint", "long", "ulong"];
 
     internal const string Attributes =
         $$"""
@@ -21,7 +23,7 @@ internal static class Constants
           namespace FastEnum
           {
               /// <summary>Marks an enum to generate optimized extensions for it.</summary>
-              [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumExtensionsGenerator", "{{Version}}")]
+              [global::System.CodeDom.Compiler.GeneratedCode("{{EnumExtensionsGenerator}}", "{{Version}}")]
               [global::System.AttributeUsage(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
               internal sealed class ExtensionsAttribute : global::System.Attribute { }
           }

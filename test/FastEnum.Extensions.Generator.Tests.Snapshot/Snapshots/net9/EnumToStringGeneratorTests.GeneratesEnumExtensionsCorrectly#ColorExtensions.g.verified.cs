@@ -9,7 +9,7 @@ namespace SnapshotTesting;
 /// <summary>
 /// Extension methods for <see cref="SnapshotTesting.Color" />
 /// </summary>
-[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Helpers.Generator.EnumToStringGenerator", "1.3.2")]
+[global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Extensions.Generator.EnumExtensionsGenerator", "1.3.2")]
 public static class ColorExtensions
 {
     private static readonly global::System.Int32[] _underlyingValues =

@@ -18,27 +18,30 @@ internal sealed class EnumExtensionsParser
 
     private static readonly DiagnosticDescriptor _enumCannotBePrivate = new(
         id: "ETS1001",
-        title: "Enum cannot be private",
-        messageFormat: "For private enums we are currently unable to create extensions",
-        category: Constants.FastEnumToStringGenerator,
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        title: "Invalid visibility modifier",
+        messageFormat: "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.");
 
     private static readonly DiagnosticDescriptor _enumUnderlyingTypeCannotBeDetermined = new(
         id: "ETS1002",
-        title: "Enum's underlying type cannot be determined",
-        messageFormat: "Enum's underlying type cannot be determined therefore we are unable to create extensions",
-        category: Constants.FastEnumToStringGenerator,
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        title: "Invalid backing type",
+        messageFormat: "Extension generation for {0} is disabled because it has an invalid backing type",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Please use one of the following types as the backing type: byte, sbyte, short, ushort, int, uint, long, ulong.");
 
     private static readonly DiagnosticDescriptor _genericTypeNestingRestrictions = new(
         id: "ETS1003",
-        title: "Extension generation restriction",
-        messageFormat: "Extension generation for enum's nested in generic types are restricted",
-        category: Constants.FastEnumToStringGenerator,
+        title: "Invalid nesting type",
+        messageFormat: "Extension generation for {0} is disabled because it is nested in a generic type",
+        category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "Please define your enum outside a generic type.");
 
     #endregion
 
@@ -104,7 +107,7 @@ internal sealed class EnumExtensionsParser
                 }
 
                 string modifier = GetAccessModifier(enumDeclarationSyntax);
-                if (modifier == Constants.PrivateAccessModifier)
+                if (Array.Exists(Constants.UnsupportedVisibilityModifiers, x => x == modifier))
                 {
                     _sourceGenerationContext.ReportDiagnostic(
                         _enumCannotBePrivate,
@@ -114,7 +117,7 @@ internal sealed class EnumExtensionsParser
                 }
 
                 string? underlyingTypeName = contextTypeSymbol!.EnumUnderlyingType?.ToString();
-                if (String.IsNullOrEmpty(underlyingTypeName))
+                if (!SupportedBackingType(underlyingTypeName))
                 {
                     _sourceGenerationContext.ReportDiagnostic(
                         _enumUnderlyingTypeCannotBeDetermined,
@@ -132,12 +135,12 @@ internal sealed class EnumExtensionsParser
                     .Select(x =>
                     {
                         AttributeValues data = x.ReadAttributeValues(displayAttributeSymbol!, enumMemberAttributeSymbol! ,descriptionAttributeSymbol!);
-                        
+
                         return new EnumMemberSpec(typeName, x.Name, x.ConstantValue!, data);
                     })
                     .OrderBy(x => x.Value)
                     .ToImmutableArray();
-                
+
                 EnumGenerationSpec enumToGenerate = new(
                     typeName,
                     modifier,
@@ -165,18 +168,16 @@ internal sealed class EnumExtensionsParser
         }
 
         IEnumerable<AttributeSyntax> attributes = attributeList.SelectMany(x => x.Attributes);
+
         foreach (AttributeSyntax? appliedAttribute in attributes)
         {
             SymbolInfo symbolInfo = compilationSemanticModel.GetSymbolInfo(appliedAttribute, cancellationToken);
-            if (symbolInfo.Symbol is not IMethodSymbol attributeSymbol)
-            {
-                continue;
-            }
 
-            INamedTypeSymbol attributeContainingTypeSymbol = attributeSymbol.ContainingType;
+            INamedTypeSymbol? attributeContainingTypeSymbol = symbolInfo.Symbol?.ContainingType;
+
             if (extensionsAttribute.Equals(attributeContainingTypeSymbol, SymbolEqualityComparer.Default))
             {
-                return appliedAttribute is not null;
+                return true;
             }
         }
 
@@ -204,6 +205,10 @@ internal sealed class EnumExtensionsParser
 
     private static string GetAccessModifier(MemberDeclarationSyntax enumDeclarationSyntax) =>
         enumDeclarationSyntax.Modifiers.Count > 0 ? enumDeclarationSyntax.Modifiers[0].Text : "internal";
+
+    private static bool SupportedBackingType(string? underlyingTypeName) =>
+        !String.IsNullOrWhiteSpace(underlyingTypeName) &&
+        Array.Exists(Constants.SupportedBackingTypes, x => x == underlyingTypeName);
 
     private static Location GetLocation(ISymbol contextTypeSymbol) =>
         contextTypeSymbol.Locations.Length > 0 ? contextTypeSymbol.Locations[0] : Location.None;
