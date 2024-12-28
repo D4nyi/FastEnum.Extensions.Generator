@@ -136,15 +136,19 @@ internal sealed partial class EnumExtensionsEmitter
 
         AddHexValuesForKnownFields(sb);
 
+        bool isByteSized = _currentSpec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase);
+
+        string underlyingType = isByteSized ? "global::System.Byte" : _currentSpec.UnderlyingType;
+
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
                         _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), (buffer, value) =>
                         {{
 
-                """, _currentSpec.UnderlyingType, _currentSpec.FullName);
+                """, underlyingType, _currentSpec.FullName);
 
-        if (_currentSpec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase))
+        if (isByteSized)
         {
             sb
                 .Append(

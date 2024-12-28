@@ -30,7 +30,7 @@ public enum Color
 }
 
 [Extensions, Flags]
-public enum GenerationOptions : byte
+public enum GenerationOptions : SByte
 {
     None = 0,
     ToString = 1,
