@@ -23,6 +23,69 @@
     },
     {
       "Location": /*
+            [FastEnum.Extensions]
+            public enum NestedInMultipleClass
+                        ^^^^^^^^^^^^^^^^^^^^^
+            {
+*/
+ "SnapshotTesting\\NestedInMultipleClass.cs: (7,24)-(7,45)",
+      "Message": "Extension generation for NestedInMultipleClass is disabled because it has multiple parent types",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "ETS1003",
+        "Title": "Multiple nesting type",
+        "Description": "Please define your enum as a standalone type or reduce nesting.",
+        "MessageFormat": "Extension generation for {0} is disabled because it has multiple parent types",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
+            [FastEnum.Extensions]
+            public enum NestedInMultipleClassWithAGenericClass
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            {
+*/
+ "SnapshotTesting\\NestedInMultipleClassWithAGenericClass.cs: (7,24)-(7,62)",
+      "Message": "Extension generation for NestedInMultipleClassWithAGenericClass is disabled because it is nested in a generic type",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "ETS1002",
+        "Title": "Invalid nesting type",
+        "Description": "Please define your enum outside a generic type.",
+        "MessageFormat": "Extension generation for {0} is disabled because it is nested in a generic type",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
+            [FastEnum.Extensions]
+            public enum NestedInMultipleClassWithAGenericClass
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            {
+*/
+ "SnapshotTesting\\NestedInMultipleClassWithAGenericClass.cs: (7,24)-(7,62)",
+      "Message": "Extension generation for NestedInMultipleClassWithAGenericClass is disabled because it has multiple parent types",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "ETS1003",
+        "Title": "Multiple nesting type",
+        "Description": "Please define your enum as a standalone type or reduce nesting.",
+        "MessageFormat": "Extension generation for {0} is disabled because it has multiple parent types",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
         [FastEnum.Extensions]
         protected enum NestedInProtectedClass
                        ^^^^^^^^^^^^^^^^^^^^^^

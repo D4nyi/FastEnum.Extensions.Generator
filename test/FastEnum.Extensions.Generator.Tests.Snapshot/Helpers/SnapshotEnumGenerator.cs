@@ -56,6 +56,42 @@ internal static class SnapshotEnumGenerator
                                         """
             },
             {
+                "NestedInMultipleClass", """
+                                         namespace SnapshotTesting
+                                         {
+                                             public class NestingGrandParentClass
+                                             {
+                                                 public class NestingParentClass
+                                                 {
+                                                     [FastEnum.Extensions]
+                                                     public enum NestedInMultipleClass
+                                                     {
+                                                         None
+                                                     }
+                                                 }
+                                             }
+                                         }
+                                         """
+            },
+            {
+                "NestedInMultipleClassWithAGenericClass", """
+                                         namespace SnapshotTesting
+                                         {
+                                             public class NestingGrandParentClass
+                                             {
+                                                 public class NestingParentClass<T>
+                                                 {
+                                                     [FastEnum.Extensions]
+                                                     public enum NestedInMultipleClassWithAGenericClass
+                                                     {
+                                                         None
+                                                     }
+                                                 }
+                                             }
+                                         }
+                                         """
+            },
+            {
                 "EmptyEnum", """
                              namespace SnapshotTesting
                              {

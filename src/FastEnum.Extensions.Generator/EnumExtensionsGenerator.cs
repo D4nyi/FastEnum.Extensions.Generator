@@ -75,29 +75,6 @@ public sealed class EnumExtensionsGenerator : IIncrementalGenerator
     private static void PostInit(IncrementalGeneratorPostInitializationContext ctx) =>
         ctx.AddSource(Constants.AttributesFile, SourceText.From(Constants.Attributes, Encoding.UTF8));
 
-    //private void ExtractBuildProperties(AnalyzerConfigOptionsProvider options)
-    //{
-    //    //options.GlobalOptions.TryGetValue("build_property.FastEnumDefaultBehaviour", out string? defaultBehaviour);
-
-    //    bool success = options.GlobalOptions.TryGetValue("build_property.targetframework", out string? targetFrameworks);
-    //    if (success && !String.IsNullOrEmpty(targetFrameworks))
-    //    {
-    //        _targetFrameworks = ParseFrameworkVersion(targetFrameworks!);
-    //        return;
-    //    }
-
-    //    success = options.GlobalOptions.TryGetValue("build_property.targetframeworks", out targetFrameworks);
-    //    if (success && targetFrameworks is not null)
-    //    {
-    //        _targetFrameworks = ParseFrameworkVersions(targetFrameworks);
-    //        return;
-    //    }
-
-    //    // if the target is NetFramework 4.8 then
-    //    // there's no way of extracting that information
-    //    _targetFrameworks = Framework.NetStandard20;
-    //}
-
     internal readonly struct EnumSourceGenerationContext(in SourceProductionContext context)
     {
         private readonly SourceProductionContext _context = context;

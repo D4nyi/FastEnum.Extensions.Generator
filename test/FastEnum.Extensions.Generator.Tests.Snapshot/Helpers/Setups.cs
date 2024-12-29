@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -24,10 +23,15 @@ internal static class Setups
 
     internal static bool HasCorrectSourceCount(this GeneratorRunResult result, int enumsCount)
     {
-        // Analyzer warning raised for: 'NestedInGenericClass', 'ProtectedClass', 'ProtectedInternalClass', 'PrivateClass', 'File'
-        // 5 removed because a warning + 1 for the attribute => 4
+        // Analyzer warning raised for:
+        // 'NestedInGenericClass', 'ProtectedClass', 'ProtectedInternalClass', 'PrivateClass', 'File'
+        // 'NestedInMultipleClass', 'NestedInMultipleClassWithAGenericClass'
+        //
+        // 7 removed because a warning
+        // 'ExtensionsAttribute' is always added
+        // -7 + 1 = -6
 
-        return result.GeneratedSources.Length == (enumsCount - 4);
+        return result.GeneratedSources.Length == (enumsCount - 6);
     }
 
     internal static GeneratorDriver CreateGeneratorDriver(Dictionary<string, string> enums)
