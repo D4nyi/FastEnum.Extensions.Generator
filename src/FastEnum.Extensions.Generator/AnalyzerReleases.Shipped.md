@@ -23,6 +23,12 @@ ETS1003 | FastEnumToString.EnumToStringGenerator | Warning      | Design       |
 
 ## Release 3.0
 
+### New Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+ETS1004 | Usage    | Warning  | Extension generation is disabled because the enum's accessibility modifier is inconsistent with its parent's
+
 ### Changed Rules
 
 Rule ID | New Category | New Severity | Old Category                           | Old Severity | Notes

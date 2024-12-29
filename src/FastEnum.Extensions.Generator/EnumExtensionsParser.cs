@@ -14,7 +14,7 @@ namespace FastEnum.Extensions.Generator;
 
 internal sealed class EnumExtensionsParser
 {
-    #region Static & Const fields
+    #region Warnings
 
     private static readonly DiagnosticDescriptor _invalidVisibilityModifier = new(
         id: "ETS1001",
@@ -44,6 +44,14 @@ internal sealed class EnumExtensionsParser
         isEnabledByDefault: true,
         description: "Please define your enum as a standalone type or reduce nesting.");
 
+    private static readonly DiagnosticDescriptor _inconsistentAccessibilityWithParentType = new(
+        id: "ETS1004",
+        title: "Multiple nesting type",
+        messageFormat: "Extension generation for {0} is disabled because its accessibility modifier is inconsistent with its parent's",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Please define your enum as a standalone type or reduce nesting.");
     #endregion
 
     private readonly Compilation _compilation;
@@ -71,8 +79,7 @@ internal sealed class EnumExtensionsParser
 
         List<EnumGenerationSpec> enumToGenerateList = [];
 
-        IEnumerable<IGrouping<SyntaxTree, EnumDeclarationSyntax>> grouped = classDeclarationSyntaxList
-            .GroupBy(c => c.SyntaxTree);
+        IEnumerable<IGrouping<SyntaxTree, EnumDeclarationSyntax>> grouped = classDeclarationSyntaxList.GroupBy(c => c.SyntaxTree);
 
         foreach (IGrouping<SyntaxTree, EnumDeclarationSyntax> group in grouped)
         {
@@ -95,26 +102,30 @@ internal sealed class EnumExtensionsParser
                     continue;
                 }
 
-                INamedTypeSymbol? contextTypeSymbol =
-                    compilationSemanticModel.GetDeclaredSymbol(enumDeclarationSyntax, cancellationToken);
+                INamedTypeSymbol? contextTypeSymbol = compilationSemanticModel.GetDeclaredSymbol(enumDeclarationSyntax, cancellationToken);
                 Debug.Assert(contextTypeSymbol is not null);
 
-                Nesting nesting = GetNesting(contextTypeSymbol!);
+                NestingState nestingState = GetNesting(contextTypeSymbol!);
+                string modifier = GetAccessModifier(enumDeclarationSyntax);
 
-                if (nesting > Nesting.SingleParentType)
+                if (nestingState > NestingState.SingleParentType)
                 {
-                    ReportNestingWarnings(nesting, GetLocation(contextTypeSymbol!), contextTypeSymbol!.Name);
+                    ReportNestingWarnings(
+                        nestingState,
+                        modifier,
+                        GetLocation(contextTypeSymbol!),
+                        contextTypeSymbol!.Name);
 
                     continue;
                 }
 
-                string modifier = GetAccessModifier(enumDeclarationSyntax);
                 if (Array.Exists(Constants.UnsupportedVisibilityModifiers, x => x == modifier))
                 {
                     _sourceGenerationContext.ReportDiagnostic(
                         _invalidVisibilityModifier,
                         GetLocation(contextTypeSymbol!),
                         contextTypeSymbol!.Name);
+
                     continue;
                 }
 
@@ -132,8 +143,7 @@ internal sealed class EnumExtensionsParser
                     .Cast<IFieldSymbol>()
                     .Select(x =>
                     {
-                        AttributeValues data = x.ReadAttributeValues(displayAttributeSymbol!,
-                            enumMemberAttributeSymbol!, descriptionAttributeSymbol!);
+                        AttributeValues data = x.ReadAttributeValues(displayAttributeSymbol!, enumMemberAttributeSymbol!, descriptionAttributeSymbol!);
 
                         return new EnumMemberSpec(typeName, x.Name, x.ConstantValue!, data);
                     })
@@ -155,9 +165,9 @@ internal sealed class EnumExtensionsParser
         return enumToGenerateList;
     }
 
-    private void ReportNestingWarnings(Nesting nesting, Location location, string name)
+    private void ReportNestingWarnings(NestingState nestingState, string modifier, Location location, string name)
     {
-        if (HasFlag(nesting, Nesting.GenericParentType))
+        if (HasFlag(nestingState, NestingState.GenericParentType))
         {
             _sourceGenerationContext.ReportDiagnostic(
                 _genericParentType,
@@ -165,10 +175,18 @@ internal sealed class EnumExtensionsParser
                 name);
         }
 
-        if (HasFlag(nesting, Nesting.MultipleParentType))
+        if (HasFlag(nestingState, NestingState.MultipleParentType))
         {
             _sourceGenerationContext.ReportDiagnostic(
                 _multipleParentType,
+                location,
+                name);
+        }
+
+        if (HasFlag(nestingState, NestingState.InternalSingleParentType) && modifier != "internal")
+        {
+            _sourceGenerationContext.ReportDiagnostic(
+                _inconsistentAccessibilityWithParentType,
                 location,
                 name);
         }
@@ -202,12 +220,12 @@ internal sealed class EnumExtensionsParser
         return false;
     }
 
-    private static Nesting GetNesting(ISymbol typeSymbol)
+    private static NestingState GetNesting(ISymbol typeSymbol)
     {
         INamedTypeSymbol containingType = typeSymbol.ContainingType;
 
         int nestingLevel = 0;
-        Nesting nesting = Nesting.Namespace;
+        NestingState nestingState = NestingState.Namespace;
 
         while (containingType is not null && containingType.Kind != SymbolKind.Namespace)
         {
@@ -220,15 +238,28 @@ internal sealed class EnumExtensionsParser
                     TypeArguments.IsDefaultOrEmpty: false
                 })
             {
-                nesting |= Nesting.GenericParentType;
+                nestingState |= NestingState.GenericParentType;
             }
 
             containingType = containingType.ContainingType;
         }
 
-        nesting |= nestingLevel < 2 ? Nesting.SingleParentType : Nesting.MultipleParentType;
+        if (nestingLevel == 1)
+        {
+            nestingState |= NestingState.SingleParentType;
 
-        return nesting;
+            Accessibility accessibility = typeSymbol.ContainingType.DeclaredAccessibility;
+            if (accessibility != Accessibility.Public)
+            {
+                nestingState |= NestingState.InternalSingleParentType;
+            }
+        }
+        else if (nestingLevel > 1)
+        {
+            nestingState |= NestingState.MultipleParentType;
+        }
+
+        return nestingState;
     }
 
     private static string GetAccessModifier(MemberDeclarationSyntax enumDeclarationSyntax) =>
@@ -237,14 +268,15 @@ internal sealed class EnumExtensionsParser
     private static Location GetLocation(ISymbol contextTypeSymbol) =>
         contextTypeSymbol.Locations.Length > 0 ? contextTypeSymbol.Locations[0] : Location.None;
 
-    private static bool HasFlag(Nesting instance, Nesting flag) => (instance & flag) == flag;
+    private static bool HasFlag(NestingState instance, NestingState flag) => (instance & flag) == flag;
 
     [Flags]
-    private enum Nesting
+    private enum NestingState
     {
         Namespace = 0,
         SingleParentType = 1,
         MultipleParentType = 2,
         GenericParentType = 4,
+        InternalSingleParentType = 8
     }
 }
