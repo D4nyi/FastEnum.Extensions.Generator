@@ -14,7 +14,6 @@ internal static class Constants
     internal const string AttributesFile = "FastEnumExtensionsAttribute.g.cs";
 
     internal static readonly string[] UnsupportedVisibilityModifiers = ["private", "protected", "protected internal"];
-    internal static readonly string[] SupportedBackingTypes = ["byte", "sbyte", "short", "ushort", "int", "uint", "long", "ulong"];
 
     internal const string Attributes =
         $$"""

@@ -25,17 +25,8 @@ internal sealed class EnumExtensionsParser
         isEnabledByDefault: true,
         description: "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.");
 
-    private static readonly DiagnosticDescriptor _enumUnderlyingTypeCannotBeDetermined = new(
-        id: "ETS1002",
-        title: "Invalid backing type",
-        messageFormat: "Extension generation for {0} is disabled because it has an invalid backing type",
-        category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Error,
-        isEnabledByDefault: true,
-        description: "Please use one of the following types as the backing type: byte, sbyte, short, ushort, int, uint, long, ulong.");
-
     private static readonly DiagnosticDescriptor _genericTypeNestingRestrictions = new(
-        id: "ETS1003",
+        id: "ETS1002",
         title: "Invalid nesting type",
         messageFormat: "Extension generation for {0} is disabled because it is nested in a generic type",
         category: "Usage",
@@ -117,13 +108,9 @@ internal sealed class EnumExtensionsParser
                 }
 
                 string? underlyingTypeName = contextTypeSymbol!.EnumUnderlyingType?.ToString();
-                if (!SupportedBackingType(underlyingTypeName))
+                if (String.IsNullOrWhiteSpace(underlyingTypeName))
                 {
-                    _sourceGenerationContext.ReportDiagnostic(
-                        _enumUnderlyingTypeCannotBeDetermined,
-                        GetLocation(contextTypeSymbol),
-                        contextTypeSymbol.Name);
-                    continue;
+                    underlyingTypeName = "int";
                 }
 
                 string typeName = contextTypeSymbol.ToString();
@@ -189,6 +176,7 @@ internal sealed class EnumExtensionsParser
         INamedTypeSymbol containingType = typeSymbol.ContainingType;
 
         bool isNestedInGenericType = false;
+
         while (containingType is not null && containingType.Kind != SymbolKind.Namespace)
         {
             if (containingType is
@@ -205,10 +193,6 @@ internal sealed class EnumExtensionsParser
 
     private static string GetAccessModifier(MemberDeclarationSyntax enumDeclarationSyntax) =>
         enumDeclarationSyntax.Modifiers.Count > 0 ? enumDeclarationSyntax.Modifiers[0].Text : "internal";
-
-    private static bool SupportedBackingType(string? underlyingTypeName) =>
-        !String.IsNullOrWhiteSpace(underlyingTypeName) &&
-        Array.Exists(Constants.SupportedBackingTypes, x => x == underlyingTypeName);
 
     private static Location GetLocation(ISymbol contextTypeSymbol) =>
         contextTypeSymbol.Locations.Length > 0 ? contextTypeSymbol.Locations[0] : Location.None;

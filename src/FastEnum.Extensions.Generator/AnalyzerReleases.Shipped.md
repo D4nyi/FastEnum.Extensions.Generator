@@ -28,5 +28,4 @@ ETS1003 | FastEnumToString.EnumToStringGenerator | Warning      | Design       |
 Rule ID | New Category | New Severity | Old Category                           | Old Severity | Notes
 --------|--------------|--------------|----------------------------------------|--------------|-------
 ETS1001 | Usage        | Error        | FastEnumToString.EnumToStringGenerator | Warning      | Extension generation is disabled because it has an unsupported visibility modifier
-ETS1002 | Usage        | Error        | FastEnumToString.EnumToStringGenerator | Warning      | Extension generation is disabled because it has an invalid backing type
-ETS1003 | Usage        | Warning      | FastEnumToString.EnumToStringGenerator | Warning      | Extension generation is disabled because it is nested in a generic type
+ETS1002 | Usage        | Warning      | FastEnumToString.EnumToStringGenerator | Warning      | Extension generation is disabled because it is nested in a generic type
