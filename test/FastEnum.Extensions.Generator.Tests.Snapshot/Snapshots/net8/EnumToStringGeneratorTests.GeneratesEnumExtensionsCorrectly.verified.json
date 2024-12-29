@@ -7,12 +7,12 @@
                     ^^^^^^^^^^^^^^^^^^^^
         {
 */
- ": (5,20)-(5,40)",
+ "SnapshotTesting\\NestedInGenericClass.cs: (5,20)-(5,40)",
       "Message": "Extension generation for NestedInGenericClass is disabled because it is nested in a generic type",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
-        "Id": "ETS1003",
+        "Id": "ETS1002",
         "Title": "Invalid nesting type",
         "Description": "Please define your enum outside a generic type.",
         "MessageFormat": "Extension generation for {0} is disabled because it is nested in a generic type",
@@ -24,12 +24,72 @@
     {
       "Location": /*
         [FastEnum.Extensions]
-        private enum PrivateEnum
-                     ^^^^^^^^^^^
+        protected enum NestedInProtectedClass
+                       ^^^^^^^^^^^^^^^^^^^^^^
         {
 */
- ": (5,21)-(5,32)",
-      "Message": "Extension generation for PrivateEnum is disabled because it has an unsupported visibility modifier",
+ "SnapshotTesting\\ProtectedClass.cs: (5,23)-(5,45)",
+      "Message": "Extension generation for NestedInProtectedClass is disabled because it has an unsupported visibility modifier",
+      "Severity": "Error",
+      "Descriptor": {
+        "Id": "ETS1001",
+        "Title": "Invalid visibility modifier",
+        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.",
+        "MessageFormat": "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        "Category": "Usage",
+        "DefaultSeverity": "Error",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
+        [FastEnum.Extensions]
+        protected internal enum NestedInProtectedInternalClass
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        {
+*/
+ "SnapshotTesting\\ProtectedInternalClass.cs: (5,32)-(5,62)",
+      "Message": "Extension generation for NestedInProtectedInternalClass is disabled because it has an unsupported visibility modifier",
+      "Severity": "Error",
+      "Descriptor": {
+        "Id": "ETS1001",
+        "Title": "Invalid visibility modifier",
+        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.",
+        "MessageFormat": "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        "Category": "Usage",
+        "DefaultSeverity": "Error",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
+        [FastEnum.Extensions]
+        private enum NestedInPrivateClass
+                     ^^^^^^^^^^^^^^^^^^^^
+        {
+*/
+ "SnapshotTesting\\PrivateClass.cs: (5,21)-(5,41)",
+      "Message": "Extension generation for NestedInPrivateClass is disabled because it has an unsupported visibility modifier",
+      "Severity": "Error",
+      "Descriptor": {
+        "Id": "ETS1001",
+        "Title": "Invalid visibility modifier",
+        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.",
+        "MessageFormat": "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        "Category": "Usage",
+        "DefaultSeverity": "Error",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
+    [FastEnum.Extensions]
+    file enum IsFile
+              ^^^^^^
+    {
+*/
+ "SnapshotTesting\\File.cs: (3,14)-(3,20)",
+      "Message": "Extension generation for IsFile is disabled because it has an unsupported visibility modifier",
       "Severity": "Error",
       "Descriptor": {
         "Id": "ETS1001",

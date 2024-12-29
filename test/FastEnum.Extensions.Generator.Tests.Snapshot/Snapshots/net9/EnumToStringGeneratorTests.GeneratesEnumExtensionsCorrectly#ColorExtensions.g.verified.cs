@@ -42,13 +42,13 @@ public static class ColorExtensions
     /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.Color" />.
     /// </summary>
     /// <returns>An array of the values defined in <see cref="SnapshotTesting.Color" />.</returns>
-    public static SnapshotTesting.Color [] GetValues() => _values;
+    public static SnapshotTesting.Color[] GetValues() => _values;
 
     /// <summary>
     /// Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.Color" />
     /// </summary>
     /// <returns>An array of the underlying values defined in <see cref="SnapshotTesting.Color" />.</returns>
-    public static global::System.Int32 [] GetUnderlyingValues() => _underlyingValues;
+    public static global::System.Int32[] GetUnderlyingValues() => _underlyingValues;
 
     /// <summary>
     /// Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.Color" />

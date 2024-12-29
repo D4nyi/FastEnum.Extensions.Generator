@@ -45,13 +45,13 @@ public static class GenerationOptionsExtensions
     /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.GenerationOptions" />.
     /// </summary>
     /// <returns>An array of the values defined in <see cref="SnapshotTesting.GenerationOptions" />.</returns>
-    public static SnapshotTesting.GenerationOptions [] GetValues() => _values;
+    public static SnapshotTesting.GenerationOptions[] GetValues() => _values;
 
     /// <summary>
     /// Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.GenerationOptions" />
     /// </summary>
     /// <returns>An array of the underlying values defined in <see cref="SnapshotTesting.GenerationOptions" />.</returns>
-    public static global::System.Byte [] GetUnderlyingValues() => _underlyingValues;
+    public static global::System.Byte[] GetUnderlyingValues() => _underlyingValues;
 
     /// <summary>
     /// Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.GenerationOptions" />
