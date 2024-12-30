@@ -21,17 +21,18 @@ internal static class Setups
         VerifySettings.UseDirectory(CreateDirectoryPath());
     }
 
-    internal static bool HasCorrectSourceCount(this GeneratorRunResult result, int enumsCount)
+    internal static int ExpectedSourceCount(this Dictionary<string, string> enums)
     {
         // Analyzer warning raised for:
         // 'NestedInGenericClass', 'ProtectedClass', 'ProtectedInternalClass', 'PrivateClass', 'File'
-        // 'NestedInMultipleClass', 'NestedInMultipleClassWithAGenericClass'
+        // 'NestedInMultipleClass', 'NestedInMultipleClassWithAGenericClass',
+        // 'NestedWithInconsistentAccessibility', 'NestedInGenericClassWithInconsistentAccessibility'
         //
-        // 7 removed because a warning
+        // 9 removed because a warning
         // 'ExtensionsAttribute' is always added
-        // -7 + 1 = -6
+        // -9 + 1 = -8
 
-        return result.GeneratedSources.Length == (enumsCount - 6);
+        return enums.Count - 8;
     }
 
     internal static GeneratorDriver CreateGeneratorDriver(Dictionary<string, string> enums)

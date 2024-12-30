@@ -17,7 +17,12 @@ public sealed class EnumToStringGeneratorTests
         GeneratorDriverRunResult result = generator.GetRunResult();
 
         // Assert
-        Assert.Single(result.Results, assertedResult => assertedResult.HasCorrectSourceCount(enums.Count));
+        Assert.Single(result.Results, assertedResult =>
+        {
+            Assert.Equal(enums.ExpectedSourceCount(), assertedResult.GeneratedSources.Length);
+
+            return true;
+        });
 
         return Verify(result, Setups.VerifySettings);
     }

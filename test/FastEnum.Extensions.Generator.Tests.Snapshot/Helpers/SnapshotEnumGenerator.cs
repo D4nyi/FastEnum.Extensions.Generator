@@ -56,6 +56,36 @@ internal static class SnapshotEnumGenerator
                                         """
             },
             {
+                "NestedWithInconsistentAccessibility", """
+                                                       namespace SnapshotTesting
+                                                       {
+                                                           internal class NestingClass
+                                                           {
+                                                               [FastEnum.Extensions]
+                                                               public enum NestedWithInconsistentAccessibility
+                                                               {
+                                                                   None
+                                                               }
+                                                           }
+                                                       }
+                                                       """
+            },
+            {
+                "NestedInGenericClassWithInconsistentAccessibility", """
+                                                                     namespace SnapshotTesting
+                                                                     {
+                                                                         internal class NestingGenericInconsistentClass<T>
+                                                                         {
+                                                                             [FastEnum.Extensions]
+                                                                             public enum NestedInGenericClassWithInconsistentAccessibility
+                                                                             {
+                                                                                 None
+                                                                             }
+                                                                         }
+                                                                     }
+                                                                     """
+            },
+            {
                 "NestedInMultipleClass", """
                                          namespace SnapshotTesting
                                          {
@@ -75,21 +105,21 @@ internal static class SnapshotEnumGenerator
             },
             {
                 "NestedInMultipleClassWithAGenericClass", """
-                                         namespace SnapshotTesting
-                                         {
-                                             public class NestingGrandParentClass
-                                             {
-                                                 public class NestingParentClass<T>
-                                                 {
-                                                     [FastEnum.Extensions]
-                                                     public enum NestedInMultipleClassWithAGenericClass
-                                                     {
-                                                         None
-                                                     }
-                                                 }
-                                             }
-                                         }
-                                         """
+                                                          namespace SnapshotTesting
+                                                          {
+                                                              public class NestingGrandParentClass_Generic
+                                                              {
+                                                                  public class NestingParentGenericClass<T>
+                                                                  {
+                                                                      [FastEnum.Extensions]
+                                                                      public enum NestedInMultipleClassWithAGenericClass
+                                                                      {
+                                                                          None
+                                                                      }
+                                                                  }
+                                                              }
+                                                          }
+                                                          """
             },
             {
                 "EmptyEnum", """
@@ -118,10 +148,9 @@ internal static class SnapshotEnumGenerator
         [
             new("Class", "class"), new("StaticClass", "static class"),
             new("SealedClass", "sealed class"), new("Record", "record"),
-            new("RecordClass", "record class"), new("RecordSealedClass", "record sealed class"),
+            new("RecordClass", "record class"), new("RecordSealedClass", "sealed record class"),
             new("Struct", "struct"), new("ReadonlyStruct", "readonly struct"),
-            new("RecordStruct", "record struct"), new("ReadonlyRecordStruct", "readonly record struct"),
-            new("InternalClass", "class", "internal")
+            new("RecordStruct", "record struct"), new("ReadonlyRecordStruct", "readonly record struct")
         ];
 
         foreach (TypeUsage type in types)
@@ -129,7 +158,7 @@ internal static class SnapshotEnumGenerator
             enums.Add(type.Key, $$"""
                                   namespace SnapshotTesting
                                   {
-                                      {{type.Visibility}} {{type.TypeName}} NestingType
+                                      {{type.Visibility}} {{type.TypeName}} NestingType{{type.Key}}
                                       {
                                           [FastEnum.Extensions]
                                           public enum NestedIn{{type.Key}}
@@ -156,7 +185,7 @@ internal static class SnapshotEnumGenerator
             enums.Add(type.Key, $$"""
                                   namespace SnapshotTesting
                                   {
-                                      public {{type.TypeName}} NestingType
+                                      public {{type.TypeName}} NestingType{{type.Key}}
                                       {
                                           [FastEnum.Extensions]
                                           {{type.Visibility}} enum NestedIn{{type.Key}}

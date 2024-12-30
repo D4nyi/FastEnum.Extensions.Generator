@@ -23,6 +23,69 @@
     },
     {
       "Location": /*
+        [FastEnum.Extensions]
+        public enum NestedWithInconsistentAccessibility
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        {
+*/
+ "SnapshotTesting\\NestedWithInconsistentAccessibility.cs: (5,20)-(5,55)",
+      "Message": "Extension generation for NestedWithInconsistentAccessibility is disabled because its accessibility modifier is inconsistent with its parent's",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "ETS1004",
+        "Title": "Multiple nesting type",
+        "Description": "Please define your enum as a standalone type or reduce nesting.",
+        "MessageFormat": "Extension generation for {0} is disabled because its accessibility modifier is inconsistent with its parent's",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
+        [FastEnum.Extensions]
+        public enum NestedInGenericClassWithInconsistentAccessibility
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        {
+*/
+ "SnapshotTesting\\NestedInGenericClassWithInconsistentAccessibility.cs: (5,20)-(5,69)",
+      "Message": "Extension generation for NestedInGenericClassWithInconsistentAccessibility is disabled because it is nested in a generic type",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "ETS1002",
+        "Title": "Invalid nesting type",
+        "Description": "Please define your enum outside a generic type.",
+        "MessageFormat": "Extension generation for {0} is disabled because it is nested in a generic type",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
+        [FastEnum.Extensions]
+        public enum NestedInGenericClassWithInconsistentAccessibility
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        {
+*/
+ "SnapshotTesting\\NestedInGenericClassWithInconsistentAccessibility.cs: (5,20)-(5,69)",
+      "Message": "Extension generation for NestedInGenericClassWithInconsistentAccessibility is disabled because its accessibility modifier is inconsistent with its parent's",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "ETS1004",
+        "Title": "Multiple nesting type",
+        "Description": "Please define your enum as a standalone type or reduce nesting.",
+        "MessageFormat": "Extension generation for {0} is disabled because its accessibility modifier is inconsistent with its parent's",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": /*
             [FastEnum.Extensions]
             public enum NestedInMultipleClass
                         ^^^^^^^^^^^^^^^^^^^^^

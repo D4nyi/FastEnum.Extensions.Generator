@@ -7,7 +7,7 @@
 namespace SnapshotTesting;
 
 /// <summary>
-/// Extension methods for <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />
+/// Extension methods for <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />
 /// </summary>
 [global::System.CodeDom.Compiler.GeneratedCode("FastEnum.Extensions.Generator.EnumExtensionsGenerator", "1.3.2")]
 public static class NestedInRecordSealedClassExtensions
@@ -17,14 +17,14 @@ public static class NestedInRecordSealedClassExtensions
         0,
     };
 
-    private static readonly SnapshotTesting.NestingType.NestedInRecordSealedClass[] _values =
+    private static readonly SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass[] _values =
     {
-        SnapshotTesting.NestingType.NestedInRecordSealedClass.None,
+        SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None,
     };
 
     private static readonly global::System.String[] _names =
     {
-        nameof(SnapshotTesting.NestingType.NestedInRecordSealedClass.None),
+        nameof(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None),
     };
 
     /// <summary>
@@ -33,53 +33,53 @@ public static class NestedInRecordSealedClassExtensions
     public const global::System.Int32 MembersCount = 1;
 
     /// <summary>
-    /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />.
+    /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />.
     /// </summary>
-    /// <returns>An array of the values defined in <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />.</returns>
-    public static SnapshotTesting.NestingType.NestedInRecordSealedClass[] GetValues() => _values;
+    /// <returns>An array of the values defined in <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />.</returns>
+    public static SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass[] GetValues() => _values;
 
     /// <summary>
-    /// Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />
+    /// Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />
     /// </summary>
-    /// <returns>An array of the underlying values defined in <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />.</returns>
+    /// <returns>An array of the underlying values defined in <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />.</returns>
     public static global::System.Int32[] GetUnderlyingValues() => _underlyingValues;
 
     /// <summary>
-    /// Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />
+    /// Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />
     /// </summary>
-    /// <returns>An array of the names of the members defined in <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />.</returns>
+    /// <returns>An array of the names of the members defined in <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />.</returns>
     public static global::System.String[] GetNames() => _names;
 
     /// <summary>Determines whether one or more bit fields are set in the current instance.</summary>
     /// <param name="instance">The instance in which the flags are searched.</param>
     /// <param name="flags">The flags that will be looked up in the instance.</param>
     /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
-    public static global::System.Boolean HasFlag(this SnapshotTesting.NestingType.NestedInRecordSealedClass instance, SnapshotTesting.NestingType.NestedInRecordSealedClass flags) => (instance & flags) == flags;
+    public static global::System.Boolean HasFlag(this SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass instance, SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass flags) => (instance & flags) == flags;
 
     /// <summary>Returns a <see langword="global::System.Boolean"/> telling whether the given enum value exists in the enumeration.</summary>
     /// <param name="value">The value to check if it's defined</param>
     /// <returns><see langword="true"/> if the value exists in the enumeration, <see langword="false"/> otherwise</returns>
-    public static global::System.Boolean IsDefined(this SnapshotTesting.NestingType.NestedInRecordSealedClass value) => value switch
+    public static global::System.Boolean IsDefined(this SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value) => value switch
     {
-        SnapshotTesting.NestingType.NestedInRecordSealedClass.None => true,
+        SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None => true,
         _ => false
     };
 
     /// <summary>Converts the value of this instance to its equivalent string representation.</summary>
-    /// <param name="value">The <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass"/> value to convert to a string.</param>
+    /// <param name="value">The <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass"/> value to convert to a string.</param>
     /// <returns>The string representation of the value of this instance.</returns>
-    public static global::System.String FastToString(this SnapshotTesting.NestingType.NestedInRecordSealedClass value) => value switch
+    public static global::System.String FastToString(this SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value) => value switch
     {
-        SnapshotTesting.NestingType.NestedInRecordSealedClass.None => nameof(SnapshotTesting.NestingType.NestedInRecordSealedClass.None),
-        _ => (global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingType.NestedInRecordSealedClass, global::System.Int32>(ref value)).ToString()
+        SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None => nameof(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None),
+        _ => (global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass, global::System.Int32>(ref value)).ToString()
     };
 
     /// <summary>Converts the value of this instance to its equivalent string representation using the specified format.</summary>
-    /// <param name="value">The <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass"/> value to convert to a string.</param>
+    /// <param name="value">The <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass"/> value to convert to a string.</param>
     /// <param name="format">A format string.</param>
     /// <returns>The string representation of the value of this instance as specified by format.</returns>
     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
-    public static global::System.String FastToString(this SnapshotTesting.NestingType.NestedInRecordSealedClass value,
+    public static global::System.String FastToString(this SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value,
         [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
         global::System.String? format)
     {
@@ -91,7 +91,7 @@ public static class NestedInRecordSealedClassExtensions
         switch (formatChar | 0x20)
         {
             case 'g': return value.FastToString();
-            case 'd': return global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingType.NestedInRecordSealedClass, global::System.Int32>(ref value).ToString();
+            case 'd': return global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass, global::System.Int32>(ref value).ToString();
             case 'x': return FormatNumberAsHex(value);
             case 'f':
                 global::System.String? result = FormatFlagNames(value);
@@ -102,33 +102,33 @@ public static class NestedInRecordSealedClassExtensions
     }
 
     /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
-    /// <param name="value">A(n) <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass"/> enum value from which the attribute value is read.</param>
+    /// <param name="value">A(n) <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
-    public static string? GetEnumMemberValue(this SnapshotTesting.NestingType.NestedInRecordSealedClass value) => null;
+    public static string? GetEnumMemberValue(this SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value) => null;
 
     /// <summary>Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
-    /// <param name="value">A(n) <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass"/> enum value from which the attribute value is read.</param>
+    /// <param name="value">A(n) <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> if exists; otherwise null.</returns>
-    public static string? GetDisplayName(this SnapshotTesting.NestingType.NestedInRecordSealedClass value) => null;
+    public static string? GetDisplayName(this SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value) => null;
 
     /// <summary>Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
-    /// <param name="value">A(n) <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass"/> enum value from which the attribute value is read.</param>
+    /// <param name="value">A(n) <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
-    public static string? GetDisplayDescription(this SnapshotTesting.NestingType.NestedInRecordSealedClass value) => null;
+    public static string? GetDisplayDescription(this SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value) => null;
 
     /// <summary>Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.</summary>
-    /// <param name="value">A(n) <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass"/> enum value from which the attribute value is read.</param>
+    /// <param name="value">A(n) <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass"/> enum value from which the attribute value is read.</param>
     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
-    public static string? GetDescription(this SnapshotTesting.NestingType.NestedInRecordSealedClass value) => null;
+    public static string? GetDescription(this SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value) => null;
 
     /// <summary>
-    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />.
+    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />.
     /// This method using case-sensitive parsing.
     /// </summary>
     /// <param name="value">The string representation of the name or numeric value of one or more enumerated constants.</param>
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static global::System.Boolean TryParse([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out SnapshotTesting.NestingType.NestedInRecordSealedClass result)
+    public static global::System.Boolean TryParse([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass result)
     {
         if (global::System.String.IsNullOrEmpty(value))
         {
@@ -149,9 +149,9 @@ public static class NestedInRecordSealedClassExtensions
             return TryParseAsNumber(span, out result);
         }
 
-        if (value.Equals(nameof(SnapshotTesting.NestingType.NestedInRecordSealedClass.None)))
+        if (value.Equals(nameof(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None)))
         {
-            result = SnapshotTesting.NestingType.NestedInRecordSealedClass.None;
+            result = SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None;
             return true;
         }
 
@@ -159,13 +159,13 @@ public static class NestedInRecordSealedClassExtensions
     }
 
     /// <summary>
-    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />.
+    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />.
     /// This method using case-insensitive parsing.
     /// </summary>
     /// <param name="value">The string representation of the name or numeric value of one or more enumerated constants.</param>
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static global::System.Boolean TryParseIgnoreCase([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out SnapshotTesting.NestingType.NestedInRecordSealedClass result)
+    public static global::System.Boolean TryParseIgnoreCase([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass result)
     {
         if (global::System.String.IsNullOrEmpty(value))
         {
@@ -186,9 +186,9 @@ public static class NestedInRecordSealedClassExtensions
             return TryParseAsNumber(span, out result);
         }
 
-        if (value.Equals(nameof(SnapshotTesting.NestingType.NestedInRecordSealedClass.None), global::System.StringComparison.OrdinalIgnoreCase))
+        if (value.Equals(nameof(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None), global::System.StringComparison.OrdinalIgnoreCase))
         {
-            result = SnapshotTesting.NestingType.NestedInRecordSealedClass.None;
+            result = SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None;
             return true;
         }
 
@@ -196,31 +196,31 @@ public static class NestedInRecordSealedClassExtensions
     }
 
     /// <summary>
-    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />.
+    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />.
     /// This method using case-sensitive parsing.
     /// </summary>
     /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingType.NestedInRecordSealedClass result) =>
+    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass result) =>
         TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
 
     /// <summary>
-    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingType.NestedInRecordSealedClass" />.
+    /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass" />.
     /// This method using case-insensitive parsing.
     /// A parameter specifies whether the operation is case-insensitive.
     /// </summary>
     /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingType.NestedInRecordSealedClass result) =>
+    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass result) =>
         TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.String FormatNumberAsHex(SnapshotTesting.NestingType.NestedInRecordSealedClass data) => data switch
+    private static global::System.String FormatNumberAsHex(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass data) => data switch
     {
-        SnapshotTesting.NestingType.NestedInRecordSealedClass.None => "00000000",
-        _ => global::System.String.Create(sizeof(global::System.Int32) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingType.NestedInRecordSealedClass, global::System.Int32>(ref data), (buffer, value) =>
+        SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None => "00000000",
+        _ => global::System.String.Create(sizeof(global::System.Int32) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass, global::System.Int32>(ref data), (buffer, value) =>
         {
              ToCharsBuffer((global::System.Byte)(value >> 24), buffer, 0);
              ToCharsBuffer((global::System.Byte)(value >> 16), buffer, 2);
@@ -230,7 +230,7 @@ public static class NestedInRecordSealedClassExtensions
     };
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.StringComparison comparison, out SnapshotTesting.NestingType.NestedInRecordSealedClass result)
+    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.StringComparison comparison, out SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass result)
     {
         if (value.IsEmpty)
         {
@@ -244,9 +244,9 @@ public static class NestedInRecordSealedClassExtensions
             return TryParseAsNumber(value, out result);
         }
 
-        if (value.Equals(nameof(SnapshotTesting.NestingType.NestedInRecordSealedClass.None).AsSpan(), comparison))
+        if (value.Equals(nameof(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None).AsSpan(), comparison))
         {
-            result = SnapshotTesting.NestingType.NestedInRecordSealedClass.None;
+            result = SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None;
             return true;
         }
 
@@ -262,7 +262,7 @@ public static class NestedInRecordSealedClassExtensions
         return global::System.Char.IsAsciiDigit(c) || c == '-' || c == '+';
     }
 
-    private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingType.NestedInRecordSealedClass result)
+    private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass result)
     {
         const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
         global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
@@ -270,7 +270,7 @@ public static class NestedInRecordSealedClassExtensions
 
         if (status)
         {
-            result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Int32, SnapshotTesting.NestingType.NestedInRecordSealedClass>(ref parseResult);
+            result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Int32, SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass>(ref parseResult);
             return true;
         }
 
@@ -278,7 +278,7 @@ public static class NestedInRecordSealedClassExtensions
         return false;
     }
 
-    private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.NestingType.NestedInRecordSealedClass result)
+    private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass result)
     {
         global::System.String[] enumNames = _names;
         global::System.Int32[] enumValues = _underlyingValues;
@@ -345,7 +345,7 @@ public static class NestedInRecordSealedClassExtensions
 
         if (parsed)
         {
-            result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Int32, SnapshotTesting.NestingType.NestedInRecordSealedClass>(ref localResult);
+            result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Int32, SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass>(ref localResult);
             return true;
         }
 
@@ -353,15 +353,15 @@ public static class NestedInRecordSealedClassExtensions
         return false;
     }
 
-    private static global::System.String? FormatFlagNames(SnapshotTesting.NestingType.NestedInRecordSealedClass value) => value switch
+    private static global::System.String? FormatFlagNames(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value) => value switch
     {
-        SnapshotTesting.NestingType.NestedInRecordSealedClass.None => nameof(SnapshotTesting.NestingType.NestedInRecordSealedClass.None),
+        SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None => nameof(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass.None),
         _ => ProcessMultipleFlagsNames(value)
     };
 
-    private static global::System.String? ProcessMultipleFlagsNames(SnapshotTesting.NestingType.NestedInRecordSealedClass value)
+    private static global::System.String? ProcessMultipleFlagsNames(SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass value)
     {
-        global::System.Int32 resultValue = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingType.NestedInRecordSealedClass, global::System.Int32>(ref value);
+        global::System.Int32 resultValue = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingTypeRecordSealedClass.NestedInRecordSealedClass, global::System.Int32>(ref value);
 
         Span<global::System.Int32> foundItems = stackalloc global::System.Int32[1];
         if (!TryFindFlagsNames(resultValue, foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount))
