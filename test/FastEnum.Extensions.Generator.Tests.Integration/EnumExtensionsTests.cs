@@ -132,7 +132,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(EnumStringGenerator))]
+    [ClassData(typeof(ColorStringGenerator))]
     public void TryParseString_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
         // Act
@@ -247,7 +247,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(EnumStringIgnoreCaseGenerator))]
+    [ClassData(typeof(ColorStringIgnoreCaseGenerator))]
     public void TryParseStringIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
         // Act
@@ -298,7 +298,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(EnumStringGenerator))]
+    [ClassData(typeof(ColorStringGenerator))]
     public void TryParseSpan_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
         // Arrange
@@ -336,7 +336,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(EnumStringIgnoreCaseGenerator))]
+    [ClassData(typeof(ColorStringIgnoreCaseGenerator))]
     public void TryParseSpanIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, Color expected)
     {
         // Arrange
@@ -387,7 +387,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(DescriptionDataGenerators))]
+    [ClassData(typeof(DescriptionDataGenerators<Color>))]
     public void GetDescription_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
     {
         // Act
@@ -411,7 +411,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(EnumMemberValueDataGenerator))]
+    [ClassData(typeof(EnumMemberValueDataGenerator<Color>))]
     public void GetEnumMemberValue_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
     {
         // Act
@@ -435,7 +435,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(DisplayDescriptionDataGenerator))]
+    [ClassData(typeof(DisplayDescriptionDataGenerator<Color>))]
     public void GetDisplayDescription_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
     {
         // Act
@@ -459,7 +459,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(DisplayNameDataGenerator))]
+    [ClassData(typeof(DisplayNameDataGenerator<Color>))]
     public void GetDisplayName_GeneratesTheSameResultAsReflectionWould(Color input, string? expectedDescription)
     {
         // Act

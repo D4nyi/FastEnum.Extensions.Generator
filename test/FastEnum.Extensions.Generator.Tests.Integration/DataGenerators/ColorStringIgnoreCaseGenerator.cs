@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
 [SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
-internal sealed class EnumStringIgnoreCaseGenerator : TheoryData<string, Color>
+internal sealed class ColorStringIgnoreCaseGenerator : TheoryData<string, Color>
 {
-    public EnumStringIgnoreCaseGenerator()
+    public ColorStringIgnoreCaseGenerator()
     {
         Add(nameof(Color.Red).ToLowerInvariant(), Color.Red);
         Add(nameof(Color.Green).ToLowerInvariant(), Color.Green);

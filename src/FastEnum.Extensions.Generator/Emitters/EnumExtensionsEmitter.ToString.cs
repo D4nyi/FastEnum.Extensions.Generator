@@ -25,7 +25,7 @@ internal sealed partial class EnumExtensionsEmitter
 
                 """, _currentSpec.Modifier, _currentSpec.FullName);
 
-        foreach (EnumMemberSpec member in _currentSpec.Members)
+        foreach (EnumMemberSpec member in _currentSpec.DistinctMembers)
         {
             sb
                 .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")
@@ -106,7 +106,7 @@ internal sealed partial class EnumExtensionsEmitter
             sb.AppendLine("        0 => \"0\",");
         }
 
-        foreach (EnumMemberSpec member in _currentSpec.Members)
+        foreach (EnumMemberSpec member in _currentSpec.DistinctMembers)
         {
             sb
                 .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")
@@ -178,7 +178,7 @@ internal sealed partial class EnumExtensionsEmitter
         MethodInfo toStringFormat = Helpers.GetToStringFormat(membersType);
         object[] toStringParam = [_currentSpec.Type.GetFormat()];
 
-        foreach (EnumMemberSpec member in _currentSpec.Members)
+        foreach (EnumMemberSpec member in _currentSpec.DistinctMembers)
         {
             string hex = (string)toStringFormat.Invoke(member.Value, toStringParam);
 

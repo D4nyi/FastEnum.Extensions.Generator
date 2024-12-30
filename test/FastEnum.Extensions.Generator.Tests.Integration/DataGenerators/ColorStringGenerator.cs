@@ -1,8 +1,8 @@
 namespace FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
-internal sealed class EnumStringGenerator : TheoryData<string, Color>
+internal sealed class ColorStringGenerator : TheoryData<string, Color>
 {
-    public EnumStringGenerator()
+    public ColorStringGenerator()
     {
         Add(nameof(Color.Red), Color.Red);
         Add(nameof(Color.Green), Color.Green);

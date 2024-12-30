@@ -43,7 +43,7 @@ internal sealed partial class EnumExtensionsEmitter
 
                 """, _currentSpec.UnderlyingType);
 
-        foreach (EnumMemberSpec member in _currentSpec.Members)
+        foreach (EnumMemberSpec member in _currentSpec.DistinctMembers)
         {
             sb.Append(methodBodyIndent).Append(member.Value).AppendLine(",");
         }
