@@ -18,6 +18,9 @@
 
         <PackageReleaseNotes>
             - Rework of analyzer warnings.
+            - Disabled generation for deeply nested enums (i.e. nested more then one type).
+            - Disabled genreation when nested enum's accessibility modifier is inconsistnet with its parent's.
+            - Handling non-unique enum values (i.e. when multiple enum members has the same value).
             - Cosmetic changes in generated code.
         </PackageReleaseNotes>
 
