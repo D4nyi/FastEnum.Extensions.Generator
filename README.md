@@ -5,7 +5,7 @@ Source Generator for enums to create extension methods with basic functionality.
 
 ## Usage
 
-Use the `[Extensions]` on your enums, so the source generator will generate the extensions for those enums:
+Use the `[Extensions]` on your enums, so it will generate the extensions for those enums:
 
 ## Feature
 
@@ -23,13 +23,14 @@ Use the `[Extensions]` on your enums, so the source generator will generate the 
 
 _**Note:**_
 I'm trying to make the generated code behave the same as the .NET implementation.
-If you find any differences please let me know.
+If you find any differences, please let me know.
 
 ## Limitations
 
-- Only actively supported .NET versions are supported. See: [supported version list](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core#lifecycle)
+- Only currently supported .NET versions are supported. See: [supported version list](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core#lifecycle)
 - .NET Framework is not supported
 - Generation extensions for enums nested in classes with generic type parameters are not supported.
+- Generation extensions for enums nested in multiple classes is not supported.
 
 ## Example
 

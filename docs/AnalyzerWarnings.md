@@ -6,7 +6,7 @@
 Usage
 
 ### Description
-Current generation strategy does not support extension generation for enums with `protected, protected internal` or `private` visibility modifiers.
+Current generation strategy does not support extension generation for enums with `protected, protected internal`, `file` or `private` visibility modifiers.
 
 Therefore, only `public` and `internal` visibility modifiers are allowed.
 
@@ -57,7 +57,7 @@ public sealed class ExampleClass
 Usage
 
 ### Description
-Please use one of the following types as the backing type: `byte, sbyte, short, ushort, int, uint, long, ulong`.
+Please use one of the following types as backing type: `byte, sbyte, short, ushort, int, uint, long, ulong`.
 
 ### Non-compliant code
 ```csharp
@@ -91,7 +91,7 @@ internal enum Compliant2 : uint
 Usage
 
 ### Description
-Please define your enum outside a generic type.
+Please define your enum not inside a generic type.
 
 ### Non-compliant code
 ```csharp

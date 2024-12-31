@@ -19,26 +19,25 @@ internal sealed class EnumExtensionsParser
     private static readonly DiagnosticDescriptor _invalidVisibilityModifier = new(
         id: "ETS1001",
         title: "Invalid visibility modifier",
-        messageFormat: "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        messageFormat: "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description:
-        "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.");
+        description: "Current generation strategy does not support extension generation for enums with `protected`, `protected internal`, `file` or `private` visibility modifiers.");
 
     private static readonly DiagnosticDescriptor _genericParentType = new(
         id: "ETS1002",
         title: "Invalid nesting type",
-        messageFormat: "Extension generation for {0} is disabled because it is nested in a generic type",
+        messageFormat: "Extension generation for {0} is disabled, because it is nested in a generic type",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "Please define your enum outside a generic type.");
+        description: "Please define your enum not inside a generic type.");
 
     private static readonly DiagnosticDescriptor _multipleParentType = new(
         id: "ETS1003",
         title: "Multiple nesting type",
-        messageFormat: "Extension generation for {0} is disabled because it has multiple parent types",
+        messageFormat: "Extension generation for {0} is disabled, because it has multiple parent types",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
@@ -47,11 +46,11 @@ internal sealed class EnumExtensionsParser
     private static readonly DiagnosticDescriptor _inconsistentAccessibilityWithParentType = new(
         id: "ETS1004",
         title: "Multiple nesting type",
-        messageFormat: "Extension generation for {0} is disabled because its accessibility modifier is inconsistent with its parent's",
+        messageFormat: "Extension generation for {0} is disabled, because its accessibility modifier is inconsistent with its parent's",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "Please define your enum as a standalone type or reduce nesting.");
+        description: "Please define your enum as a standalone type or define the same accessibility modifier as its parent.");
 
     #endregion
 
