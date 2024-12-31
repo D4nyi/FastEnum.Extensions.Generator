@@ -8,14 +8,14 @@
         {
 */
  "SnapshotTesting\\NestedInGenericClass.cs: (5,20)-(5,40)",
-      "Message": "Extension generation for NestedInGenericClass is disabled because it is nested in a generic type",
+      "Message": "Extension generation for NestedInGenericClass is disabled, because it is nested in a generic type",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
         "Id": "ETS1002",
         "Title": "Invalid nesting type",
-        "Description": "Please define your enum outside a generic type.",
-        "MessageFormat": "Extension generation for {0} is disabled because it is nested in a generic type",
+        "Description": "Please define your enum not inside a generic type.",
+        "MessageFormat": "Extension generation for {0} is disabled, because it is nested in a generic type",
         "Category": "Usage",
         "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true
@@ -29,14 +29,14 @@
         {
 */
  "SnapshotTesting\\NestedWithInconsistentAccessibility.cs: (5,20)-(5,55)",
-      "Message": "Extension generation for NestedWithInconsistentAccessibility is disabled because its accessibility modifier is inconsistent with its parent's",
+      "Message": "Extension generation for NestedWithInconsistentAccessibility is disabled, because its accessibility modifier is inconsistent with its parent's",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
         "Id": "ETS1004",
         "Title": "Multiple nesting type",
-        "Description": "Please define your enum as a standalone type or reduce nesting.",
-        "MessageFormat": "Extension generation for {0} is disabled because its accessibility modifier is inconsistent with its parent's",
+        "Description": "Please define your enum as a standalone type or define the same accessibility modifier as its parent.",
+        "MessageFormat": "Extension generation for {0} is disabled, because its accessibility modifier is inconsistent with its parent's",
         "Category": "Usage",
         "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true
@@ -50,14 +50,14 @@
         {
 */
  "SnapshotTesting\\NestedInGenericClassWithInconsistentAccessibility.cs: (5,20)-(5,69)",
-      "Message": "Extension generation for NestedInGenericClassWithInconsistentAccessibility is disabled because it is nested in a generic type",
+      "Message": "Extension generation for NestedInGenericClassWithInconsistentAccessibility is disabled, because it is nested in a generic type",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
         "Id": "ETS1002",
         "Title": "Invalid nesting type",
-        "Description": "Please define your enum outside a generic type.",
-        "MessageFormat": "Extension generation for {0} is disabled because it is nested in a generic type",
+        "Description": "Please define your enum not inside a generic type.",
+        "MessageFormat": "Extension generation for {0} is disabled, because it is nested in a generic type",
         "Category": "Usage",
         "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true
@@ -71,14 +71,14 @@
         {
 */
  "SnapshotTesting\\NestedInGenericClassWithInconsistentAccessibility.cs: (5,20)-(5,69)",
-      "Message": "Extension generation for NestedInGenericClassWithInconsistentAccessibility is disabled because its accessibility modifier is inconsistent with its parent's",
+      "Message": "Extension generation for NestedInGenericClassWithInconsistentAccessibility is disabled, because its accessibility modifier is inconsistent with its parent's",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
         "Id": "ETS1004",
         "Title": "Multiple nesting type",
-        "Description": "Please define your enum as a standalone type or reduce nesting.",
-        "MessageFormat": "Extension generation for {0} is disabled because its accessibility modifier is inconsistent with its parent's",
+        "Description": "Please define your enum as a standalone type or define the same accessibility modifier as its parent.",
+        "MessageFormat": "Extension generation for {0} is disabled, because its accessibility modifier is inconsistent with its parent's",
         "Category": "Usage",
         "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true
@@ -92,14 +92,14 @@
             {
 */
  "SnapshotTesting\\NestedInMultipleClass.cs: (7,24)-(7,45)",
-      "Message": "Extension generation for NestedInMultipleClass is disabled because it has multiple parent types",
+      "Message": "Extension generation for NestedInMultipleClass is disabled, because it has multiple parent types",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
         "Id": "ETS1003",
         "Title": "Multiple nesting type",
         "Description": "Please define your enum as a standalone type or reduce nesting.",
-        "MessageFormat": "Extension generation for {0} is disabled because it has multiple parent types",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has multiple parent types",
         "Category": "Usage",
         "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true
@@ -113,14 +113,14 @@
             {
 */
  "SnapshotTesting\\NestedInMultipleClassWithAGenericClass.cs: (7,24)-(7,62)",
-      "Message": "Extension generation for NestedInMultipleClassWithAGenericClass is disabled because it is nested in a generic type",
+      "Message": "Extension generation for NestedInMultipleClassWithAGenericClass is disabled, because it is nested in a generic type",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
         "Id": "ETS1002",
         "Title": "Invalid nesting type",
-        "Description": "Please define your enum outside a generic type.",
-        "MessageFormat": "Extension generation for {0} is disabled because it is nested in a generic type",
+        "Description": "Please define your enum not inside a generic type.",
+        "MessageFormat": "Extension generation for {0} is disabled, because it is nested in a generic type",
         "Category": "Usage",
         "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true
@@ -134,14 +134,14 @@
             {
 */
  "SnapshotTesting\\NestedInMultipleClassWithAGenericClass.cs: (7,24)-(7,62)",
-      "Message": "Extension generation for NestedInMultipleClassWithAGenericClass is disabled because it has multiple parent types",
+      "Message": "Extension generation for NestedInMultipleClassWithAGenericClass is disabled, because it has multiple parent types",
       "Severity": "Warning",
       "WarningLevel": 1,
       "Descriptor": {
         "Id": "ETS1003",
         "Title": "Multiple nesting type",
         "Description": "Please define your enum as a standalone type or reduce nesting.",
-        "MessageFormat": "Extension generation for {0} is disabled because it has multiple parent types",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has multiple parent types",
         "Category": "Usage",
         "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true
@@ -155,13 +155,13 @@
         {
 */
  "SnapshotTesting\\ProtectedClass.cs: (5,23)-(5,45)",
-      "Message": "Extension generation for NestedInProtectedClass is disabled because it has an unsupported visibility modifier",
+      "Message": "Extension generation for NestedInProtectedClass is disabled, because it has an unsupported visibility modifier",
       "Severity": "Error",
       "Descriptor": {
         "Id": "ETS1001",
         "Title": "Invalid visibility modifier",
-        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.",
-        "MessageFormat": "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal`, `file` or `private` visibility modifiers.",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         "Category": "Usage",
         "DefaultSeverity": "Error",
         "IsEnabledByDefault": true
@@ -175,13 +175,13 @@
         {
 */
  "SnapshotTesting\\ProtectedInternalClass.cs: (5,32)-(5,62)",
-      "Message": "Extension generation for NestedInProtectedInternalClass is disabled because it has an unsupported visibility modifier",
+      "Message": "Extension generation for NestedInProtectedInternalClass is disabled, because it has an unsupported visibility modifier",
       "Severity": "Error",
       "Descriptor": {
         "Id": "ETS1001",
         "Title": "Invalid visibility modifier",
-        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.",
-        "MessageFormat": "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal`, `file` or `private` visibility modifiers.",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         "Category": "Usage",
         "DefaultSeverity": "Error",
         "IsEnabledByDefault": true
@@ -195,13 +195,13 @@
         {
 */
  "SnapshotTesting\\PrivateClass.cs: (5,21)-(5,41)",
-      "Message": "Extension generation for NestedInPrivateClass is disabled because it has an unsupported visibility modifier",
+      "Message": "Extension generation for NestedInPrivateClass is disabled, because it has an unsupported visibility modifier",
       "Severity": "Error",
       "Descriptor": {
         "Id": "ETS1001",
         "Title": "Invalid visibility modifier",
-        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.",
-        "MessageFormat": "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal`, `file` or `private` visibility modifiers.",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         "Category": "Usage",
         "DefaultSeverity": "Error",
         "IsEnabledByDefault": true
@@ -215,13 +215,13 @@
     {
 */
  "SnapshotTesting\\File.cs: (3,14)-(3,20)",
-      "Message": "Extension generation for IsFile is disabled because it has an unsupported visibility modifier",
+      "Message": "Extension generation for IsFile is disabled, because it has an unsupported visibility modifier",
       "Severity": "Error",
       "Descriptor": {
         "Id": "ETS1001",
         "Title": "Invalid visibility modifier",
-        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal` or `private` visibility modifiers.",
-        "MessageFormat": "Extension generation for {0} is disabled because it has an unsupported visibility modifier",
+        "Description": "Current generation strategy does not support extension generation for enums with `protected`, `protected internal`, `file` or `private` visibility modifiers.",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         "Category": "Usage",
         "DefaultSeverity": "Error",
         "IsEnabledByDefault": true
