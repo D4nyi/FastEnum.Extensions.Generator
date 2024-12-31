@@ -52,6 +52,7 @@ internal sealed class EnumExtensionsParser
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "Please define your enum as a standalone type or reduce nesting.");
+
     #endregion
 
     private readonly Compilation _compilation;
@@ -71,11 +72,13 @@ internal sealed class EnumExtensionsParser
         INamedTypeSymbol? enumMemberAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.EnumMemberAttributeFullName);
         INamedTypeSymbol? descriptionAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.DescriptionAttributeFullName);
         INamedTypeSymbol? extensionsAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.ExtensionsAttributeFullName);
+        INamedTypeSymbol? flagsAttributeSymbol = _compilation.GetTypeByMetadataName(Constants.FlagsAttributeFullName);
 
         Debug.Assert(extensionsAttributeSymbol is not null);
         Debug.Assert(displayAttributeSymbol is not null);
         Debug.Assert(enumMemberAttributeSymbol is not null);
         Debug.Assert(descriptionAttributeSymbol is not null);
+        Debug.Assert(flagsAttributeSymbol is not null);
 
         List<EnumGenerationSpec> enumToGenerateList = [];
 
@@ -90,15 +93,15 @@ internal sealed class EnumExtensionsParser
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                bool isExtensionsDefined = HasExtensionsAttributeDefined(
+                (bool hasExtensions, bool hasFlags) = HasExtensionsAttributeDefined(
                     enumDeclarationSyntax.AttributeLists,
                     compilationSemanticModel,
                     extensionsAttributeSymbol!,
+                    flagsAttributeSymbol!,
                     cancellationToken);
 
-                if (!isExtensionsDefined)
+                if (!hasExtensions)
                 {
-                    // the type is not indicated with [Extensions]
                     continue;
                 }
 
@@ -155,7 +158,8 @@ internal sealed class EnumExtensionsParser
                     modifier,
                     members,
                     contextTypeSymbol.ContainingNamespace.ToString(),
-                    underlyingTypeName!
+                    underlyingTypeName!,
+                    hasFlags
                 );
 
                 enumToGenerateList.Add(enumToGenerate);
@@ -192,20 +196,22 @@ internal sealed class EnumExtensionsParser
         }
     }
 
-    private static bool HasExtensionsAttributeDefined(
+    private static (bool hasExtensions, bool hasFlags) HasExtensionsAttributeDefined(
         SyntaxList<AttributeListSyntax> attributeList,
         SemanticModel compilationSemanticModel,
         ISymbol extensionsAttribute,
+        ISymbol flagsAttribute,
         CancellationToken cancellationToken)
     {
         if (attributeList.Count == 0)
         {
-            return false;
+            return (false, false);
         }
 
-        IEnumerable<AttributeSyntax> attributes = attributeList.SelectMany(x => x.Attributes);
+        bool hasExtensions = false;
+        bool hasFlags = false;
 
-        foreach (AttributeSyntax? appliedAttribute in attributes)
+        foreach (AttributeSyntax? appliedAttribute in attributeList.SelectMany(x => x.Attributes))
         {
             SymbolInfo symbolInfo = compilationSemanticModel.GetSymbolInfo(appliedAttribute, cancellationToken);
 
@@ -213,11 +219,15 @@ internal sealed class EnumExtensionsParser
 
             if (extensionsAttribute.Equals(attributeContainingTypeSymbol, SymbolEqualityComparer.Default))
             {
-                return true;
+                hasExtensions = true;
+            }
+            else if (flagsAttribute.Equals(attributeContainingTypeSymbol, SymbolEqualityComparer.Default))
+            {
+                hasFlags = true;
             }
         }
 
-        return false;
+        return (hasExtensions, hasFlags);
     }
 
     private static NestingState GetNesting(ISymbol typeSymbol)

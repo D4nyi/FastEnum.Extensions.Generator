@@ -2,11 +2,11 @@ using FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
 namespace FastEnum.Extensions.Generator.Tests.Integration;
 
-public sealed class MultipleEnumValueExtensionsTests
+public sealed class MultipleEnumValueWithFlagsExtensionsTests
 {
     [Theory]
     [ClassData(typeof(DefaultGenerator))]
-    public void FastToString_GeneratesTheSameResultAsToString(GenerationOption value)
+    public void FastToString_GeneratesTheSameResultAsToString(GenerationOptions value)
     {
         // Arrange
         string expected = value.ToString();
@@ -20,7 +20,7 @@ public sealed class MultipleEnumValueExtensionsTests
 
     [Theory]
     [ClassData(typeof(GenerationOptionFormattingGenerator))]
-    public void ToStringFormat_GeneratesTheSameResultAsToStringFormat(GenerationOption value, string? format)
+    public void ToStringFormat_GeneratesTheSameResultAsToStringFormat(GenerationOptions value, string? format)
     {
         // Arrange
         string expected = value.ToString(format);
@@ -36,7 +36,7 @@ public sealed class MultipleEnumValueExtensionsTests
     public void GetUnderlyingValues_GeneratesTheSameResultAsGetValuesAsUnderlyingType()
     {
         // Arrange
-        int[] expected = (int[])Enum.GetValuesAsUnderlyingType<GenerationOption>();
+        int[] expected = (int[])Enum.GetValuesAsUnderlyingType<GenerationOptions>();
 
         // Act
         int[] actual = GenerationOptionExtensions.GetUnderlyingValues();
@@ -49,7 +49,7 @@ public sealed class MultipleEnumValueExtensionsTests
     public void MembersCount_GetsTheCorrectAmountOfMembersCount()
     {
         // Arrange
-        int expected = Enum.GetValues<GenerationOption>().Length;
+        int expected = Enum.GetValues<GenerationOptions>().Length;
 
         // Act
         int actual = GenerationOptionExtensions.MembersCount;
@@ -60,11 +60,11 @@ public sealed class MultipleEnumValueExtensionsTests
 
     [Theory]
     [ClassData(typeof(GenerationOptionStringGenerator))]
-    public void TryParseString_GeneratesTheSameResultAsTheBuiltInMethod(string name, GenerationOption expected)
+    public void TryParseString_GeneratesTheSameResultAsTheBuiltInMethod(string name, GenerationOptions expected)
     {
         // Act
-        bool success1 = GenerationOptionExtensions.TryParse(name, out GenerationOption generationOption1);
-        bool success2 = Enum.TryParse(name, out GenerationOption generationOption2);
+        bool success1 = GenerationOptionsExtensions.TryParse(name, out GenerationOptions generationOption1);
+        bool success2 = Enum.TryParse(name, out GenerationOptions generationOption2);
 
         // Assert
         Assert.True(success1);
@@ -76,11 +76,11 @@ public sealed class MultipleEnumValueExtensionsTests
 
     [Theory]
     [ClassData(typeof(GenerationOptionStringIgnoreCaseGenerator))]
-    public void TryParseStringIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, GenerationOption expected)
+    public void TryParseStringIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, GenerationOptions expected)
     {
         // Act
-        bool success1 = GenerationOptionExtensions.TryParseIgnoreCase(name, out GenerationOption generationOption1);
-        bool success2 = Enum.TryParse(name, true, out GenerationOption generationOption2);
+        bool success1 = GenerationOptionsExtensions.TryParseIgnoreCase(name, out GenerationOptions generationOption1);
+        bool success2 = Enum.TryParse(name, true, out GenerationOptions generationOption2);
 
         // Assert
         Assert.True(success1);
@@ -92,14 +92,14 @@ public sealed class MultipleEnumValueExtensionsTests
 
     [Theory]
     [ClassData(typeof(GenerationOptionStringGenerator))]
-    public void TryParseSpan_GeneratesTheSameResultAsTheBuiltInMethod(string name, GenerationOption expected)
+    public void TryParseSpan_GeneratesTheSameResultAsTheBuiltInMethod(string name, GenerationOptions expected)
     {
         // Arrange
         ReadOnlySpan<char> spanName = name.AsSpan();
 
         // Act
-        bool success1 = GenerationOptionExtensions.TryParse(spanName, out GenerationOption generationOption1);
-        bool success2 = Enum.TryParse(spanName, out GenerationOption generationOption2);
+        bool success1 = GenerationOptionsExtensions.TryParse(spanName, out GenerationOptions generationOption1);
+        bool success2 = Enum.TryParse(spanName, out GenerationOptions generationOption2);
 
         // Assert
         Assert.True(success1);
@@ -111,14 +111,14 @@ public sealed class MultipleEnumValueExtensionsTests
 
     [Theory]
     [ClassData(typeof(GenerationOptionStringIgnoreCaseGenerator))]
-    public void TryParseSpanIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, GenerationOption expected)
+    public void TryParseSpanIgnoreCase_GeneratesTheSameResultAsTheBuiltInMethod(string name, GenerationOptions expected)
     {
         // Arrange
         ReadOnlySpan<char> spanName = name.AsSpan();
 
         // Act
-        bool success1 = GenerationOptionExtensions.TryParseIgnoreCase(spanName, out GenerationOption generationOption1);
-        bool success2 = Enum.TryParse(spanName, true, out GenerationOption generationOption2);
+        bool success1 = GenerationOptionsExtensions.TryParseIgnoreCase(spanName, out GenerationOptions generationOption1);
+        bool success2 = Enum.TryParse(spanName, true, out GenerationOptions generationOption2);
 
         // Assert
         Assert.True(success1);
@@ -129,8 +129,8 @@ public sealed class MultipleEnumValueExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(DescriptionDataGenerators<GenerationOption>))]
-    public void GetDescription_GeneratesTheSameResultAsReflectionWould(GenerationOption input, string? expectedDescription)
+    [ClassData(typeof(DescriptionDataGenerators<GenerationOptions>))]
+    public void GetDescription_GeneratesTheSameResultAsReflectionWould(GenerationOptions input, string? expectedDescription)
     {
         // Act
         string? actualDescription = input.GetDescription();
@@ -140,8 +140,8 @@ public sealed class MultipleEnumValueExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(EnumMemberValueDataGenerator<GenerationOption>))]
-    public void GetEnumMemberValue_GeneratesTheSameResultAsReflectionWould(GenerationOption input, string? expectedDescription)
+    [ClassData(typeof(EnumMemberValueDataGenerator<GenerationOptions>))]
+    public void GetEnumMemberValue_GeneratesTheSameResultAsReflectionWould(GenerationOptions input, string? expectedDescription)
     {
         // Act
         string? actualDescription = input.GetEnumMemberValue();
@@ -151,8 +151,8 @@ public sealed class MultipleEnumValueExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(DisplayDescriptionDataGenerator<GenerationOption>))]
-    public void GetDisplayDescription_GeneratesTheSameResultAsReflectionWould(GenerationOption input, string? expectedDescription)
+    [ClassData(typeof(DisplayDescriptionDataGenerator<GenerationOptions>))]
+    public void GetDisplayDescription_GeneratesTheSameResultAsReflectionWould(GenerationOptions input, string? expectedDescription)
     {
         // Act
         string? actualDescription = input.GetDisplayDescription();
@@ -162,8 +162,8 @@ public sealed class MultipleEnumValueExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(DisplayNameDataGenerator<GenerationOption>))]
-    public void GetDisplayName_GeneratesTheSameResultAsReflectionWould(GenerationOption input, string? expectedDescription)
+    [ClassData(typeof(DisplayNameDataGenerator<GenerationOptions>))]
+    public void GetDisplayName_GeneratesTheSameResultAsReflectionWould(GenerationOptions input, string? expectedDescription)
     {
         // Act
         string? actualDescription = input.GetDisplayName();

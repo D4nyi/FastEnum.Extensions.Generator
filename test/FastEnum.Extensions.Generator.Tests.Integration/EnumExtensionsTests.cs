@@ -19,7 +19,7 @@ public sealed class EnumExtensionsTests
     }
 
     [Theory]
-    [ClassData(typeof(FormattingGenerator))]
+    [ClassData(typeof(ColorFormattingGenerator))]
     public void ToStringFormat_GeneratesTheSameResultAsToStringFormat(Color value, string? format)
     {
         // Arrange

@@ -41,6 +41,48 @@ internal static class SnapshotEnumGenerator
                                      """
             },
             {
+                "NoneUniqueOption", """
+                                    namespace SnapshotTesting;
+
+                                    [FastEnum.Extensions]
+                                    public enum NoneUniqueOption : UInt16
+                                    {
+                                        [System.Runtime.Serialization.EnumMember(Value = "None")]
+                                        None = 0,
+
+                                        [System.ComponentModel.Description("ToString")]
+                                        ToString = 1,
+
+                                        [System.ComponentModel.Description("ToStringFormat")]
+                                        ToStringFormat = ToString,
+
+                                        [System.ComponentModel.DataAnnotations.Display(Name = "Parse", Description = "Parse")]
+                                        Parse = 2
+                                    }
+                                    """
+            },
+            {
+                "NoneUniqueOptions", """
+                                    namespace SnapshotTesting;
+
+                                    [FastEnum.Extensions, System.Flags]
+                                    public enum NoneUniqueOptions : System.UInt64
+                                    {
+                                        [System.Runtime.Serialization.EnumMember(Value = "None")]
+                                        None = 0,
+
+                                        [System.ComponentModel.Description("ToString")]
+                                        ToString = 1,
+
+                                        [System.ComponentModel.Description("ToStringFormat")]
+                                        ToStringFormat = ToString,
+
+                                        [System.ComponentModel.DataAnnotations.Display(Name = "Parse", Description = "Parse")]
+                                        Parse = 2
+                                    }
+                                    """
+            },
+            {
                 "NestedInGenericClass", """
                                         namespace SnapshotTesting
                                         {

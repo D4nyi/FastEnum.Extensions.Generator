@@ -19,9 +19,22 @@ internal abstract class AttributeDataGenerator<T, TEnum> : TheoryData<TEnum, str
 {
     protected AttributeDataGenerator(Func<T?, string?> accessor)
     {
+        Type backingType = Enum.GetUnderlyingType(typeof(TEnum));
+
         for (int index = 0; index < Constants.TestValues.Length; index++)
         {
-            TEnum @enum = Unsafe.As<short, TEnum>(ref Constants.TestValues[index]);
+            short value = Constants.TestValues[index];
+
+            TEnum @enum;
+            if (backingType == typeof(int))
+            {
+                int tmp = value;
+                @enum = Unsafe.As<int, TEnum>(ref tmp);
+            }
+            else
+            {
+                @enum = Unsafe.As<short, TEnum>(ref value);
+            }
 
             T? attribute = GetAttribute(@enum);
 

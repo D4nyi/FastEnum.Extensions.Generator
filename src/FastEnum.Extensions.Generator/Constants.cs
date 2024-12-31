@@ -7,6 +7,7 @@ internal static class Constants
     internal const string EnumMemberAttributeFullName = "System.Runtime.Serialization.EnumMemberAttribute";
     internal const string DisplayAttributeFullName = "System.ComponentModel.DataAnnotations.DisplayAttribute";
     internal const string DescriptionAttributeFullName = "System.ComponentModel.DescriptionAttribute";
+    internal const string FlagsAttributeFullName = "System.FlagsAttribute";
 
     internal const string EnumExtensionsGenerator = "FastEnum.Extensions.Generator.EnumExtensionsGenerator";
 

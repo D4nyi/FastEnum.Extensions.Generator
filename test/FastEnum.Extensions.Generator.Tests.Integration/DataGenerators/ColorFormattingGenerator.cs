@@ -1,8 +1,8 @@
 namespace FastEnum.Extensions.Generator.Tests.Integration.DataGenerators;
 
-internal sealed class FormattingGenerator : TheoryData<Color, string?>
+internal sealed class ColorFormattingGenerator : TheoryData<Color, string?>
 {
-    public FormattingGenerator()
+    public ColorFormattingGenerator()
     {
         IEnumerable<Color> colors = ColorExtensions.GetValues().Append((Color)15);
         string[] formats = ["G", "g", "D", "d", "X", "x", "F", "f"];

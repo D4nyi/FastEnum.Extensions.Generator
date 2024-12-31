@@ -106,7 +106,7 @@ internal sealed partial class EnumExtensionsEmitter
             sb.AppendLine("        0 => \"0\",");
         }
 
-        foreach (EnumMemberSpec member in _currentSpec.DistinctMembers)
+        foreach (EnumMemberSpec member in _currentSpec.DistinctFlagMembers)
         {
             sb
                 .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")

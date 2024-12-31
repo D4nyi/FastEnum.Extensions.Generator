@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics;
 
+using FastEnum.Extensions.Generator.Utils;
+
 namespace FastEnum.Extensions.Generator.Specs;
 
 [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
@@ -18,17 +20,24 @@ internal readonly struct EnumGenerationSpec
     internal string OriginalUnderlyingType { get; }
 
     internal ImmutableArray<EnumMemberSpec> Members { get; }
+    internal ImmutableArray<EnumMemberSpec> DistinctFlagMembers { get; }
+    internal ImmutableArray<EnumMemberSpec> DistinctMembers { get; }
 
     internal EnumGenerationSpec(
         string fullName,
         string modifier,
         ImmutableArray<EnumMemberSpec> members,
         string @namespace,
-        string underlyingTypeName)
+        string underlyingTypeName,
+        bool hasFlags)
     {
         FullName = fullName;
         Modifier = modifier;
+
         Members = members;
+        DistinctFlagMembers = members.ToDistinct(true);
+        DistinctMembers = hasFlags ? DistinctFlagMembers : members.ToDistinct(false);
+
         Namespace = @namespace;
         OriginalUnderlyingType = underlyingTypeName;
         IsGlobalNamespace = Namespace == GlobalNamespace;

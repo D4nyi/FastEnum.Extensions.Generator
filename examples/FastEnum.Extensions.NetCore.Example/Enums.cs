@@ -12,7 +12,9 @@ public static class NestingClass
     [Extensions]
     public enum NestedInClass
     {
-        None
+        None= 0,
+        One = 1,
+        One2 = One
     }
 }
 
