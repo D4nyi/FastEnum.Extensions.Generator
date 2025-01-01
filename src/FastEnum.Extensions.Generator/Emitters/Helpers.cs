@@ -6,11 +6,11 @@ namespace FastEnum.Extensions.Generator.Emitters;
 
 internal static class Helpers
 {
-    private static readonly ParameterModifier[] Modifiers = [new(1)];
-    private static readonly Type[] ArgTypes = [typeof(string)];
+    private static readonly ParameterModifier[] _modifiers = [new(1)];
+    private static readonly Type[] _argTypes = [typeof(string)];
     private const BindingFlags Binding = BindingFlags.Public | BindingFlags.Instance;
 
-    private static readonly Dictionary<Type, MethodInfo> ToStringFormats = [];
+    private static readonly Dictionary<Type, MethodInfo> _toStringFormats = [];
 
     internal static StringBuilder AddCorrectBitwiseOperation(this StringBuilder sb, string underlyingTypeName)
     {
@@ -52,13 +52,13 @@ internal static class Helpers
 
     internal static MethodInfo GetToStringFormat(Type membersType)
     {
-        if (!ToStringFormats.TryGetValue(membersType, out MethodInfo? toString) || toString is null)
+        if (!_toStringFormats.TryGetValue(membersType, out MethodInfo? toString) || toString is null)
         {
-            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, ArgTypes,
-                           Modifiers)
+            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, _argTypes,
+                           _modifiers)
                        ?? throw new InvalidOperationException("'ToString' method is not found!");
 
-            ToStringFormats.Add(membersType, toString);
+            _toStringFormats.Add(membersType, toString);
         }
 
         return toString;
