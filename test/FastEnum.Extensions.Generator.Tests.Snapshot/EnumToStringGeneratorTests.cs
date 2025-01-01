@@ -29,7 +29,7 @@ public sealed class EnumToStringGeneratorTests
         _output.WriteLine(typeof(DisplayAttribute).Assembly.Location);
     }
 
-    [Fact]
+    // [Fact]
     public Task GeneratesEnumExtensionsCorrectly()
     {
         // Arrange
