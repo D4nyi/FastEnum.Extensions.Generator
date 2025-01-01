@@ -17,40 +17,44 @@ internal sealed class EnumExtensionsParser
     #region Warnings
 
     private static readonly DiagnosticDescriptor _invalidVisibilityModifier = new(
-        id: "ETS1001",
+        id: "EEG1001",
         title: "Invalid visibility modifier",
         messageFormat: "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Current generation strategy does not support extension generation for enums with `protected`, `protected internal`, `file` or `private` visibility modifiers.");
+        description: "Current generation strategy only supports extension generation for enums with `public` or `internal` visibility modifiers.",
+        helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier");
 
     private static readonly DiagnosticDescriptor _genericParentType = new(
-        id: "ETS1002",
+        id: "EEG1002",
         title: "Invalid nesting type",
         messageFormat: "Extension generation for {0} is disabled, because it is nested in a generic type",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "Please define your enum not inside a generic type.");
+        description: "Please define your enum not inside a generic type.",
+        helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1002-invalid-backing-type");
 
     private static readonly DiagnosticDescriptor _multipleParentType = new(
-        id: "ETS1003",
+        id: "EEG1003",
         title: "Multiple nesting type",
         messageFormat: "Extension generation for {0} is disabled, because it has multiple parent types",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "Please define your enum as a standalone type or reduce nesting.");
+        description: "Please define your enum as a standalone type or reduce nesting.",
+        helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1003-invalid-nesting-type");
 
     private static readonly DiagnosticDescriptor _inconsistentAccessibilityWithParentType = new(
-        id: "ETS1004",
+        id: "EEG1004",
         title: "Multiple nesting type",
         messageFormat: "Extension generation for {0} is disabled, because its accessibility modifier is inconsistent with its parent's",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "Please define your enum as a standalone type or define the same accessibility modifier as its parent.");
+        description: "Please define your enum as a standalone type or define the same accessibility modifier as its parent.",
+        helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1004-multiple-nesting-type");
 
     #endregion
 
