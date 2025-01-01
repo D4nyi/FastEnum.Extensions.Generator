@@ -78,7 +78,7 @@ internal static class Setups
         return folderPrefix + (versionString.IsEmpty ? "X" : versionString[0].ToString());
     }
 
-    private static string GetSystemRuntimeLocation(string systemCoreLibLocation)
+    internal static string GetSystemRuntimeLocation(string systemCoreLibLocation)
     {
         int idx = systemCoreLibLocation.LastIndexOf(Path.PathSeparator);
 
