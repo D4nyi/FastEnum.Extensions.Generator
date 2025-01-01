@@ -1,14 +1,11 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-
-using Xunit.Abstractions;
 
 namespace FastEnum.Extensions.Generator.Tests.Snapshot.Helpers;
 
@@ -79,7 +76,7 @@ internal static class Setups
         return folderPrefix + (versionString.IsEmpty ? "X" : versionString[0].ToString());
     }
 
-    internal static string GetSystemRuntimeLocation(string systemCoreLibLocation)
+    private static string GetSystemRuntimeLocation(string systemCoreLibLocation)
     {
         int idx = systemCoreLibLocation.LastIndexOf(Path.DirectorySeparatorChar);
 
