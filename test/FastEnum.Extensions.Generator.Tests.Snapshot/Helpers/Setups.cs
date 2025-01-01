@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -80,7 +81,9 @@ internal static class Setups
 
     internal static string GetSystemRuntimeLocation(string systemCoreLibLocation)
     {
-        int idx = systemCoreLibLocation.LastIndexOf(Path.PathSeparator);
+        char separator = OperatingSystem.IsWindows() ? '\\' : '/';
+
+        int idx = systemCoreLibLocation.LastIndexOf(separator);
 
         return String.Concat(systemCoreLibLocation.AsSpan(0, idx + 1), "System.Runtime.dll");
     }
