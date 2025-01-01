@@ -80,7 +80,7 @@ internal static class Setups
 
     private static string GetSystemRuntimeLocation(string systemCoreLibLocation)
     {
-        int idx = systemCoreLibLocation.LastIndexOf('\\');
+        int idx = systemCoreLibLocation.LastIndexOf(Path.PathSeparator);
 
         return String.Concat(systemCoreLibLocation.AsSpan(0, idx + 1), "System.Runtime.dll");
     }
