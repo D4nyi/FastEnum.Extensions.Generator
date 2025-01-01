@@ -81,9 +81,7 @@ internal static class Setups
 
     internal static string GetSystemRuntimeLocation(string systemCoreLibLocation)
     {
-        char separator = OperatingSystem.IsWindows() ? '\\' : '/';
-
-        int idx = systemCoreLibLocation.LastIndexOf(separator);
+        int idx = systemCoreLibLocation.LastIndexOf(Path.DirectorySeparatorChar);
 
         return String.Concat(systemCoreLibLocation.AsSpan(0, idx + 1), "System.Runtime.dll");
     }

@@ -20,6 +20,8 @@ public sealed class EnumToStringGeneratorTests
 
         ReadOnlyMemory<byte> newLine = Encoding.UTF8.GetBytes(Environment.NewLine).AsMemory();
 
+        await fs.WriteAsync(Encoding.UTF8.GetBytes([Path.DirectorySeparatorChar]));
+        await fs.WriteAsync(newLine);
         await fs.WriteAsync(Encoding.UTF8.GetBytes(typeof(object).Assembly.Location));
         await fs.WriteAsync(newLine);
         await fs.WriteAsync(Encoding.UTF8.GetBytes(Setups.GetSystemRuntimeLocation(typeof(object).Assembly.Location)));
