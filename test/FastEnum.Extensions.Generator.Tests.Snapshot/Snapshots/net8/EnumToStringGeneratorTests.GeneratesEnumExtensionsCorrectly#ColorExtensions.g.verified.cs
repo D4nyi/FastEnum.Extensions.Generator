@@ -112,22 +112,38 @@ public static class ColorExtensions
     /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
-    public static string? GetEnumMemberValue(this SnapshotTesting.Color value) => null;
+    public static string? GetEnumMemberValue(this SnapshotTesting.Color value) => value switch
+    {
+        SnapshotTesting.Color.Green => "Pine",
+        _ => null
+    };
 
     /// <summary>Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> if exists; otherwise null.</returns>
-    public static string? GetDisplayName(this SnapshotTesting.Color value) => null;
+    public static string? GetDisplayName(this SnapshotTesting.Color value) => value switch
+    {
+        SnapshotTesting.Color.Blue => "Sky",
+        _ => null
+    };
 
     /// <summary>Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
-    public static string? GetDisplayDescription(this SnapshotTesting.Color value) => null;
+    public static string? GetDisplayDescription(this SnapshotTesting.Color value) => value switch
+    {
+        SnapshotTesting.Color.Blue => "Sky",
+        _ => null
+    };
 
     /// <summary>Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>
     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
-    public static string? GetDescription(this SnapshotTesting.Color value) => null;
+    public static string? GetDescription(this SnapshotTesting.Color value) => value switch
+    {
+        SnapshotTesting.Color.Red => "Crimson red",
+        _ => null
+    };
 
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.Color" />.

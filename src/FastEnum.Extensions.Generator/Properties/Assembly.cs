@@ -10,5 +10,3 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("FastEnum.Extensions.Generator")]
 [assembly: AssemblyCopyright("Copyright © <ReleaseYear>. Dániel Szöllősi")]
 [assembly: AssemblyDescription("Source generates extension methods for enums to work with them easier and faster.")]
-
-[assembly: InternalsVisibleTo("FastEnum.Extensions.Generator", AllInternalsVisible = true)]

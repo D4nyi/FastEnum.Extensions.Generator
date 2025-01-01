@@ -38,7 +38,10 @@ internal static class Setups
     internal static GeneratorDriver CreateGeneratorDriver(Dictionary<string, string> enums)
     {
         CSharpParseOptions parseOptions = new(documentationMode: DocumentationMode.Diagnose);
-        CSharpCompilationOptions compilationOptions = new(OutputKind.DynamicallyLinkedLibrary);
+        CSharpCompilationOptions compilationOptions = new(OutputKind.ConsoleApplication);
+
+        string systemCoreLibLocation = typeof(object).Assembly.Location;
+        string systemRuntimeLocation = GetSystemRuntimeLocation(systemCoreLibLocation);
 
         // Create a Roslyn compilation for the syntax trees.
         CSharpCompilation compilation = CSharpCompilation.Create(
@@ -50,7 +53,8 @@ internal static class Setups
             // Create references for assemblies we require
             references:
             [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(systemCoreLibLocation),
+                MetadataReference.CreateFromFile(systemRuntimeLocation),
                 MetadataReference.CreateFromFile(typeof(DescriptionAttribute).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(EnumMemberAttribute).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(DisplayAttribute).Assembly.Location)
@@ -70,5 +74,12 @@ internal static class Setups
             ?.InformationalVersion;
 
         return folderPrefix + (versionString.IsEmpty ? "X" : versionString[0].ToString());
+    }
+
+    private static string GetSystemRuntimeLocation(string systemCoreLibLocation)
+    {
+        int idx = systemCoreLibLocation.LastIndexOf('\\');
+
+        return String.Concat(systemCoreLibLocation.AsSpan(0, idx + 1), "System.Runtime.dll");
     }
 }

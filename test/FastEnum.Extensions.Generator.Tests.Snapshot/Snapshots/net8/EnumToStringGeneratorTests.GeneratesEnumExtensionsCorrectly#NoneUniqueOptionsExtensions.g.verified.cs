@@ -116,22 +116,38 @@ public static class NoneUniqueOptionsExtensions
     /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.NoneUniqueOptions"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
-    public static string? GetEnumMemberValue(this SnapshotTesting.NoneUniqueOptions value) => null;
+    public static string? GetEnumMemberValue(this SnapshotTesting.NoneUniqueOptions value) => value switch
+    {
+        SnapshotTesting.NoneUniqueOptions.None => "None",
+        _ => null
+    };
 
     /// <summary>Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.NoneUniqueOptions"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> if exists; otherwise null.</returns>
-    public static string? GetDisplayName(this SnapshotTesting.NoneUniqueOptions value) => null;
+    public static string? GetDisplayName(this SnapshotTesting.NoneUniqueOptions value) => value switch
+    {
+        SnapshotTesting.NoneUniqueOptions.Parse => "Parse",
+        _ => null
+    };
 
     /// <summary>Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.NoneUniqueOptions"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
-    public static string? GetDisplayDescription(this SnapshotTesting.NoneUniqueOptions value) => null;
+    public static string? GetDisplayDescription(this SnapshotTesting.NoneUniqueOptions value) => value switch
+    {
+        SnapshotTesting.NoneUniqueOptions.Parse => "Parse",
+        _ => null
+    };
 
     /// <summary>Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.NoneUniqueOptions"/> enum value from which the attribute value is read.</param>
     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
-    public static string? GetDescription(this SnapshotTesting.NoneUniqueOptions value) => null;
+    public static string? GetDescription(this SnapshotTesting.NoneUniqueOptions value) => value switch
+    {
+        SnapshotTesting.NoneUniqueOptions.ToStringFormat => "ToStringFormat",
+        _ => null
+    };
 
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NoneUniqueOptions" />.
