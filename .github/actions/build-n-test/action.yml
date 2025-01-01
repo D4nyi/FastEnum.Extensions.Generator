@@ -42,6 +42,10 @@ runs:
       run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build --no-restore --nologo -c ${{ inputs.configuration }}
       shell: bash
 
+    - name: Test
+      run: ls -la /home/runner/work/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator/test/FastEnum.Extensions.Generator.Tests.Snapshot/bin/Debug/net*/
+      shell: bash
+
     - name: Snapshot Tests
       run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ inputs.configuration }}
       shell: bash
