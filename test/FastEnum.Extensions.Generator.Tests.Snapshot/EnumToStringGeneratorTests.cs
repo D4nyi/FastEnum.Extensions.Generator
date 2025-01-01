@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using System.Text;
 
 using FastEnum.Extensions.Generator.Tests.Snapshot.Helpers;
 
@@ -12,21 +13,17 @@ namespace FastEnum.Extensions.Generator.Tests.Snapshot;
 
 public sealed class EnumToStringGeneratorTests
 {
-    private readonly ITestOutputHelper _output;
-
-    public EnumToStringGeneratorTests(ITestOutputHelper output)
-    {
-        _output = output;
-    }
-
     [Fact]
-    public void Log()
+    public async Task Log()
     {
-        _output.WriteLine("ASDTEST:");
-        _output.WriteLine(typeof(object).Assembly.Location);
-        _output.WriteLine(typeof(DescriptionAttribute).Assembly.Location);
-        _output.WriteLine(typeof(EnumMemberAttribute).Assembly.Location);
-        _output.WriteLine(typeof(DisplayAttribute).Assembly.Location);
+        await using FileStream fs = File.OpenRead(
+            "/home/runner/work/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator/test/" +
+            $"FastEnum.Extensions.Generator.Tests.Snapshot/bin/Debug/output-{Random.Shared.Next()}.txt");
+
+        await fs.WriteAsync(Encoding.UTF8.GetBytes(typeof(object).Assembly.Location));
+        await fs.WriteAsync(Encoding.UTF8.GetBytes(typeof(DescriptionAttribute).Assembly.Location));
+        await fs.WriteAsync(Encoding.UTF8.GetBytes(typeof(EnumMemberAttribute).Assembly.Location));
+        await fs.WriteAsync(Encoding.UTF8.GetBytes(typeof(DisplayAttribute).Assembly.Location));
     }
 
     // [Fact]

@@ -22,3 +22,6 @@ jobs:
         uses: D4nyi/FastEnum.Extensions.Generator/.github/actions/build-n-test@d85fd616b283552a049fe660b542da17531ecc35
         with:
           configuration: ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Print
+        run: cat /home/runner/work/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator/test/FastEnum.Extensions.Generator.Tests.Snapshot/bin/Debug/output-*.txt
