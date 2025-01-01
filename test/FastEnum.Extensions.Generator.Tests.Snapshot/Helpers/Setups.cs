@@ -7,6 +7,8 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
+using Xunit.Abstractions;
+
 namespace FastEnum.Extensions.Generator.Tests.Snapshot.Helpers;
 
 internal static class Setups
@@ -35,7 +37,7 @@ internal static class Setups
         return enums.Count - 8;
     }
 
-    internal static GeneratorDriver CreateGeneratorDriver(Dictionary<string, string> enums)
+    internal static GeneratorDriver CreateGeneratorDriver(Dictionary<string, string> enums, ITestOutputHelper output)
     {
         CSharpParseOptions parseOptions = new(documentationMode: DocumentationMode.Diagnose);
         CSharpCompilationOptions compilationOptions = new(OutputKind.ConsoleApplication);
@@ -43,12 +45,12 @@ internal static class Setups
         string systemCoreLibLocation = typeof(object).Assembly.Location;
         string systemRuntimeLocation = GetSystemRuntimeLocation(systemCoreLibLocation);
 
-        Console.WriteLine("ASDTEST:");
-        Console.WriteLine(systemCoreLibLocation);
-        Console.WriteLine(systemRuntimeLocation);
-        Console.WriteLine(typeof(DescriptionAttribute).Assembly.Location);
-        Console.WriteLine(typeof(EnumMemberAttribute).Assembly.Location);
-        Console.WriteLine(typeof(DisplayAttribute).Assembly.Location);
+        output.WriteLine("ASDTEST:");
+        output.WriteLine(systemCoreLibLocation);
+        output.WriteLine(systemRuntimeLocation);
+        output.WriteLine(typeof(DescriptionAttribute).Assembly.Location);
+        output.WriteLine(typeof(EnumMemberAttribute).Assembly.Location);
+        output.WriteLine(typeof(DisplayAttribute).Assembly.Location);
 
         // Create a Roslyn compilation for the syntax trees.
         CSharpCompilation compilation = CSharpCompilation.Create(
