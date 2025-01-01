@@ -16,7 +16,7 @@ public sealed class EnumToStringGeneratorTests
     [Fact]
     public async Task Log()
     {
-        await using FileStream fs = File.OpenRead(
+        await using FileStream fs = File.OpenWrite(
             "/home/runner/work/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator/test/" +
             $"FastEnum.Extensions.Generator.Tests.Snapshot/bin/Debug/output-{Random.Shared.Next()}.txt");
 
