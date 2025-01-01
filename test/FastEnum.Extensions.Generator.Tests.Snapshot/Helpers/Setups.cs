@@ -43,6 +43,13 @@ internal static class Setups
         string systemCoreLibLocation = typeof(object).Assembly.Location;
         string systemRuntimeLocation = GetSystemRuntimeLocation(systemCoreLibLocation);
 
+        Console.WriteLine("ASDTEST:");
+        Console.WriteLine(systemCoreLibLocation);
+        Console.WriteLine(systemRuntimeLocation);
+        Console.WriteLine(typeof(DescriptionAttribute).Assembly.Location);
+        Console.WriteLine(typeof(EnumMemberAttribute).Assembly.Location);
+        Console.WriteLine(typeof(DisplayAttribute).Assembly.Location);
+
         // Create a Roslyn compilation for the syntax trees.
         CSharpCompilation compilation = CSharpCompilation.Create(
             assemblyName: "GeneratorTests",
