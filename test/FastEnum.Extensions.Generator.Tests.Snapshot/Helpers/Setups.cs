@@ -37,20 +37,13 @@ internal static class Setups
         return enums.Count - 8;
     }
 
-    internal static GeneratorDriver CreateGeneratorDriver(Dictionary<string, string> enums, ITestOutputHelper output)
+    internal static GeneratorDriver CreateGeneratorDriver(Dictionary<string, string> enums)
     {
         CSharpParseOptions parseOptions = new(documentationMode: DocumentationMode.Diagnose);
         CSharpCompilationOptions compilationOptions = new(OutputKind.ConsoleApplication);
 
         string systemCoreLibLocation = typeof(object).Assembly.Location;
         string systemRuntimeLocation = GetSystemRuntimeLocation(systemCoreLibLocation);
-
-        output.WriteLine("ASDTEST:");
-        output.WriteLine(systemCoreLibLocation);
-        output.WriteLine(systemRuntimeLocation);
-        output.WriteLine(typeof(DescriptionAttribute).Assembly.Location);
-        output.WriteLine(typeof(EnumMemberAttribute).Assembly.Location);
-        output.WriteLine(typeof(DisplayAttribute).Assembly.Location);
 
         // Create a Roslyn compilation for the syntax trees.
         CSharpCompilation compilation = CSharpCompilation.Create(

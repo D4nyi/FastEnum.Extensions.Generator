@@ -1,3 +1,7 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+
 using FastEnum.Extensions.Generator.Tests.Snapshot.Helpers;
 
 using Microsoft.CodeAnalysis;
@@ -16,11 +20,21 @@ public sealed class EnumToStringGeneratorTests
     }
 
     [Fact]
+    public void Log()
+    {
+        _output.WriteLine("ASDTEST:");
+        _output.WriteLine(typeof(object).Assembly.Location);
+        _output.WriteLine(typeof(DescriptionAttribute).Assembly.Location);
+        _output.WriteLine(typeof(EnumMemberAttribute).Assembly.Location);
+        _output.WriteLine(typeof(DisplayAttribute).Assembly.Location);
+    }
+
+    [Fact]
     public Task GeneratesEnumExtensionsCorrectly()
     {
         // Arrange
         Dictionary<string, string> enums = SnapshotEnumGenerator.Enums();
-        GeneratorDriver generator = Setups.CreateGeneratorDriver(enums, _output);
+        GeneratorDriver generator = Setups.CreateGeneratorDriver(enums);
 
         // Act
         GeneratorDriverRunResult result = generator.GetRunResult();
