@@ -1,5 +1,6 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
+
+[assembly: System.Resources.NeutralResourcesLanguage("en-us")]
 
 [assembly: CLSCompliant(false)]
 

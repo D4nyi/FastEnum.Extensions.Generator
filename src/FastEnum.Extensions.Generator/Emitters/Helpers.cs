@@ -1,6 +1,8 @@
-﻿using System.Reflection;
-using System.Globalization;
+﻿using System.Globalization;
+using System.Reflection;
 using System.Text;
+
+using FastEnum.Extensions.Generator.Specs;
 
 namespace FastEnum.Extensions.Generator.Emitters;
 
@@ -68,4 +70,19 @@ internal static class Helpers
         numberType == typeof(int)
             ? 0
             : Convert.ChangeType(0, numberType, CultureInfo.InvariantCulture);
+
+    internal static string Get(this Indentation indentation)
+    {
+        // 4 spaces per indentation.
+        return indentation switch
+        {
+            Indentation.Method     => "    ",
+            Indentation.MethodBody => "        ",
+            Indentation.Nesting1   => "            ",
+            Indentation.Nesting2   => "                ",
+            Indentation.Nesting3   => "                    ",
+            Indentation.Nesting4   => "                        ",
+            _ => ""
+        };
+    }
 }

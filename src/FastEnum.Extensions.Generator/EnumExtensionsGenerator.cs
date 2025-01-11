@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
+using FastEnum.Extensions.Generator.Utils;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -10,83 +11,59 @@ using Microsoft.CodeAnalysis.Text;
 namespace FastEnum.Extensions.Generator;
 
 [Generator]
-public sealed class EnumExtensionsGenerator : IIncrementalGenerator
+public sealed partial class EnumExtensionsGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        //if (!System.Diagnostics.Debugger.IsAttached)
-        //{
-        //    System.Diagnostics.Debugger.Launch();
-        //}
+        context.RegisterPostInitializationOutput(static ctx =>
+            ctx.AddSource(Constants.AttributesFile, CreateSource(Constants.Attributes)));
 
-        context.RegisterPostInitializationOutput(PostInit);
+        IncrementalValueProvider<ImmutableArray<object>> results = context.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                Constants.ExtensionsAttributeFullName,
+                predicate: static (node, _) => node is EnumDeclarationSyntax,
+                transform: Transform)
+            .WithTrackingName(Constants.InitialExtraction)
+            .Where(static m => m is not null)
+            .WithTrackingName(Constants.RemovingNulls)
+            .Collect()
+            .WithTrackingName(Constants.CollectedGenerationData)!
 
-        //context.RegisterImplementationSourceOutput(
-        //    context.AnalyzerConfigOptionsProvider,
-        //    (_, options) => ExtractBuildProperties(options));
+            // Apply sequence equality comparison on the result array for incremental caching.
+            .WithComparer(new ObjectImmutableArraySequenceEqualityComparer<object>());
 
-        IncrementalValuesProvider<EnumDeclarationSyntax> enumDeclarations =
-            context.SyntaxProvider
-                .ForAttributeWithMetadataName(
-                    Constants.ExtensionsAttributeFullName,
-                    (node, _) => node is EnumDeclarationSyntax,
-                    (syntaxContext, _) => (EnumDeclarationSyntax)syntaxContext.TargetNode
-                );
+        context.RegisterSourceOutput(results, static (context, results) =>
+        {
+            if (results.IsDefaultOrEmpty)
+            {
+                // nothing to do yet
+                return;
+            }
 
-        IncrementalValueProvider<(Compilation, ImmutableArray<EnumDeclarationSyntax>)> compilationAndEnums =
-            context.CompilationProvider.Combine(enumDeclarations.Collect());
-
-        context.RegisterSourceOutput(compilationAndEnums,
-            (spc, source) =>
-                Execute(source.Item1, source.Item2, spc));
+            try
+            {
+                foreach (object result in results)
+                {
+                    switch (result)
+                    {
+                        case Diagnostic d:
+                            context.ReportDiagnostic(d);
+                            break;
+                        case EnumGenerationSpec enumGenerationSpec:
+                            {
+                                string generatedClass = Emit(enumGenerationSpec);
+                                context.AddSource($"{enumGenerationSpec.Name}Extensions.g.cs", CreateSource(generatedClass));
+                            }
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                context.AddSource("errors.txt", CreateSource(e.ToString()));
+            }
+        });
     }
 
-    private static void Execute(
-        Compilation compilation,
-        in ImmutableArray<EnumDeclarationSyntax> contextClasses,
-        in SourceProductionContext sourceProductionContext)
-    {
-        if (contextClasses.IsDefaultOrEmpty)
-        {
-            // nothing to do yet
-            return;
-        }
-
-        try
-        {
-            EnumSourceGenerationContext context = new(sourceProductionContext);
-            EnumExtensionsParser parser = new(compilation, context);
-            List<EnumGenerationSpec> spec = parser.GetGenerationSpec(
-                contextClasses,
-                sourceProductionContext.CancellationToken);
-
-            if (spec.Count == 0) return;
-
-            EnumExtensionsEmitter emitter = new(in context, spec);
-            emitter.Emit();
-        }
-        catch (Exception e)
-        {
-            sourceProductionContext.AddSource("errors.txt", e.ToString());
-            throw;
-        }
-    }
-
-    private static void PostInit(IncrementalGeneratorPostInitializationContext ctx) =>
-        ctx.AddSource(Constants.AttributesFile, SourceText.From(Constants.Attributes, Encoding.UTF8));
-
-    internal readonly struct EnumSourceGenerationContext(in SourceProductionContext context)
-    {
-        private readonly SourceProductionContext _context = context;
-
-        public void ReportDiagnostic(DiagnosticDescriptor descriptor, Location? location, params object?[]? args)
-        {
-            _context.ReportDiagnostic(Diagnostic.Create(descriptor, location, args));
-        }
-
-        public void AddSource(string hintName, SourceText sourceText)
-        {
-            _context.AddSource(hintName, sourceText);
-        }
-    }
+    private static SourceText CreateSource(string sourceText) => SourceText.From(sourceText, Encoding.UTF8, SourceHashAlgorithm.Sha256);
 }

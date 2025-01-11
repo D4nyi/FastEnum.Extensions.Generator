@@ -1,21 +1,20 @@
 using System.Globalization;
 using System.Text;
 
-using FastEnum.Extensions.Generator.Emitters;
 using FastEnum.Extensions.Generator.Specs;
 
-namespace FastEnum.Extensions.Generator;
+namespace FastEnum.Extensions.Generator.Emitters;
 
-internal sealed partial class EnumExtensionsEmitter
+internal static class GeneralEmitter
 {
-    private void AddFileAndClassHeader(StringBuilder sb)
+    internal static void AddFileAndClassHeader(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb.AppendLine(Constants.FileHeader);
 
-        if (!_currentSpec.IsGlobalNamespace)
+        if (!spec.IsGlobalNamespace)
         {
             sb
-                .Append("namespace ").Append(_currentSpec.Namespace).AppendLine(";").AppendLine();
+                .Append("namespace ").Append(spec.Namespace).AppendLine(";").AppendLine();
         }
 
         sb
@@ -27,12 +26,12 @@ internal sealed partial class EnumExtensionsEmitter
                 [global::System.CodeDom.Compiler.GeneratedCode("{1}", "{2}")]
                 {3} static class {4}Extensions
                 {{
-                """, _currentSpec.FullName, Constants.EnumExtensionsGenerator, Constants.Version, _currentSpec.Modifier, _currentSpec.Name);
+                """, spec.FullName, Constants.EnumExtensionsGenerator, Constants.Version, spec.Modifier, spec.Name);
     }
 
-    private void AddFieldsAndGetMethods(StringBuilder sb)
+    internal static void AddFieldsAndGetMethods(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Get(Indentation.MethodBody);
+        string methodBodyIndent = Indentation.MethodBody.Get();
 
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -41,9 +40,9 @@ internal sealed partial class EnumExtensionsEmitter
                     private static readonly {0}[] _underlyingValues =
                     {{
 
-                """, _currentSpec.UnderlyingType);
+                """, spec.UnderlyingType);
 
-        foreach (EnumMemberSpec member in _currentSpec.Members)
+        foreach (EnumMemberSpec member in spec.Members)
         {
             sb.Append(methodBodyIndent).Append(member.Value).AppendLine(",");
         }
@@ -56,9 +55,9 @@ internal sealed partial class EnumExtensionsEmitter
                     private static readonly {0}[] _values =
                     {{
 
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
-        foreach (EnumMemberSpec member in _currentSpec.Members)
+        foreach (EnumMemberSpec member in spec.Members)
         {
             sb.Append(methodBodyIndent).Append(member.FullName).AppendLine(",");
         }
@@ -73,7 +72,7 @@ internal sealed partial class EnumExtensionsEmitter
 
                 """);
 
-        foreach (EnumMemberSpec member in _currentSpec.Members)
+        foreach (EnumMemberSpec member in spec.Members)
         {
             sb.Append(methodBodyIndent).Append("nameof(").Append(member.FullName).AppendLine("),");
         }
@@ -107,10 +106,10 @@ internal sealed partial class EnumExtensionsEmitter
                     public static global::System.String[] GetNames() => _names;
 
 
-                """, _currentSpec.Members.Length, _currentSpec.FullName, _currentSpec.UnderlyingType);
+                """, spec.Members.Length, spec.FullName, spec.UnderlyingType);
     }
 
-    private void AddHasFlag(StringBuilder sb)
+    internal static void AddHasFlag(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -122,12 +121,12 @@ internal sealed partial class EnumExtensionsEmitter
                     public static global::System.Boolean HasFlag(this {0} instance, {1} flags) => (instance & flags) == flags;
 
 
-                """, _currentSpec.FullName, _currentSpec.FullName);
+                """, spec.FullName, spec.FullName);
     }
 
-    private void AddIsDefined(StringBuilder sb)
+    internal static void AddIsDefined(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Get(Indentation.MethodBody);
+        string methodBodyIndent = Indentation.MethodBody.Get();
 
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -137,9 +136,9 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <returns><see langword="true"/> if the value exists in the enumeration, <see langword="false"/> otherwise</returns>
                     public static global::System.Boolean IsDefined(this {0} value) => value switch
                     {{
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
-        int length = _currentSpec.Members.Length;
+        int length = spec.Members.Length;
         int last = length - 1;
         for (int i = 0; i < length; i++)
         {
@@ -148,7 +147,7 @@ internal sealed partial class EnumExtensionsEmitter
                 sb.AppendLine().Append(methodBodyIndent);
             }
 
-            sb.Append(_currentSpec.Members[i].FullName);
+            sb.Append(spec.Members[i].FullName);
 
             if (i != last)
             {
@@ -166,7 +165,7 @@ internal sealed partial class EnumExtensionsEmitter
             """);
     }
 
-    private void AddPrivateHelperMethods(StringBuilder sb)
+    internal static void AddPrivateHelperMethods(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -214,8 +213,8 @@ internal sealed partial class EnumExtensionsEmitter
                             if ((resultValue & currentValue) == currentValue)
                             {{
 
-                """, _currentSpec.FullName, _currentSpec.UnderlyingType, _currentSpec.Members.Length > 64 ? 64 : _currentSpec.Members.Length)
-            .AddCorrectBitwiseOperation(_currentSpec.UnderlyingType)
+                """, spec.FullName, spec.UnderlyingType, spec.Members.Length > 64 ? 64 : spec.Members.Length)
+            .AddCorrectBitwiseOperation(spec.UnderlyingType)
             .Append(
                 """
                                 foundItems[foundItemsCount] = index;
@@ -257,7 +256,7 @@ internal sealed partial class EnumExtensionsEmitter
 
                 """);
 
-        if (!_currentSpec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase))
+        if (!spec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase))
         {
             sb.Append(
                 """

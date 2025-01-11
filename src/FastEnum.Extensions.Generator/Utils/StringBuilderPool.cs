@@ -12,22 +12,10 @@ namespace FastEnum.Extensions.Generator.Utils;
 /// </remarks>
 internal static class StringBuilderPool
 {
-    private const int DefaultStackCapacity   = 4;
-    private const int DefaultBuilderCapacity = 4 * 1024;
+    private const int DefaultBuilderCapacity = 28_000;
     private static StringBuilder? _fastItem;
 
-    private static readonly Stack<StringBuilder> _builders = new(DefaultStackCapacity);
-
-    /// <summary>
-    /// Initializes the object pool with a few items.
-    /// </summary>
-    static StringBuilderPool()
-    {
-        for (int i = 0; i < DefaultStackCapacity; i++)
-        {
-            _builders.Push(new StringBuilder(DefaultBuilderCapacity));
-        }
-    }
+    private static readonly Stack<StringBuilder> _builders = new(0);
 
     /// <summary>
     /// Retrieves a <see cref="StringBuilder"/> from the object pool.

@@ -24,27 +24,26 @@ internal static class Setups
     internal static int ExpectedSourceCount(this Dictionary<string, string> enums)
     {
         // Analyzer warning raised for:
-        // 'NestedInGenericClass', 'ProtectedClass', 'ProtectedInternalClass', 'PrivateClass', 'File'
-        // 'NestedInMultipleClass', 'NestedInMultipleClassWithAGenericClass',
+        // 'NestedInGenericClass', 'ProtectedClass', 'ProtectedInternalClass', 'PrivateClass', 'File',
+        // 'NestedInMultipleClass', 'NestedInMultipleClassWithAGenericClass', 'EmptyEnum',
         // 'NestedWithInconsistentAccessibility', 'NestedInGenericClassWithInconsistentAccessibility'
         //
-        // 9 removed because a warning
+        // 10 removed because a warning
         // 'ExtensionsAttribute' is always added
-        // -9 + 1 = -8
+        // -10 + 1 = -9
 
-        return enums.Count - 8;
+        return enums.Count - 9;
     }
 
-    internal static GeneratorDriver CreateGeneratorDriver(Dictionary<string, string> enums)
+    internal static CSharpCompilation CreateCompilation(Dictionary<string, string> enums)
     {
         CSharpParseOptions parseOptions = new(documentationMode: DocumentationMode.Diagnose);
-        CSharpCompilationOptions compilationOptions = new(OutputKind.ConsoleApplication);
+        CSharpCompilationOptions compilationOptions = new(OutputKind.DynamicallyLinkedLibrary);
 
         string systemCoreLibLocation = typeof(object).Assembly.Location;
         string systemRuntimeLocation = GetSystemRuntimeLocation(systemCoreLibLocation);
 
-        // Create a Roslyn compilation for the syntax trees.
-        CSharpCompilation compilation = CSharpCompilation.Create(
+        return CSharpCompilation.Create(
             assemblyName: "GeneratorTests",
             options: compilationOptions,
             // Parse the provided string into a C# syntax tree
@@ -59,10 +58,19 @@ internal static class Setups
                 MetadataReference.CreateFromFile(typeof(EnumMemberAttribute).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(DisplayAttribute).Assembly.Location)
             ]);
+    }
 
-        return CSharpGeneratorDriver
-            .Create(new EnumExtensionsGenerator())
-            .RunGenerators(compilation);
+    internal static GeneratorDriver CreateGeneratorDriver()
+    {
+        ISourceGenerator generator = new EnumExtensionsGenerator().AsSourceGenerator();
+
+        // ⚠ Tell the driver to track all the incremental generator outputs
+        // without this, you'll have no tracked outputs!
+        GeneratorDriverOptions opts = new(
+            disabledOutputs: IncrementalGeneratorOutputKind.None,
+            trackIncrementalGeneratorSteps: true);
+
+        return CSharpGeneratorDriver.Create([generator], driverOptions: opts);;
     }
 
     private static string CreateDirectoryPath()

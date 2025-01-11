@@ -3,11 +3,11 @@ using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
 
-namespace FastEnum.Extensions.Generator;
+namespace FastEnum.Extensions.Generator.Emitters;
 
-internal sealed partial class EnumExtensionsEmitter
+internal static class TryParseSpanEmitter
 {
-    private void AddTryParseSpan(StringBuilder sb)
+    internal static void AddTryParseSpan(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -34,13 +34,13 @@ internal sealed partial class EnumExtensionsEmitter
                         TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
 
 
-                """, _currentSpec.FullName);
+                """, spec.FullName);
     }
 
-    private void AddTryParsePrivate(StringBuilder sb)
+    internal static void AddTryParsePrivate(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Get(Indentation.MethodBody);
-        string nesting1Indent = Get(Indentation.Nesting1);
+        string methodBodyIndent = Indentation.MethodBody.Get();
+        string nesting1Indent = Indentation.Nesting1.Get();
 
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -61,9 +61,9 @@ internal sealed partial class EnumExtensionsEmitter
                         }}
 
 
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
-        foreach (EnumMemberSpec member in _currentSpec.Members)
+        foreach (EnumMemberSpec member in spec.Members)
         {
             sb
                 .Append(methodBodyIndent).Append("if (value.Equals(nameof(").Append(member.FullName).AppendLine(").AsSpan(), comparison))")
@@ -181,6 +181,6 @@ internal sealed partial class EnumExtensionsEmitter
                     }}
 
 
-                """, _currentSpec.FullName, _currentSpec.UnderlyingType);
+                """, spec.FullName, spec.UnderlyingType);
     }
 }

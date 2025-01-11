@@ -3,19 +3,19 @@ using System.Text;
 
 using FastEnum.Extensions.Generator.Specs;
 
-namespace FastEnum.Extensions.Generator;
+namespace FastEnum.Extensions.Generator.Emitters;
 
-internal sealed partial class EnumExtensionsEmitter
+internal static class AttributeDataEmitter
 {
-    private void AddAttributeMethods(StringBuilder sb)
+    internal static void AddAttributeMethods(StringBuilder sb, EnumGenerationSpec spec)
     {
-        AddGetEnumMemberValue(sb);
-        AddGetDisplayName(sb);
-        AddGetDisplayDescription(sb);
-        AddGetDescription(sb);
+        AddGetEnumMemberValue(sb, spec);
+        AddGetDisplayName(sb, spec);
+        AddGetDisplayDescription(sb, spec);
+        AddGetDescription(sb, spec);
     }
 
-    private void AddGetEnumMemberValue(StringBuilder sb)
+    private static void AddGetEnumMemberValue(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -24,12 +24,12 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
                     public static string? GetEnumMemberValue(this
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
-        AddAttributeMethodBody(sb, static x => x.EnumMemberValue);
+        AddAttributeMethodBody(sb, spec, static x => x.EnumMemberValue);
     }
 
-    private void AddGetDisplayName(StringBuilder sb)
+    private static void AddGetDisplayName(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -38,12 +38,12 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> if exists; otherwise null.</returns>
                     public static string? GetDisplayName(this
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
-        AddAttributeMethodBody(sb, static x => x.DisplayName);
+        AddAttributeMethodBody(sb, spec, static x => x.DisplayName);
     }
 
-    private void AddGetDisplayDescription(StringBuilder sb)
+    private static void AddGetDisplayDescription(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -52,12 +52,12 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
                     public static string? GetDisplayDescription(this
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
-        AddAttributeMethodBody(sb, static x => x.DisplayDescription);
+        AddAttributeMethodBody(sb, spec, static x => x.DisplayDescription);
     }
 
-    private void AddGetDescription(StringBuilder sb)
+    private static void AddGetDescription(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -66,24 +66,24 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
                     public static string? GetDescription(this
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
-        AddAttributeMethodBody(sb, static x => x.Description);
+        AddAttributeMethodBody(sb, spec, static x => x.Description);
     }
 
-    private void AddAttributeMethodBody(StringBuilder sb, Func<AttributeValues, string?> accessor)
+    private static void AddAttributeMethodBody(StringBuilder sb, EnumGenerationSpec spec, Func<AttributeValues, string?> accessor)
     {
-        sb.Append(' ').Append(_currentSpec.FullName).Append(" value)");
+        sb.Append(' ').Append(spec.FullName).Append(" value)");
 
-        List<EnumMemberSpec> notNulls = _currentSpec.DistinctMembers.Where(x => accessor(x.Data) is not null).ToList();
+        List<EnumMemberSpec> notNulls = spec.DistinctMembers.Where(x => accessor(x.Data) is not null).ToList();
         if (notNulls.Count == 0)
         {
             sb.AppendLine(" => null;").AppendLine();
             return;
         }
 
-        string methodIndent = Get(Indentation.Method);
-        string methodBodyIndent = Get(Indentation.MethodBody);
+        string methodIndent = Indentation.Method.Get();
+        string methodBodyIndent = Indentation.MethodBody.Get();
 
         sb
             .AppendLine(" => value switch")
