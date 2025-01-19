@@ -32,8 +32,11 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
         bool hasFlags)
     {
         FullName = fullName;
-        Modifier = modifier;
 
+        int lastIndexOfDot = FullName.LastIndexOf('.');
+        Name = FullName.Substring(lastIndexOfDot + 1);
+
+        Modifier = modifier;
         Members = members;
         DistinctFlagMembers = members.ToDistinct(true);
         DistinctMembers = hasFlags ? DistinctFlagMembers : members.ToDistinct(false);
@@ -54,9 +57,6 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
             ToStringFormat = type.GetFormat();
             UnderlyingType = "global::" + type.FullName;
         }
-
-        int lastIndexOfDot = FullName.LastIndexOf('.');
-        Name = FullName.Substring(lastIndexOfDot + 1);
     }
 
     public override string ToString() => FullName;

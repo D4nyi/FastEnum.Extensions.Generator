@@ -23,7 +23,7 @@ internal static class AttributeDataEmitter
                     /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
-                    public static string? GetEnumMemberValue(this
+                    public static global::System.String? GetEnumMemberValue(this
                 """, spec.FullName);
 
         AddAttributeMethodBody(sb, spec, static x => x.EnumMemberValue);
@@ -37,7 +37,7 @@ internal static class AttributeDataEmitter
                     /// <summary>Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> if exists; otherwise null.</returns>
-                    public static string? GetDisplayName(this
+                    public static global::System.String? GetDisplayName(this
                 """, spec.FullName);
 
         AddAttributeMethodBody(sb, spec, static x => x.DisplayName);
@@ -51,7 +51,7 @@ internal static class AttributeDataEmitter
                     /// <summary>Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
-                    public static string? GetDisplayDescription(this
+                    public static global::System.String? GetDisplayDescription(this
                 """, spec.FullName);
 
         AddAttributeMethodBody(sb, spec, static x => x.DisplayDescription);
@@ -65,7 +65,7 @@ internal static class AttributeDataEmitter
                     /// <summary>Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.</summary>
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
-                    public static string? GetDescription(this
+                    public static global::System.String? GetDescription(this
                 """, spec.FullName);
 
         AddAttributeMethodBody(sb, spec, static x => x.Description);

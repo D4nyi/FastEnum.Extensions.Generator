@@ -23,7 +23,7 @@ internal static class GeneralEmitter
                 /// <summary>
                 /// Extension methods for <see cref="{0}" />
                 /// </summary>
-                [global::System.CodeDom.Compiler.GeneratedCode("{1}", "{2}")]
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("{1}", "{2}")]
                 {3} static class {4}Extensions
                 {{
                 """, spec.FullName, Constants.EnumExtensionsGenerator, Constants.Version, spec.Modifier, spec.Name);
@@ -174,7 +174,7 @@ internal static class GeneralEmitter
                     {{
                         {1} resultValue = global::System.Runtime.CompilerServices.Unsafe.As<{0}, {1}>(ref value);
 
-                        Span<global::System.Int32> foundItems = stackalloc global::System.Int32[{2}];
+                        global::System.Span<global::System.Int32> foundItems = stackalloc global::System.Int32[{2}];
                         if (!TryFindFlagsNames(resultValue, foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount))
                         {{
                             return null;
@@ -186,7 +186,7 @@ internal static class GeneralEmitter
 
                         global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
 
-                        WriteMultipleFoundFlagsNames(_names, foundItems, destination);
+                        WriteMultipleFoundFlagsNames(foundItems, destination);
 
                         return new global::System.String(destination);
                     }}
@@ -237,11 +237,11 @@ internal static class GeneralEmitter
                     }
 
                     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    private static void WriteMultipleFoundFlagsNames(global::System.String[] names, global::System.ReadOnlySpan<global::System.Int32> foundItems, global::System.Span<global::System.Char> destination)
+                    private static void WriteMultipleFoundFlagsNames(global::System.ReadOnlySpan<global::System.Int32> foundItems, global::System.Span<global::System.Char> destination)
                     {
                         for (global::System.Int32 i = foundItems.Length - 1; i != 0; i--)
                         {
-                            global::System.String name = names[foundItems[i]];
+                            global::System.String name = _names[foundItems[i]];
                             name.CopyTo(destination);
                             destination = destination[name.Length..];
                             global::System.Span<global::System.Char> afterSeparator = destination[2..]; // done before copying ", " to eliminate those two bounds checks
@@ -250,7 +250,7 @@ internal static class GeneralEmitter
                             destination = afterSeparator;
                         }
 
-                        names[foundItems[0]].CopyTo(destination);
+                        _names[foundItems[0]].CopyTo(destination);
                     }
 
 

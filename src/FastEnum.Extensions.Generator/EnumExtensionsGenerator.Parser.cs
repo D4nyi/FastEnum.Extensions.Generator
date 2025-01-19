@@ -4,6 +4,8 @@ using FastEnum.Extensions.Generator.Specs;
 using FastEnum.Extensions.Generator.Utils;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 
 namespace FastEnum.Extensions.Generator;
 
@@ -66,7 +68,8 @@ public sealed partial class EnumExtensionsGenerator
 
     private static object? Transform(GeneratorAttributeSyntaxContext context, CancellationToken ct)
     {
-        if (context.TargetSymbol is not INamedTypeSymbol enumSymbol)
+        if (context.TargetSymbol is not INamedTypeSymbol enumSymbol ||
+            context.TargetNode is not EnumDeclarationSyntax enumDeclarationSyntax)
         {
             // nothing to do if this type isn't available
             return null;
@@ -74,19 +77,11 @@ public sealed partial class EnumExtensionsGenerator
 
         ct.ThrowIfCancellationRequested();
 
-        bool hasFlags = enumSymbol.GetAttributes().Any(static attributeData =>
-            attributeData.AttributeDataIs(Constants.FlagsAttributeFullName));
+        bool hasFlags = enumSymbol.GetAttributes().Any(static attributeData => attributeData.AttributeDataIs(Constants.FlagsAttributeFullName));
 
         NestingState nestingState = enumSymbol.GetNesting();
-        string modifier = enumSymbol.DeclaredAccessibility switch
-        {
-            Accessibility.Public => "public",
-            Accessibility.Internal => "internal",
-            Accessibility.Protected => "protected",
-            Accessibility.Private => "private",
-            Accessibility.ProtectedAndInternal or Accessibility.ProtectedOrInternal => "protected internal",
-            _ => null!
-        };
+
+        string modifier = enumDeclarationSyntax.Modifiers.ToString();
 
         if (enumSymbol.IsFileLocal)
         {
@@ -95,7 +90,7 @@ public sealed partial class EnumExtensionsGenerator
 
         string typeName = enumSymbol.ToString();
 
-        Location location = enumSymbol.Locations.FirstOrDefault() ?? Location.None;
+        Location location = GetComparableLocation(enumDeclarationSyntax);
 
         Diagnostic? warning = HasNestingWarning(nestingState, modifier, location, typeName);
 
@@ -106,19 +101,7 @@ public sealed partial class EnumExtensionsGenerator
 
         if (Array.Exists(Constants.UnsupportedVisibilityModifiers, x => x == modifier))
         {
-            return Diagnostic.Create(
-                InvalidVisibilityModifier,
-                location,
-                typeName);
-        }
-
-        bool isGlobalNamespace = enumSymbol.ContainingNamespace.IsGlobalNamespace;
-        string @namespace = enumSymbol.ContainingNamespace.ToString();
-
-        string underlyingTypeName = enumSymbol.EnumUnderlyingType?.ToString()!;
-        if (String.IsNullOrWhiteSpace(underlyingTypeName))
-        {
-            underlyingTypeName = "int";
+            return Diagnostic.Create(InvalidVisibilityModifier, location, typeName);
         }
 
         ImmutableArray<EnumMemberSpec> members = enumSymbol.GetMembers()
@@ -138,12 +121,16 @@ public sealed partial class EnumExtensionsGenerator
             return Diagnostic.Create(EmptyEnum, location, typeName);
         }
 
+        string underlyingTypeName = enumSymbol.EnumUnderlyingType?.ToString() ?? "int";
+
+        (bool isGlobalNamespace, string ns) = GetNamespace(enumSymbol, nestingState);
+
         return new EnumGenerationSpec(
             typeName,
             modifier,
             members,
             isGlobalNamespace,
-            @namespace,
+            ns,
             underlyingTypeName,
             hasFlags
         );
@@ -172,5 +159,39 @@ public sealed partial class EnumExtensionsGenerator
         }
 
         return null;
+    }
+
+    // Get a Location object that doesn't store a reference to the compilation.
+    // That allows it to compare equally across compilations.
+    private static Location GetComparableLocation(EnumDeclarationSyntax syntax)
+    {
+        Location location = syntax.GetLocation();
+
+        // string filePath = location.SourceTree?.FilePath ?? String.Empty;
+         TextSpan sourceSpan = TextSpan.FromBounds(syntax.Modifiers.Span.Start, syntax.Identifier.Span.End);
+        //
+        // FileLinePositionSpan original = location.GetLineSpan();
+        //
+        // LinePosition startLinePosition = new(original.StartLinePosition.Line + 1, original.StartLinePosition.Character);
+        // LinePosition endLinePosition = new(startLinePosition.Line, sourceSpan.Length);
+        //
+        // LinePositionSpan lineSpan = new(startLinePosition, endLinePosition);
+
+        return Location.Create(location.SourceTree!, sourceSpan);
+    }
+
+    private static (bool isGlobalNamespace, string ns) GetNamespace(INamedTypeSymbol enumSymbol, NestingState nestingState)
+    {
+        if (nestingState == NestingState.SingleParentType)
+        {
+            enumSymbol = enumSymbol.ContainingType;
+        }
+
+        INamespaceSymbol ns = enumSymbol.ContainingNamespace;
+
+        return (
+            ns.IsGlobalNamespace,
+            ns.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))
+        );
     }
 }

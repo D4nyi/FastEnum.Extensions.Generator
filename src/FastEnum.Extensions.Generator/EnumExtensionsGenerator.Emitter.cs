@@ -12,27 +12,29 @@ public sealed partial class EnumExtensionsGenerator
     {
         StringBuilder sb = StringBuilderPool.Get();
 
+        // General
         GeneralEmitter.AddFileAndClassHeader(sb, enumGenerationSpec);
+        GeneralEmitter.AddFieldsAndGetMethods(sb, enumGenerationSpec);
+        GeneralEmitter.AddHasFlag(sb, enumGenerationSpec);
+        GeneralEmitter.AddIsDefined(sb, enumGenerationSpec);
 
-        if (enumGenerationSpec.Members.IsEmpty)
-        {
-            sb.Append(Constants.EmptyEnum);
-        }
-        else
-        {
-            GeneralEmitter.AddFieldsAndGetMethods(sb, enumGenerationSpec);
-            GeneralEmitter.AddHasFlag(sb, enumGenerationSpec);
-            GeneralEmitter.AddIsDefined(sb, enumGenerationSpec);
-            ToStringEmitter.AddToString(sb, enumGenerationSpec);
-            ToStringEmitter.AddToStringFormat(sb, enumGenerationSpec);
-            AttributeDataEmitter.AddAttributeMethods(sb, enumGenerationSpec);
-            TryParseStringEmitter.AddTryParseString(sb, enumGenerationSpec);
-            TryParseSpanEmitter.AddTryParseSpan(sb, enumGenerationSpec);
-            ToStringEmitter.AddFormatAsHexHelper(sb, enumGenerationSpec);
-            TryParseSpanEmitter.AddTryParsePrivate(sb, enumGenerationSpec);
-            ToStringEmitter.AddFormatFlagNames(sb, enumGenerationSpec);
-            GeneralEmitter.AddPrivateHelperMethods(sb, enumGenerationSpec);
-        }
+        AttributeDataEmitter.AddAttributeMethods(sb, enumGenerationSpec);
+
+        // ToString
+        ToStringEmitter.AddToString(sb, enumGenerationSpec);
+        ToStringEmitter.AddToStringFormat(sb, enumGenerationSpec);
+
+        // TryParse
+        TryParseStringEmitter.AddTryParseString(sb, enumGenerationSpec);
+        TryParseSpanEmitter.AddTryParseSpan(sb, enumGenerationSpec);
+
+        // Private Helpers
+        ToStringEmitter.AddFormatAsHexHelper(sb, enumGenerationSpec);
+        ToStringEmitter.AddFormatFlagNames(sb, enumGenerationSpec);
+
+        TryParseSpanEmitter.AddTryParsePrivate(sb, enumGenerationSpec);
+
+        GeneralEmitter.AddPrivateHelperMethods(sb, enumGenerationSpec);
 
         sb.Append('}').AppendLine();
 

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>Preview</LangVersion>
+        <LangVersion>Latest</LangVersion>
 
         <IsRoslynComponent>True</IsRoslynComponent>
 
@@ -10,25 +10,18 @@
         <Authors>Dániel Szöllősi</Authors>
         <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageTags>Enum, Extensions, Enum-Extensions, Fast, Efficient, Source Generator</PackageTags>
+        <PackageTags>Enum, Extensions, Extension, Utility, C#, CSharp, .NET, Fast, Efficient, Source Generator</PackageTags>
         <RepositoryUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</RepositoryUrl>
         <PackageProjectUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator</PackageProjectUrl>
         <Description>Source Generator generating extension methods for enums</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
         <PackageReleaseNotes>
-            - Rework of analyzer warnings.
-            - Disabled generation for deeply nested enums (i.e. nested more then one type).
-            - Disabled genreation when nested enum's accessibility modifier is inconsistnet with its parent's.
-            - Handling non-unique enum values (i.e. when multiple enum members has the same value).
-            - Cosmetic changes in generated code.
+            - No source file is generated for empty enum's, an info analyzer warning is emitted instead.
+ - Analyzer warning placemnet changed, now the declaration line will be highlighted. (e.g.: "public enum Demo")
+ - Internals updated for more efficient and faster code generation.
+ - Cosmetic changes in generated code.
         </PackageReleaseNotes>
-
-        <PackageTags>
-            Extension, C#, CSharp, .NET, dotnet, Enum, Source-Generator
-        </PackageTags>
-
-        <DebugType>portable</DebugType>
 
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>

@@ -58,9 +58,11 @@ public sealed partial class EnumExtensionsGenerator : IIncrementalGenerator
                     }
                 }
             }
+#pragma warning disable CA1031
             catch (Exception e)
+#pragma warning restore CA1031
             {
-                context.AddSource("errors.txt", CreateSource(e.ToString()));
+                context.AddSource("Errors.g.cs", CreateSource("// " + e.Message));
             }
         });
     }
