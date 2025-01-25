@@ -1,29 +1,43 @@
 using FastEnum.Extensions.Generator.Tests.Snapshot.Helpers;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace FastEnum.Extensions.Generator.Tests.Snapshot;
 
 public sealed class EnumToStringGeneratorTests
 {
     [Fact]
-    public Task GeneratesEnumExtensionsCorrectly()
+    public async Task Snapshots()
     {
         // Arrange
         Dictionary<string, string> enums = SnapshotEnumGenerator.Enums();
-        GeneratorDriver generator = Setups.CreateGeneratorDriver(enums);
+        int expectedSourceCount = enums.ExpectedSourceCount();
+
+        GeneratorDriver driver = Setups.CreateGeneratorDriver();
+        CSharpCompilation compilation = Setups.CreateCompilation(enums);
+        CSharpCompilation clone = compilation.Clone();
 
         // Act
-        GeneratorDriverRunResult result = generator.GetRunResult();
+        driver = driver.RunGenerators(compilation);
+
+        GeneratorDriverRunResult runResult = driver.GetRunResult();
+
+        GeneratorDriverRunResult runResult2 = driver.RunGenerators(clone).GetRunResult();
 
         // Assert
-        Assert.Single(result.Results, assertedResult =>
-        {
-            Assert.Equal(enums.ExpectedSourceCount(), assertedResult.GeneratedSources.Length);
+        await Verify(runResult, Setups.VerifySettings);
 
-            return true;
-        });
+        Assert.Single(runResult.Results, x => AssertRunResult(expectedSourceCount, x));
+        Assert.Single(runResult2.Results, x => AssertRunResult(expectedSourceCount, x));
 
-        return Verify(result, Setups.VerifySettings);
+        GeneratorInternalsTestHelper.AssertRunsEqual(runResult, runResult2);
+    }
+
+    private static bool AssertRunResult(int expectedSourceCount, GeneratorRunResult assertedResult)
+    {
+        Assert.Equal(expectedSourceCount, assertedResult.GeneratedSources.Length);
+
+        return true;
     }
 }

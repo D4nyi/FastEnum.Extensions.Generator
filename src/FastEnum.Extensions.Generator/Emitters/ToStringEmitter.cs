@@ -2,17 +2,16 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 
-using FastEnum.Extensions.Generator.Emitters;
 using FastEnum.Extensions.Generator.Specs;
 
-namespace FastEnum.Extensions.Generator;
+namespace FastEnum.Extensions.Generator.Emitters;
 
-internal sealed partial class EnumExtensionsEmitter
+internal static class ToStringEmitter
 {
-    private void AddToString(StringBuilder sb)
+    internal static void AddToString(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodIndent = Get(Indentation.Method);
-        string methodBodyIndent = Get(Indentation.MethodBody);
+        string methodIndent = Indentation.Method.Get();
+        string methodBodyIndent = Indentation.MethodBody.Get();
 
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -23,9 +22,9 @@ internal sealed partial class EnumExtensionsEmitter
                     {0} static global::System.String FastToString(this {1} value) => value switch
                     {{
 
-                """, _currentSpec.Modifier, _currentSpec.FullName);
+                """, spec.Modifier, spec.FullName);
 
-        foreach (EnumMemberSpec member in _currentSpec.DistinctMembers)
+        foreach (EnumMemberSpec member in spec.DistinctMembers)
         {
             sb
                 .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")
@@ -34,14 +33,14 @@ internal sealed partial class EnumExtensionsEmitter
 
         sb
             .Append(methodBodyIndent).Append("_ => (")
-                .AddCast(_currentSpec.FullName, _currentSpec.UnderlyingType).AppendLine(").ToString()")
+                .AddCast(spec.FullName, spec.UnderlyingType).AppendLine(").ToString()")
             .Append(methodIndent).AppendLine("};")
             .AppendLine();
     }
 
-    private void AddToStringFormat(StringBuilder sb)
+    internal static void AddToStringFormat(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodIndent = Get(Indentation.Method);
+        string methodIndent = Indentation.Method.Get();
 
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -52,8 +51,8 @@ internal sealed partial class EnumExtensionsEmitter
                     /// <returns>The string representation of the value of this instance as specified by format.</returns>
                     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
 
-                """, _currentSpec.FullName)
-            .Append(methodIndent).Append(_currentSpec.Modifier).Append(" static global::System.String FastToString(this ").Append(_currentSpec.FullName).AppendLine(" value,")
+                """, spec.FullName)
+            .Append(methodIndent).Append(spec.Modifier).Append(" static global::System.String FastToString(this ").Append(spec.FullName).AppendLine(" value,")
             .Append(
                 """
                         [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
@@ -68,7 +67,7 @@ internal sealed partial class EnumExtensionsEmitter
                         {
                             case 'g': return value.FastToString();
                             case 'd': return
-                """).Append(' ').AddCast(_currentSpec.FullName, _currentSpec.UnderlyingType).AppendLine(".ToString();")
+                """).Append(' ').AddCast(spec.FullName, spec.UnderlyingType).AppendLine(".ToString();")
             .Append(
                 """
                             case 'x': return FormatNumberAsHex(value);
@@ -84,9 +83,9 @@ internal sealed partial class EnumExtensionsEmitter
                 """);
     }
 
-    private void AddFormatFlagNames(StringBuilder sb)
+    internal static void AddFormatFlagNames(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Get(Indentation.MethodBody);
+        string methodBodyIndent = Indentation.MethodBody.Get();
 
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -94,19 +93,19 @@ internal sealed partial class EnumExtensionsEmitter
                     private static global::System.String? FormatFlagNames({0} value) => value switch
                     {{
 
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
         // Necessary to change the type of the number ZERO if the underlying type is not Int32,
         // otherwise the Equals will return false, no matter what the actual first value is in the enum
         // because of the type mismatch
-        object zero = _currentSpec.Members[0].Value.GetType().GetCorrectZero();
+        object zero = spec.Members[0].Value.GetType().GetCorrectZero();
 
-        if (!_currentSpec.Members[0].Value.Equals(zero))
+        if (!spec.Members[0].Value.Equals(zero))
         {
             sb.AppendLine("        0 => \"0\",");
         }
 
-        foreach (EnumMemberSpec member in _currentSpec.DistinctFlagMembers)
+        foreach (EnumMemberSpec member in spec.DistinctFlagMembers)
         {
             sb
                 .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")
@@ -123,7 +122,7 @@ internal sealed partial class EnumExtensionsEmitter
                 """);
     }
 
-    private void AddFormatAsHexHelper(StringBuilder sb)
+    internal static void AddFormatAsHexHelper(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -132,13 +131,13 @@ internal sealed partial class EnumExtensionsEmitter
                     private static global::System.String FormatNumberAsHex({0} data) => data switch
                     {{
 
-                """, _currentSpec.FullName);
+                """, spec.FullName);
 
-        AddHexValuesForKnownFields(sb);
+        AddHexValuesForKnownFields(sb, spec);
 
-        bool isByteSized = _currentSpec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase);
+        bool isByteSized = spec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase);
 
-        string underlyingType = isByteSized ? "global::System.Byte" : _currentSpec.UnderlyingType;
+        string underlyingType = isByteSized ? "global::System.Byte" : spec.UnderlyingType;
 
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -146,7 +145,7 @@ internal sealed partial class EnumExtensionsEmitter
                         _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), (buffer, value) =>
                         {{
 
-                """, underlyingType, _currentSpec.FullName);
+                """, underlyingType, spec.FullName);
 
         if (isByteSized)
         {
@@ -167,18 +166,18 @@ internal sealed partial class EnumExtensionsEmitter
             return;
         }
 
-        UseToCharsBufferHelper(sb, _currentSpec.OriginalUnderlyingType);
+        UseToCharsBufferHelper(sb, spec.OriginalUnderlyingType);
     }
 
-    private void AddHexValuesForKnownFields(StringBuilder sb)
+    private static void AddHexValuesForKnownFields(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string nesting1Indent = Get(Indentation.MethodBody);
+        string nesting1Indent = Indentation.MethodBody.Get();
 
-        Type membersType = _currentSpec.Members[0].Value.GetType(); // an enum has only one backing type
+        Type membersType = spec.Members[0].Value.GetType(); // an enum has only one backing type
         MethodInfo toStringFormat = Helpers.GetToStringFormat(membersType);
-        object[] toStringParam = [_currentSpec.Type.GetFormat()];
+        object[] toStringParam = [spec.ToStringFormat];
 
-        foreach (EnumMemberSpec member in _currentSpec.DistinctMembers)
+        foreach (EnumMemberSpec member in spec.DistinctMembers)
         {
             string hex = (string)toStringFormat.Invoke(member.Value, toStringParam);
 

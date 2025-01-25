@@ -23,9 +23,9 @@ internal readonly struct EnumMemberSpec : IEquatable<EnumMemberSpec>
 
     public static bool operator ==(EnumMemberSpec left, EnumMemberSpec right) => left.Equals(right);
 
-    public override int GetHashCode() => EqualityComparer<object>.Default.GetHashCode(Value);
+    public override int GetHashCode() => Value.GetHashCode();
 
     public override bool Equals(object? obj) => obj is EnumMemberSpec spec && Equals(spec);
 
-    public bool Equals(EnumMemberSpec other) => EqualityComparer<object>.Default.Equals(Value, other.Value);
+    public bool Equals(EnumMemberSpec other) => Value.Equals(other.Value);
 }

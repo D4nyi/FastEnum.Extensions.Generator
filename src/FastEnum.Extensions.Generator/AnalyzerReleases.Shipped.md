@@ -39,3 +39,11 @@ Rule ID | Category | Severity | Notes
 ETS1001 | Design   | Warning  | Enum cannot be private, we are currently unable to create extensions
 ETS1002 | Design   | Warning  | Enum's underlying type cannot be determined  therefore we are unable to create extensions
 ETS1003 | Design   | Warning  | Extension generation restriction, extension generation for enum's nested in generic types are available
+
+## Release 4.0
+
+### New Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+EEG1005 | Usage    | Info     | [Documentation](https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1005-empty-enum)
