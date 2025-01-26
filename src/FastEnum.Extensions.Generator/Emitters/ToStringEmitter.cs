@@ -33,7 +33,7 @@ internal static class ToStringEmitter
 
         sb
             .Append(methodBodyIndent).Append("_ => (")
-                .AddCast(spec.FullName, spec.UnderlyingType).AppendLine(").ToString()")
+            .AddCast(spec.FullName, spec.UnderlyingType).AppendLine(").ToString()")
             .Append(methodIndent).AppendLine("};")
             .AppendLine();
     }
@@ -52,11 +52,10 @@ internal static class ToStringEmitter
                     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
 
                 """, spec.FullName)
-            .Append(methodIndent).Append(spec.Modifier).Append(" static global::System.String FastToString(this ").Append(spec.FullName).AppendLine(" value,")
+            .Append(methodIndent).Append(spec.Modifier).Append(" static global::System.String FastToString(this ").Append(spec.FullName)
+            .AppendLine(" value, [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(\"EnumFormat\")] global::System.String? format)")
             .Append(
                 """
-                        [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
-                        global::System.String? format)
                     {
                         if (global::System.String.IsNullOrEmpty(format)) return value.FastToString();
 
@@ -90,6 +89,7 @@ internal static class ToStringEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     private static global::System.String? FormatFlagNames({0} value) => value switch
                     {{
 
@@ -166,7 +166,7 @@ internal static class ToStringEmitter
             return;
         }
 
-        UseToCharsBufferHelper(sb, spec.OriginalUnderlyingType);
+        UseToCharsBufferHelperInlined(sb, spec.OriginalUnderlyingType);
     }
 
     private static void AddHexValuesForKnownFields(StringBuilder sb, EnumGenerationSpec spec)
@@ -186,7 +186,7 @@ internal static class ToStringEmitter
         }
     }
 
-    private static void UseToCharsBufferHelper(StringBuilder sb, string originalUnderlyingType)
+    private static void UseToCharsBufferHelperInlined(StringBuilder sb, string originalUnderlyingType)
     {
         int shiftValue = originalUnderlyingType switch
         {
@@ -198,20 +198,32 @@ internal static class ToStringEmitter
 
         if (shiftValue != 0)
         {
+            bool firstItem = true;
             int startIndex = 0;
+
             for (; shiftValue >= 0; shiftValue -= 8)
             {
-                sb.Append("             ToCharsBuffer((global::System.Byte)");
+                sb
+                    .Append("             ")
+                    .AddTypeDefinition("Byte", firstItem)
+                    .Append("byteValue = (global::System.Byte)").AddShift(shiftValue)
+                    .Append("             ")
+                    .AddTypeDefinition("UInt32", firstItem)
+                    .AppendLine("difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;")
+                    .Append("             ")
+                    .AddTypeDefinition("UInt32", firstItem)
+                    .AppendLine("packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;")
+                    .AppendLine();
+
+                firstItem = false;
+
+                sb.Append("             buffer[").Append(startIndex + 1).AppendLine("] = (global::System.Char)(packedResult & 0xFFU);");
+                sb.Append("             buffer[").Append(startIndex).AppendLine("] = (global::System.Char)(packedResult >> 8);");
+
                 if (shiftValue >= 8)
                 {
-                    sb.Append("(value >> ").Append(shiftValue).Append(')');
+                    sb.AppendLine();
                 }
-                else
-                {
-                    sb.Append("value");
-                }
-
-                sb.Append(", buffer, ").Append(startIndex).AppendLine(");");
 
                 startIndex += 2;
             }

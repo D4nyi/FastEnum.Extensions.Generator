@@ -36,7 +36,7 @@ public sealed partial class EnumExtensionsGenerator
 
         GeneralEmitter.AddPrivateHelperMethods(sb, enumGenerationSpec);
 
-        sb.Append('}').AppendLine();
+        sb.AppendLine().Append('}');
 
         return StringBuilderPool.Return(sb);
     }

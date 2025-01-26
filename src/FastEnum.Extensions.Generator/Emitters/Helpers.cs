@@ -16,13 +16,38 @@ internal static class Helpers
 
     internal static StringBuilder AddCorrectBitwiseOperation(this StringBuilder sb, string underlyingTypeName)
     {
+        sb.Append("                resultValue ");
         if (underlyingTypeName is "int" or "uint" or "long" or "ulong")
         {
-            return sb.AppendLine("resultValue &= ~currentValue;");
+            return sb.AppendLine("&= ~currentValue;");
         }
 
         // "byte" or "sbyte" or "short" or "ushort" or others
-        return sb.Append("                resultValue = (").Append(underlyingTypeName).AppendLine(")(resultValue & ~currentValue);");
+        return sb.Append("= (").Append(underlyingTypeName).AppendLine(")(resultValue & ~currentValue);");
+    }
+
+    internal static StringBuilder AddShift(this StringBuilder sb, int shiftValue)
+    {
+        if (shiftValue >= 8)
+        {
+            sb.Append("(value >> ").Append(shiftValue.ToString(CultureInfo.InvariantCulture)).AppendLine(");");
+        }
+        else
+        {
+            sb.AppendLine("value;");
+        }
+
+        return sb;
+    }
+
+    internal static StringBuilder AddTypeDefinition(this StringBuilder sb, string type, bool add)
+    {
+        if (add)
+        {
+            sb.Append("global::System.").Append(type).Append(' ');
+        }
+
+        return sb;
     }
 
     internal static StringBuilder AddCast(this StringBuilder sb, string enumName, string underlyingType)
