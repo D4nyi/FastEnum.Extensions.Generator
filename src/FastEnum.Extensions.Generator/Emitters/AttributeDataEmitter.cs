@@ -82,23 +82,20 @@ internal static class AttributeDataEmitter
             return;
         }
 
-        string methodIndent = Indentation.Method.Get();
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendLine(" => value switch")
-            .Append(methodIndent).AppendLine("{");
+            .AppendLine("    {");
 
         foreach (EnumMemberSpec member in notNulls)
         {
             sb
-                .Append(methodBodyIndent).Append(member.FullName).Append(" => \"")
+                .Append("        ").Append(member.FullName).Append(" => \"")
                 .Append(accessor(member.Data)).AppendLine("\",");
         }
 
         sb
-            .Append(methodBodyIndent).AppendLine("_ => null")
-            .Append(methodIndent).AppendLine("};")
+            .AppendLine("        _ => null")
+            .AppendLine("    };")
             .AppendLine();
     }
 }

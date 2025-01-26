@@ -21,6 +21,7 @@
  - Analyzer warning placemnet changed, now the declaration line will be highlighted. (e.g.: "public enum Demo")
  - Internals updated for more efficient and faster code generation.
  - Cosmetic changes in generated code.
+ - Some methods are inlined
         </PackageReleaseNotes>
 
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>

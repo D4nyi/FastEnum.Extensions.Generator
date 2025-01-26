@@ -10,9 +10,6 @@ internal static class ToStringEmitter
 {
     internal static void AddToString(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodIndent = Indentation.Method.Get();
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -27,21 +24,19 @@ internal static class ToStringEmitter
         foreach (EnumMemberSpec member in spec.DistinctMembers)
         {
             sb
-                .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")
+                .Append("        ").Append(member.FullName).Append(" => nameof(")
                 .Append(member.FullName).AppendLine("),");
         }
 
         sb
-            .Append(methodBodyIndent).Append("_ => (")
+            .Append("        _ => (")
             .AddCast(spec.FullName, spec.UnderlyingType).AppendLine(").ToString()")
-            .Append(methodIndent).AppendLine("};")
+            .AppendLine("    };")
             .AppendLine();
     }
 
     internal static void AddToStringFormat(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodIndent = Indentation.Method.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -52,7 +47,7 @@ internal static class ToStringEmitter
                     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
 
                 """, spec.FullName)
-            .Append(methodIndent).Append(spec.Modifier).Append(" static global::System.String FastToString(this ").Append(spec.FullName)
+            .Append("    ").Append(spec.Modifier).Append(" static global::System.String FastToString(this ").Append(spec.FullName)
             .AppendLine(" value, [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(\"EnumFormat\")] global::System.String? format)")
             .Append(
                 """
@@ -84,8 +79,6 @@ internal static class ToStringEmitter
 
     internal static void AddFormatFlagNames(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -108,7 +101,7 @@ internal static class ToStringEmitter
         foreach (EnumMemberSpec member in spec.DistinctFlagMembers)
         {
             sb
-                .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")
+                .Append("        ").Append(member.FullName).Append(" => nameof(")
                 .Append(member.FullName).AppendLine("),");
         }
 
@@ -171,8 +164,6 @@ internal static class ToStringEmitter
 
     private static void AddHexValuesForKnownFields(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string nesting1Indent = Indentation.MethodBody.Get();
-
         Type membersType = spec.Members[0].Value.GetType(); // an enum has only one backing type
         MethodInfo toStringFormat = Helpers.GetToStringFormat(membersType);
         object[] toStringParam = [spec.ToStringFormat];
@@ -182,7 +173,7 @@ internal static class ToStringEmitter
             string hex = (string)toStringFormat.Invoke(member.Value, toStringParam);
 
             sb
-                .Append(nesting1Indent).Append(member.FullName).Append(" => \"").Append(hex).AppendLine("\",");
+                .Append("        ").Append(member.FullName).Append(" => \"").Append(hex).AppendLine("\",");
         }
     }
 

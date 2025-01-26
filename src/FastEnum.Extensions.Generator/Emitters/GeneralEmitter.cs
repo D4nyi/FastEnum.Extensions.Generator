@@ -31,8 +31,6 @@ internal static class GeneralEmitter
 
     internal static void AddFieldsAndGetMethods(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -44,7 +42,7 @@ internal static class GeneralEmitter
 
         foreach (EnumMemberSpec member in spec.Members)
         {
-            sb.Append(methodBodyIndent).Append(member.Value).AppendLine(",");
+            sb.Append("        ").Append(member.Value).AppendLine(",");
         }
 
         sb
@@ -59,7 +57,7 @@ internal static class GeneralEmitter
 
         foreach (EnumMemberSpec member in spec.Members)
         {
-            sb.Append(methodBodyIndent).Append(member.FullName).AppendLine(",");
+            sb.Append("        ").Append(member.FullName).AppendLine(",");
         }
 
         sb
@@ -74,7 +72,7 @@ internal static class GeneralEmitter
 
         foreach (EnumMemberSpec member in spec.Members)
         {
-            sb.Append(methodBodyIndent).Append("nameof(").Append(member.FullName).AppendLine("),");
+            sb.Append("        ").Append("nameof(").Append(member.FullName).AppendLine("),");
         }
 
         sb
@@ -127,8 +125,6 @@ internal static class GeneralEmitter
 
     internal static void AddIsDefined(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -145,7 +141,7 @@ internal static class GeneralEmitter
         {
             if (i % 3 == 0)
             {
-                sb.AppendLine().Append(methodBodyIndent);
+                sb.AppendLine().Append("        ");
             }
 
             sb.Append(spec.Members[i].FullName);
