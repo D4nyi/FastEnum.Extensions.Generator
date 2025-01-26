@@ -31,8 +31,6 @@ internal static class GeneralEmitter
 
     internal static void AddFieldsAndGetMethods(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -44,7 +42,7 @@ internal static class GeneralEmitter
 
         foreach (EnumMemberSpec member in spec.Members)
         {
-            sb.Append(methodBodyIndent).Append(member.Value).AppendLine(",");
+            sb.Append("        ").Append(member.Value).AppendLine(",");
         }
 
         sb
@@ -59,7 +57,7 @@ internal static class GeneralEmitter
 
         foreach (EnumMemberSpec member in spec.Members)
         {
-            sb.Append(methodBodyIndent).Append(member.FullName).AppendLine(",");
+            sb.Append("        ").Append(member.FullName).AppendLine(",");
         }
 
         sb
@@ -74,7 +72,7 @@ internal static class GeneralEmitter
 
         foreach (EnumMemberSpec member in spec.Members)
         {
-            sb.Append(methodBodyIndent).Append("nameof(").Append(member.FullName).AppendLine("),");
+            sb.Append("        ").Append("nameof(").Append(member.FullName).AppendLine("),");
         }
 
         sb
@@ -118,6 +116,7 @@ internal static class GeneralEmitter
                     /// <param name="instance">The instance in which the flags are searched.</param>
                     /// <param name="flags">The flags that will be looked up in the instance.</param>
                     /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static global::System.Boolean HasFlag(this {0} instance, {1} flags) => (instance & flags) == flags;
 
 
@@ -126,8 +125,6 @@ internal static class GeneralEmitter
 
     internal static void AddIsDefined(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -144,7 +141,7 @@ internal static class GeneralEmitter
         {
             if (i % 3 == 0)
             {
-                sb.AppendLine().Append(methodBodyIndent);
+                sb.AppendLine().Append("        ");
             }
 
             sb.Append(spec.Members[i].FullName);
@@ -170,33 +167,16 @@ internal static class GeneralEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     private static global::System.String? ProcessMultipleFlagsNames({0} value)
                     {{
                         {1} resultValue = global::System.Runtime.CompilerServices.Unsafe.As<{0}, {1}>(ref value);
 
                         global::System.Span<global::System.Int32> foundItems = stackalloc global::System.Int32[{2}];
-                        if (!TryFindFlagsNames(resultValue, foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount))
-                        {{
-                            return null;
-                        }}
 
-                        foundItems = foundItems[..foundItemsCount];
-
-                        global::System.Int32 length = checked(resultLength + 2 * (foundItemsCount - 1)); // ", ".Length == 2
-
-                        global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
-
-                        WriteMultipleFoundFlagsNames(foundItems, destination);
-
-                        return new global::System.String(destination);
-                    }}
-
-                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    private static global::System.Boolean TryFindFlagsNames({1} resultValue, global::System.Span<global::System.Int32> foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount)
-                    {{
                         // Now look for multiple matches, storing the indices of the values into our span.
-                        resultLength = 0;
-                        foundItemsCount = 0;
+                        global::System.Int32 resultLength = 0;
+                        global::System.Int32 foundItemsCount = 0;
 
                         global::System.Int32 index = MembersCount - 1;
                         {1}[] values = _underlyingValues;
@@ -233,53 +213,38 @@ internal static class GeneralEmitter
                         // a non-zero result, we couldn't match the result to only named values.
                         // In that case, we return null and let the call site just generate
                         // a string for the integral value if it desires.
-                        return resultValue == 0;
-                    }
-
-                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    private static void WriteMultipleFoundFlagsNames(global::System.ReadOnlySpan<global::System.Int32> foundItems, global::System.Span<global::System.Char> destination)
-                    {
-                        for (global::System.Int32 i = foundItems.Length - 1; i != 0; i--)
+                        if (resultValue != 0)
                         {
-                            global::System.String name = _names[foundItems[i]];
-                            name.CopyTo(destination);
-                            destination = destination[name.Length..];
-                            global::System.Span<global::System.Char> afterSeparator = destination[2..]; // done before copying ", " to eliminate those two bounds checks
-                            destination[0] = ',';
-                            destination[1] = ' ';
-                            destination = afterSeparator;
+                            return null;
                         }
 
-                        _names[foundItems[0]].CopyTo(destination);
+                        foundItems = foundItems[..foundItemsCount];
+
+                        global::System.Int32 length = checked(resultLength + 2 * (foundItemsCount - 1)); // ", ".Length == 2
+
+                        global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
+
+                        global::System.Span<global::System.Char> workingSpan = destination;
+
+                        for (global::System.Int32 i = foundItems.Length - 1; i != 0; i--)
+                        {
+                            global::System.String name = names[foundItems[i]];
+                            name.CopyTo(workingSpan);
+                            workingSpan = workingSpan[name.Length..];
+                            global::System.Span<global::System.Char> afterSeparator = workingSpan[2..]; // done before copying ", " to eliminate those two bounds checks
+                            workingSpan[0] = ',';
+                            workingSpan[1] = ' ';
+                            workingSpan = afterSeparator;
+                        }
+
+                        names[foundItems[0]].CopyTo(workingSpan);
+
+                        return new global::System.String(destination);
                     }
 
-
-                """);
-
-        if (!spec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase))
-        {
-            sb.Append(
-                """
-                    [global::System.Security.SecuritySafeCriticalAttribute, global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    private static void ToCharsBuffer(global::System.Byte value, global::System.Span<global::System.Char> buffer, global::System.Int32 startingIndex)
-                    {
-                        global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
-                        global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-                        buffer[startingIndex + 1] = (global::System.Char)(packedResult & 0xFFU);
-                        buffer[startingIndex] = (global::System.Char)(packedResult >> 8);
-                    }
-
-
-                """);
-        }
-
-        sb.Append(
-            """
                 [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
                 private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
                     new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
-
             """);
     }
 }

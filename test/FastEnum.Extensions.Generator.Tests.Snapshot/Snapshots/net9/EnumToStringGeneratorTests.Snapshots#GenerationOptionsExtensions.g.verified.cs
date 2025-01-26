@@ -62,6 +62,7 @@ public static class GenerationOptionsExtensions
     /// <param name="instance">The instance in which the flags are searched.</param>
     /// <param name="flags">The flags that will be looked up in the instance.</param>
     /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public static global::System.Boolean HasFlag(this SnapshotTesting.GenerationOptions instance, SnapshotTesting.GenerationOptions flags) => (instance & flags) == flags;
 
     /// <summary>Returns a <see langword="global::System.Boolean"/> telling whether the given enum value exists in the enumeration.</summary>
@@ -127,9 +128,7 @@ public static class GenerationOptionsExtensions
     /// <param name="format">A format string.</param>
     /// <returns>The string representation of the value of this instance as specified by format.</returns>
     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
-    public static global::System.String FastToString(this SnapshotTesting.GenerationOptions value,
-        [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
-        global::System.String? format)
+    public static global::System.String FastToString(this SnapshotTesting.GenerationOptions value, [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute("EnumFormat")] global::System.String? format)
     {
         if (global::System.String.IsNullOrEmpty(format)) return value.FastToString();
 
@@ -158,47 +157,13 @@ public static class GenerationOptionsExtensions
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParse([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out SnapshotTesting.GenerationOptions result)
     {
-        if (global::System.String.IsNullOrEmpty(value))
+        if (value is not null)
         {
-            result = default;
-            return false;
+            return TryParseSpan(value.AsSpan(), false, out result);
         }
 
-        global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
-        if (span.IsEmpty)
-        {
-            result = default;
-            return false;
-        }
-
-        if (CheckIfNumber(span))
-        {
-            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-            return TryParseAsNumber(span, out result);
-        }
-
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.None)))
-        {
-            result = SnapshotTesting.GenerationOptions.None;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.ToString)))
-        {
-            result = SnapshotTesting.GenerationOptions.ToString;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.Parse)))
-        {
-            result = SnapshotTesting.GenerationOptions.Parse;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.HasFlag)))
-        {
-            result = SnapshotTesting.GenerationOptions.HasFlag;
-            return true;
-        }
-
-        return TryParseByName(value, false, out result);
+        result = default;
+        return false;
     }
 
     /// <summary>
@@ -210,47 +175,13 @@ public static class GenerationOptionsExtensions
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParseIgnoreCase([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out SnapshotTesting.GenerationOptions result)
     {
-        if (global::System.String.IsNullOrEmpty(value))
+        if (value is not null)
         {
-            result = default;
-            return false;
+            return TryParseSpan(value.AsSpan(), true, out result);
         }
 
-        global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
-        if (span.IsEmpty)
-        {
-            result = default;
-            return false;
-        }
-
-        if (CheckIfNumber(span))
-        {
-            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-            return TryParseAsNumber(span, out result);
-        }
-
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.None), global::System.StringComparison.OrdinalIgnoreCase))
-        {
-            result = SnapshotTesting.GenerationOptions.None;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.ToString), global::System.StringComparison.OrdinalIgnoreCase))
-        {
-            result = SnapshotTesting.GenerationOptions.ToString;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.Parse), global::System.StringComparison.OrdinalIgnoreCase))
-        {
-            result = SnapshotTesting.GenerationOptions.Parse;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.HasFlag), global::System.StringComparison.OrdinalIgnoreCase))
-        {
-            result = SnapshotTesting.GenerationOptions.HasFlag;
-            return true;
-        }
-
-        return TryParseByName(value, true, out result);
+        result = default;
+        return false;
     }
 
     /// <summary>
@@ -261,7 +192,7 @@ public static class GenerationOptionsExtensions
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.GenerationOptions result) =>
-        TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
+        TryParseSpan(value, false, out result);
 
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.GenerationOptions" />.
@@ -272,7 +203,7 @@ public static class GenerationOptionsExtensions
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.GenerationOptions result) =>
-        TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
+        TryParseSpan(value, true, out result);
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.String FormatNumberAsHex(SnapshotTesting.GenerationOptions data) => data switch
@@ -291,6 +222,7 @@ public static class GenerationOptionsExtensions
         })
     };
 
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.String? FormatFlagNames(SnapshotTesting.GenerationOptions value) => value switch
     {
         SnapshotTesting.GenerationOptions.None => nameof(SnapshotTesting.GenerationOptions.None),
@@ -301,69 +233,45 @@ public static class GenerationOptionsExtensions
     };
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.StringComparison comparison, out SnapshotTesting.GenerationOptions result)
+    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.GenerationOptions result)
     {
-        if (value.IsEmpty)
+        if (!value.IsEmpty)
         {
-            result = default;
-            return false;
+            global::System.Char c = value[0];
+            if (global::System.Char.IsWhiteSpace(c))
+            {
+                value = value.TrimStart();
+                if (value.IsEmpty)
+                {
+                    goto Done;
+                }
+
+                c = value[0];
+            }
+
+            if (!global::System.Char.IsAsciiDigit(c) && c != '-' && c != '+')
+            {
+                global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                return TryParseByName(value, ignoreCase, out result);
+            }
+
+            const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
+            global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
+            global::System.Boolean status = global::System.Byte.TryParse(value, NumberStyle, numberFormat, out global::System.Byte parseResult);
+
+            if (status)
+            {
+                result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Byte, SnapshotTesting.GenerationOptions>(ref parseResult);
+                return true;
+            }
         }
 
-        if (CheckIfNumber(value))
-        {
-            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-            return TryParseAsNumber(value, out result);
-        }
-
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.None).AsSpan(), comparison))
-        {
-            result = SnapshotTesting.GenerationOptions.None;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.ToString).AsSpan(), comparison))
-        {
-            result = SnapshotTesting.GenerationOptions.ToString;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.Parse).AsSpan(), comparison))
-        {
-            result = SnapshotTesting.GenerationOptions.Parse;
-            return true;
-        }
-        if (value.Equals(nameof(SnapshotTesting.GenerationOptions.HasFlag).AsSpan(), comparison))
-        {
-            result = SnapshotTesting.GenerationOptions.HasFlag;
-            return true;
-        }
-
-        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-        return TryParseByName(value, comparison == global::System.StringComparison.OrdinalIgnoreCase, out result);
-    }
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.Boolean CheckIfNumber(global::System.ReadOnlySpan<global::System.Char> value)
-    {
-        global::System.Char c = value[0];
-
-        return global::System.Char.IsAsciiDigit(c) || c == '-' || c == '+';
-    }
-
-    private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.GenerationOptions result)
-    {
-        const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
-        global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
-        global::System.Boolean status = global::System.Byte.TryParse(value, NumberStyle, numberFormat, out var parseResult);
-
-        if (status)
-        {
-            result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Byte, SnapshotTesting.GenerationOptions>(ref parseResult);
-            return true;
-        }
-
+    Done:
         result = default;
         return false;
     }
 
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.GenerationOptions result)
     {
         global::System.String[] enumNames = _names;
@@ -439,33 +347,16 @@ public static class GenerationOptionsExtensions
         return false;
     }
 
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.String? ProcessMultipleFlagsNames(SnapshotTesting.GenerationOptions value)
     {
         global::System.Byte resultValue = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.GenerationOptions, global::System.Byte>(ref value);
 
         global::System.Span<global::System.Int32> foundItems = stackalloc global::System.Int32[4];
-        if (!TryFindFlagsNames(resultValue, foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount))
-        {
-            return null;
-        }
 
-        foundItems = foundItems[..foundItemsCount];
-
-        global::System.Int32 length = checked(resultLength + 2 * (foundItemsCount - 1)); // ", ".Length == 2
-
-        global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
-
-        WriteMultipleFoundFlagsNames(foundItems, destination);
-
-        return new global::System.String(destination);
-    }
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.Boolean TryFindFlagsNames(global::System.Byte resultValue, global::System.Span<global::System.Int32> foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount)
-    {
         // Now look for multiple matches, storing the indices of the values into our span.
-        resultLength = 0;
-        foundItemsCount = 0;
+        global::System.Int32 resultLength = 0;
+        global::System.Int32 foundItemsCount = 0;
 
         global::System.Int32 index = MembersCount - 1;
         global::System.Byte[] values = _underlyingValues;
@@ -482,41 +373,50 @@ public static class GenerationOptionsExtensions
             if ((resultValue & currentValue) == currentValue)
             {
                 resultValue = (global::System.Byte)(resultValue & ~currentValue);
-                foundItems[foundItemsCount] = index;
-                foundItemsCount++;
-                resultLength = checked(resultLength + names[index].Length);
-                if (resultValue == 0)
-                {
-                    break;
+                    foundItems[foundItemsCount] = index;
+                    foundItemsCount++;
+                    resultLength = checked(resultLength + names[index].Length);
+                    if (resultValue == 0)
+                    {
+                        break;
+                    }
                 }
+
+                index--;
             }
 
-            index--;
+            // If we exhausted looking through all the values, and we still have
+            // a non-zero result, we couldn't match the result to only named values.
+            // In that case, we return null and let the call site just generate
+            // a string for the integral value if it desires.
+            if (resultValue != 0)
+            {
+                return null;
+            }
+
+            foundItems = foundItems[..foundItemsCount];
+
+            global::System.Int32 length = checked(resultLength + 2 * (foundItemsCount - 1)); // ", ".Length == 2
+
+            global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
+
+            global::System.Span<global::System.Char> workingSpan = destination;
+
+            for (global::System.Int32 i = foundItems.Length - 1; i != 0; i--)
+            {
+                global::System.String name = names[foundItems[i]];
+                name.CopyTo(workingSpan);
+                workingSpan = workingSpan[name.Length..];
+                global::System.Span<global::System.Char> afterSeparator = workingSpan[2..]; // done before copying ", " to eliminate those two bounds checks
+                workingSpan[0] = ',';
+                workingSpan[1] = ' ';
+                workingSpan = afterSeparator;
+            }
+
+            names[foundItems[0]].CopyTo(workingSpan);
+
+            return new global::System.String(destination);
         }
-
-        // If we exhausted looking through all the values, and we still have
-        // a non-zero result, we couldn't match the result to only named values.
-        // In that case, we return null and let the call site just generate
-        // a string for the integral value if it desires.
-        return resultValue == 0;
-    }
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static void WriteMultipleFoundFlagsNames(global::System.ReadOnlySpan<global::System.Int32> foundItems, global::System.Span<global::System.Char> destination)
-    {
-        for (global::System.Int32 i = foundItems.Length - 1; i != 0; i--)
-        {
-            global::System.String name = _names[foundItems[i]];
-            name.CopyTo(destination);
-            destination = destination[name.Length..];
-            global::System.Span<global::System.Char> afterSeparator = destination[2..]; // done before copying ", " to eliminate those two bounds checks
-            destination[0] = ',';
-            destination[1] = ' ';
-            destination = afterSeparator;
-        }
-
-        _names[foundItems[0]].CopyTo(destination);
-    }
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
     private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
