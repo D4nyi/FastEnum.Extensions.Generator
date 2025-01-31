@@ -4,10 +4,10 @@ internal static class Constants
 {
     internal const string Version = "1.4.0";
 
-    internal const string EnumMemberAttributeFullName = "System.Runtime.Serialization.EnumMemberAttribute";
-    internal const string DisplayAttributeFullName = "System.ComponentModel.DataAnnotations.DisplayAttribute";
-    internal const string DescriptionAttributeFullName = "System.ComponentModel.DescriptionAttribute";
-    internal const string FlagsAttributeFullName = "System.FlagsAttribute";
+    internal const string EnumMemberAttributeName = "EnumMemberAttribute";
+    internal const string DisplayAttributeName = "DisplayAttribute";
+    internal const string DescriptionAttributeName = "DescriptionAttribute";
+    internal const string FlagsAttributeName = "FlagsAttribute";
 
     internal const string EnumExtensionsGenerator = "FastEnum.Extensions.Generator.EnumExtensionsGenerator";
 
@@ -18,6 +18,8 @@ internal static class Constants
 
     internal const string InitialExtraction = nameof(InitialExtraction);
     internal const string RemovingNulls = nameof(RemovingNulls);
+    internal const string CreateDiagnostics = nameof(CreateDiagnostics);
+    internal const string BuildGenerationSpec = nameof(BuildGenerationSpec);
     internal const string CollectedGenerationData = nameof(CollectedGenerationData);
 
 

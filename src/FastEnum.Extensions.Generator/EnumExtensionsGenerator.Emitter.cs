@@ -15,7 +15,6 @@ public sealed partial class EnumExtensionsGenerator
         // General
         GeneralEmitter.AddFileAndClassHeader(sb, enumGenerationSpec);
         GeneralEmitter.AddFieldsAndGetMethods(sb, enumGenerationSpec);
-        GeneralEmitter.AddHasFlag(sb, enumGenerationSpec);
         GeneralEmitter.AddIsDefined(sb, enumGenerationSpec);
 
         AttributeDataEmitter.AddAttributeMethods(sb, enumGenerationSpec);
@@ -27,10 +26,6 @@ public sealed partial class EnumExtensionsGenerator
         // TryParse
         TryParseStringEmitter.AddTryParseString(sb, enumGenerationSpec);
         TryParseSpanEmitter.AddTryParseSpan(sb, enumGenerationSpec);
-
-        // Private Helpers
-        ToStringEmitter.AddFormatAsHexHelper(sb, enumGenerationSpec);
-        ToStringEmitter.AddFormatFlagNames(sb, enumGenerationSpec);
 
         TryParseSpanEmitter.AddTryParsePrivate(sb, enumGenerationSpec);
 

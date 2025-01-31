@@ -5,7 +5,6 @@ using FastEnum.Extensions.Generator.Utils;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace FastEnum.Extensions.Generator;
 
@@ -66,7 +65,7 @@ public sealed partial class EnumExtensionsGenerator
 
     #endregion
 
-    private static object? Transform(GeneratorAttributeSyntaxContext context, CancellationToken ct)
+    private static EnumBaseDataSpec? Transform(GeneratorAttributeSyntaxContext context, CancellationToken ct)
     {
         if (context.TargetSymbol is not INamedTypeSymbol enumSymbol ||
             context.TargetNode is not EnumDeclarationSyntax enumDeclarationSyntax)
@@ -77,85 +76,127 @@ public sealed partial class EnumExtensionsGenerator
 
         ct.ThrowIfCancellationRequested();
 
-        bool hasFlags = enumSymbol.GetAttributes().Any(static attributeData => attributeData.AttributeDataIs(Constants.FlagsAttributeFullName));
+#pragma warning disable CA1307
+#pragma warning disable CA1309 // No need for checking cultures and casing
+        bool hasFlags = enumSymbol.GetAttributes().Any(static attributeData => Constants.FlagsAttributeName.Equals(attributeData.AttributeClass?.MetadataName));
+#pragma warning restore CA1309
+#pragma warning restore CA1307
 
         NestingState nestingState = enumSymbol.GetNesting();
 
         string modifier = enumDeclarationSyntax.Modifiers.ToString();
 
-        if (enumSymbol.IsFileLocal)
-        {
-            modifier = "file";
-        }
-
         string typeName = enumSymbol.ToString();
+
+        string underlyingTypeName = enumSymbol.EnumUnderlyingType?.ToString() ?? "int";
+
+        (bool isGlobalNamespace, string ns) = GetNamespace(enumSymbol, nestingState);
+
+        ImmutableArray<EnumFieldSpec> members = enumSymbol.GetMembers()
+            .Where(static x => x.Kind == SymbolKind.Field) // filter out ctor
+            .Cast<IFieldSymbol>()
+            .Select(static x =>
+            {
+                AttributeInternalsSpec[] attributesData = x.GetAttributes()
+                    .Select(y => new AttributeInternalsSpec(
+                    y.AttributeClass?.MetadataName,
+                    y.NamedArguments.Select(x => new KeyValuePair<string, TypedConstant>(x.Key, x.Value)).ToArray(),
+                    y.ConstructorArguments.Length == 1 ? y.ConstructorArguments[0].Value : null
+                )).ToArray();
+
+                return new EnumFieldSpec(x.Name, x.ConstantValue!, attributesData);
+            })
+            .ToImmutableArray();
 
         Location location = GetComparableLocation(enumDeclarationSyntax);
 
-        Diagnostic? warning = HasNestingWarning(nestingState, modifier, location, typeName);
+        return new EnumBaseDataSpec(
+            hasFlags,
+            nestingState,
+            modifier,
+            typeName,
+            underlyingTypeName,
+            ns,
+            isGlobalNamespace,
+            members,
+            location
+        );
+    }
+
+    private static object CreateDiagnostics(EnumBaseDataSpec spec, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        Diagnostic? warning = HasNestingWarning(spec);
 
         if (warning is not null)
         {
             return warning;
         }
 
-        if (Array.Exists(Constants.UnsupportedVisibilityModifiers, x => x == modifier))
+        if (Array.Exists(Constants.UnsupportedVisibilityModifiers, x => x == spec.Modifier))
         {
-            return Diagnostic.Create(InvalidVisibilityModifier, location, typeName);
+            return Diagnostic.Create(InvalidVisibilityModifier, spec.Location, spec.TypeName);
         }
 
-        ImmutableArray<EnumMemberSpec> members = enumSymbol.GetMembers()
-            .Where(static x => x.Kind == SymbolKind.Field) // filter out ctor
-            .Cast<IFieldSymbol>()
+        if (spec.Members.IsDefaultOrEmpty)
+        {
+            return Diagnostic.Create(EmptyEnum, spec.Location, spec.TypeName);
+        }
+
+        return spec;
+    }
+
+    private static object BuildGenerationSpec(object obj, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (obj is not EnumBaseDataSpec spec)
+        {
+            return obj;
+        }
+
+        ImmutableArray<EnumMemberSpec> members = spec.Members
             .Select(x =>
             {
-                AttributeValues data = x.GetAttributeValues();
+                AttributeValues data = x.AttributesData.GetAttributeValues();
 
-                return new EnumMemberSpec(typeName, x.Name, x.ConstantValue!, data);
+                return new EnumMemberSpec(spec.TypeName, x.Name, x.Value, data);
             })
             .OrderBy(x => x.Value)
             .ToImmutableArray();
 
-        if (members.IsDefaultOrEmpty)
-        {
-            return Diagnostic.Create(EmptyEnum, location, typeName);
-        }
-
-        string underlyingTypeName = enumSymbol.EnumUnderlyingType?.ToString() ?? "int";
-
-        (bool isGlobalNamespace, string ns) = GetNamespace(enumSymbol, nestingState);
-
         return new EnumGenerationSpec(
-            typeName,
-            modifier,
+            spec.TypeName,
+            spec.Modifier,
             members,
-            isGlobalNamespace,
-            ns,
-            underlyingTypeName,
-            hasFlags
+            spec.IsGlobalNamespace,
+            spec.Namespace,
+            spec.UnderlyingTypeName,
+            spec.HasFlags
         );
     }
 
-    private static Diagnostic? HasNestingWarning(NestingState nestingState, string modifier, Location location, string name)
+    private static Diagnostic? HasNestingWarning(EnumBaseDataSpec spec)
     {
-        if (nestingState < NestingState.MultipleParentType)
+        if (spec.NestingState < NestingState.MultipleParentType)
         {
             return null;
         }
 
-        if (nestingState.HasFlagFast(NestingState.GenericParentType))
+        if (spec.NestingState.HasFlagFast(NestingState.GenericParentType))
         {
-            return Diagnostic.Create(GenericParentType, location, name);
+            return Diagnostic.Create(GenericParentType, spec.Location, spec.TypeName);
         }
 
-        if (nestingState.HasFlagFast(NestingState.MultipleParentType))
+        if (spec.NestingState.HasFlagFast(NestingState.MultipleParentType))
         {
-            return Diagnostic.Create(MultipleParentType, location, name);
+            return Diagnostic.Create(MultipleParentType, spec.Location, spec.TypeName);
         }
 
-        if (nestingState.HasFlagFast(NestingState.InternalSingleParentType) && modifier != "internal")
+        if (spec.NestingState.HasFlagFast(NestingState.InternalSingleParentType) && spec.Modifier != "internal")
         {
-            return Diagnostic.Create(InconsistentAccessibilityWithParentType, location, name, modifier);
+            return Diagnostic.Create(InconsistentAccessibilityWithParentType, spec.Location, spec.TypeName, spec.Modifier);
         }
 
         return null;
@@ -167,8 +208,11 @@ public sealed partial class EnumExtensionsGenerator
     {
         Location location = syntax.GetLocation();
 
-        // string filePath = location.SourceTree?.FilePath ?? String.Empty;
-         TextSpan sourceSpan = TextSpan.FromBounds(syntax.Modifiers.Span.Start, syntax.Identifier.Span.End);
+        string filePath = location.SourceTree?.FilePath ?? String.Empty;
+
+        return Location.Create(filePath, location.SourceSpan, location.GetLineSpan().Span);
+
+        // TextSpan sourceSpan = TextSpan.FromBounds(syntax.Modifiers.Span.Start, syntax.Identifier.Span.End);
         //
         // FileLinePositionSpan original = location.GetLineSpan();
         //
@@ -176,8 +220,9 @@ public sealed partial class EnumExtensionsGenerator
         // LinePosition endLinePosition = new(startLinePosition.Line, sourceSpan.Length);
         //
         // LinePositionSpan lineSpan = new(startLinePosition, endLinePosition);
-
-        return Location.Create(location.SourceTree!, sourceSpan);
+        //
+        //
+        // return Location.Create(filePath, sourceSpan, lineSpan);
     }
 
     private static (bool isGlobalNamespace, string ns) GetNamespace(INamedTypeSymbol enumSymbol, NestingState nestingState)

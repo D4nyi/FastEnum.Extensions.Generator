@@ -6,39 +6,43 @@ namespace FastEnum.Extensions.Generator.Utils;
 
 internal static class AttributeExtensions
 {
-    public static AttributeValues GetAttributeValues(this IFieldSymbol enumField)
+    public static AttributeValues GetAttributeValues(this AttributeInternalsSpec[] enumField)
     {
         AttributeValues data = new();
 
-        foreach (AttributeData a in enumField.GetAttributes())
+#pragma warning disable CA1307
+#pragma warning disable CA1309 // No need for checking cultures and casing
+        foreach (AttributeInternalsSpec spec in enumField)
         {
-            if (a.AttributeDataIs(Constants.DisplayAttributeFullName) && a.NamedArguments.Length > 1)
+            string? metadataName = spec.MetadataName;
+
+            if (Constants.DisplayAttributeName.Equals(metadataName) && spec.NamedArguments.Length > 1)
             {
-                foreach (KeyValuePair<string, TypedConstant> argument in a.NamedArguments)
+                foreach (KeyValuePair<string, TypedConstant> argument in spec.NamedArguments)
                 {
-                    if (argument.Key == "Name")
+                    string key = argument.Key;
+                    if ("Name".Equals(key))
                     {
                         data.DisplayName = argument.Value.Value?.ToString();
                     }
-                    else if (argument.Key == "Description")
+                    else if ("Description".Equals(key))
                     {
                         data.DisplayDescription = argument.Value.Value?.ToString();
                     }
                 }
             }
-            else if (a.AttributeDataIs(Constants.EnumMemberAttributeFullName) && a.NamedArguments.Length == 1)
+            else if (Constants.EnumMemberAttributeName.Equals(metadataName) && spec.NamedArguments.Length == 1)
             {
-                data.EnumMemberValue = a.NamedArguments[0].Value.Value?.ToString();
+                data.EnumMemberValue = spec.NamedArguments[0].Value.Value?.ToString();
             }
-            else if (a.AttributeDataIs(Constants.DescriptionAttributeFullName) && a.ConstructorArguments.Length == 1)
+            else if (Constants.DescriptionAttributeName.Equals(metadataName) && spec.ConstructorArgument is not null)
             {
-                data.Description = a.ConstructorArguments[0].Value?.ToString();
+                data.Description = spec.ConstructorArgument.ToString();
             }
         }
+#pragma warning restore CA1309
+#pragma warning restore CA1307
 
         return data;
     }
-
-    internal static bool AttributeDataIs(this AttributeData attributeData, string attributeFullName) =>
-        attributeData.AttributeClass?.ToDisplayString() == attributeFullName;
 }

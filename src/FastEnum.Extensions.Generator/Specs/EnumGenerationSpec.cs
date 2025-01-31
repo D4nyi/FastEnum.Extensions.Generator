@@ -67,14 +67,21 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
 
     public override int GetHashCode()
     {
-        const int multiplier = -1521134295;
-
-        return (((((EqualityComparer<string>.Default.GetHashCode(ToStringFormat) * multiplier +
-                    EqualityComparer<string>.Default.GetHashCode(FullName)) * multiplier +
-                   EqualityComparer<string>.Default.GetHashCode(Modifier)) * multiplier +
-                  EqualityComparer<string>.Default.GetHashCode(UnderlyingType)) * multiplier +
-                 EqualityComparer<string>.Default.GetHashCode(OriginalUnderlyingType)) * multiplier +
-                EqualityComparer<ImmutableArray<EnumMemberSpec>>.Default.GetHashCode(Members)) * multiplier;
+        unchecked
+        {
+            int hashCode = Namespace.GetHashCode();
+            hashCode = (hashCode * 397) ^ IsGlobalNamespace.GetHashCode();
+            hashCode = (hashCode * 397) ^ FullName.GetHashCode();
+            hashCode = (hashCode * 397) ^ Name.GetHashCode();
+            hashCode = (hashCode * 397) ^ Modifier.GetHashCode();
+            hashCode = (hashCode * 397) ^ UnderlyingType.GetHashCode();
+            hashCode = (hashCode * 397) ^ OriginalUnderlyingType.GetHashCode();
+            hashCode = (hashCode * 397) ^ ToStringFormat.GetHashCode();
+            hashCode = (hashCode * 397) ^ Members.GetHashCode();
+            hashCode = (hashCode * 397) ^ DistinctFlagMembers.GetHashCode();
+            hashCode = (hashCode * 397) ^ DistinctMembers.GetHashCode();
+            return hashCode;
+        }
     }
 
     public override bool Equals(object? obj) => obj is EnumGenerationSpec spec && Equals(spec);

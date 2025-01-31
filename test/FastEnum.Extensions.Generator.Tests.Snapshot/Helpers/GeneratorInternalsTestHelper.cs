@@ -9,7 +9,7 @@ namespace FastEnum.Extensions.Generator.Tests.Snapshot.Helpers;
 
 internal static class GeneratorInternalsTestHelper
 {
-    private static readonly string[] _stages = ["InitialExtraction", "RemovingNulls", "CollectedGenerationData"];
+    private static readonly string[] _stages = ["InitialExtraction", "RemovingNulls", "CreateDiagnostics", "BuildGenerationSpec", "CollectedGenerationData"];
 
     internal static void AssertRunsEqual(GeneratorDriverRunResult runResult1, GeneratorDriverRunResult runResult2)
     {
@@ -61,27 +61,25 @@ internal static class GeneratorInternalsTestHelper
             object output1 = runStep1.Outputs.Select(x => x.Value).FirstOrDefault()!;
             object output2 = runStep2.Outputs.Select(x => x.Value).FirstOrDefault()!;
 
-            Action<(object Value, IncrementalStepRunReason Reason)> assert = static x => Assert.Equal(IncrementalStepRunReason.Modified, x.Reason);
 
-            if (output1 is Diagnostic diagnostic1)
+            switch (output1)
             {
-                AssertDiagnostic(diagnostic1, output2 as Diagnostic);
-            }
-            else if (output1 is ImmutableArray<object> immutableArray1)
-            {
-                AssertImmutableArray(immutableArray1, (ImmutableArray<object>)output2);
-            }
-            else
-            {
-                Assert.Equal(output1, output2);
-
-                assert = static x => Assert.True(x.Reason is IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged);
+                case Diagnostic diagnostic1:
+                    AssertDiagnostic(diagnostic1, output2 as Diagnostic);
+                    break;
+                case ImmutableArray<object> immutableArray1:
+                    AssertImmutableArray(immutableArray1, (ImmutableArray<object>)output2);
+                    break;
+                default:
+                    Assert.Equal(output1, output2);
+                    break;
             }
 
             // Therefore, on the second run the results should always be cached or unchanged!
             // - Unchanged is when the _input_ has changed, but the output hasn't
             // - Cached is when the input has not changed, so the cached output is used
-            Assert.All(runStep2.Outputs, assert);
+            // static x => Assert.Equal(IncrementalStepRunReason.Modified, x.Reason);
+            Assert.All(runStep2.Outputs, static x => Assert.True(x.Reason is IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged));
 
             // Make sure we're not using anything we shouldn't
             AssertObjectGraph(runStep1);
