@@ -139,9 +139,30 @@ public static class GenerationOptionsExtensions
         {
             case 'g': return value.FastToString();
             case 'd': return global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.GenerationOptions, global::System.Byte>(ref value).ToString();
-            case 'x': return FormatNumberAsHex(value);
+            case 'x': return value switch
+            {
+                SnapshotTesting.GenerationOptions.None => "00",
+                SnapshotTesting.GenerationOptions.ToString => "01",
+                SnapshotTesting.GenerationOptions.Parse => "02",
+                SnapshotTesting.GenerationOptions.HasFlag => "04",
+                _ => global::System.String.Create(sizeof(global::System.Byte) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.GenerationOptions, global::System.Byte>(ref value), static (buffer, value) =>
+                {
+                    global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
+                    global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[1] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[0] = (global::System.Char)(packedResult >> 8);
+                })
+            };
             case 'f':
-                global::System.String? result = FormatFlagNames(value);
+                global::System.String? result = value switch
+                {
+                    SnapshotTesting.GenerationOptions.None => nameof(SnapshotTesting.GenerationOptions.None),
+                    SnapshotTesting.GenerationOptions.ToString => nameof(SnapshotTesting.GenerationOptions.ToString),
+                    SnapshotTesting.GenerationOptions.Parse => nameof(SnapshotTesting.GenerationOptions.Parse),
+                    SnapshotTesting.GenerationOptions.HasFlag => nameof(SnapshotTesting.GenerationOptions.HasFlag),
+                    _ => ProcessMultipleFlagsNames(value)
+                };
                 if (result is null) goto case 'd';
                 return result;
             default: throw CreateInvalidFormatSpecifierException();
@@ -204,33 +225,6 @@ public static class GenerationOptionsExtensions
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.GenerationOptions result) =>
         TryParseSpan(value, true, out result);
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.String FormatNumberAsHex(SnapshotTesting.GenerationOptions data) => data switch
-    {
-        SnapshotTesting.GenerationOptions.None => "00",
-        SnapshotTesting.GenerationOptions.ToString => "01",
-        SnapshotTesting.GenerationOptions.Parse => "02",
-        SnapshotTesting.GenerationOptions.HasFlag => "04",
-        _ => global::System.String.Create(sizeof(global::System.Byte) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.GenerationOptions, global::System.Byte>(ref data), (buffer, value) =>
-        {
-            global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
-            global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-            buffer[1] = (global::System.Char)(packedResult & 0xFFU);
-            buffer[0] = (global::System.Char)(packedResult >> 8);
-        })
-    };
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.String? FormatFlagNames(SnapshotTesting.GenerationOptions value) => value switch
-    {
-        SnapshotTesting.GenerationOptions.None => nameof(SnapshotTesting.GenerationOptions.None),
-        SnapshotTesting.GenerationOptions.ToString => nameof(SnapshotTesting.GenerationOptions.ToString),
-        SnapshotTesting.GenerationOptions.Parse => nameof(SnapshotTesting.GenerationOptions.Parse),
-        SnapshotTesting.GenerationOptions.HasFlag => nameof(SnapshotTesting.GenerationOptions.HasFlag),
-        _ => ProcessMultipleFlagsNames(value)
-    };
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.GenerationOptions result)

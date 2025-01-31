@@ -138,9 +138,78 @@ public static class NoneUniqueOptionsExtensions
         {
             case 'g': return value.FastToString();
             case 'd': return global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOptions, global::System.UInt64>(ref value).ToString();
-            case 'x': return FormatNumberAsHex(value);
+            case 'x': return value switch
+            {
+                SnapshotTesting.NoneUniqueOptions.None => "0000000000000000",
+                SnapshotTesting.NoneUniqueOptions.ToStringFormat => "0000000000000001",
+                SnapshotTesting.NoneUniqueOptions.Parse => "0000000000000002",
+                _ => global::System.String.Create(sizeof(global::System.UInt64) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOptions, global::System.UInt64>(ref value), static (buffer, value) =>
+                {
+                    global::System.Byte byteValue = (global::System.Byte)(value >> 56);
+                    global::System.UInt32 difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+                    global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[1] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[0] = (global::System.Char)(packedResult >> 8);
+
+                    byteValue = (global::System.Byte)(value >> 48);
+                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[3] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[2] = (global::System.Char)(packedResult >> 8);
+
+                    byteValue = (global::System.Byte)(value >> 40);
+                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[5] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[4] = (global::System.Char)(packedResult >> 8);
+
+                    byteValue = (global::System.Byte)(value >> 32);
+                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[7] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[6] = (global::System.Char)(packedResult >> 8);
+
+                    byteValue = (global::System.Byte)(value >> 24);
+                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[9] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[8] = (global::System.Char)(packedResult >> 8);
+
+                    byteValue = (global::System.Byte)(value >> 16);
+                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[11] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[10] = (global::System.Char)(packedResult >> 8);
+
+                    byteValue = (global::System.Byte)(value >> 8);
+                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[13] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[12] = (global::System.Char)(packedResult >> 8);
+
+                    byteValue = (global::System.Byte)value;
+                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                    buffer[15] = (global::System.Char)(packedResult & 0xFFU);
+                    buffer[14] = (global::System.Char)(packedResult >> 8);
+                })
+            };
             case 'f':
-                global::System.String? result = FormatFlagNames(value);
+                global::System.String? result = value switch
+                {
+                    SnapshotTesting.NoneUniqueOptions.None => nameof(SnapshotTesting.NoneUniqueOptions.None),
+                    SnapshotTesting.NoneUniqueOptions.ToStringFormat => nameof(SnapshotTesting.NoneUniqueOptions.ToStringFormat),
+                    SnapshotTesting.NoneUniqueOptions.Parse => nameof(SnapshotTesting.NoneUniqueOptions.Parse),
+                    _ => ProcessMultipleFlagsNames(value)
+                };
                 if (result is null) goto case 'd';
                 return result;
             default: throw CreateInvalidFormatSpecifierException();
@@ -203,81 +272,6 @@ public static class NoneUniqueOptionsExtensions
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NoneUniqueOptions result) =>
         TryParseSpan(value, true, out result);
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.String FormatNumberAsHex(SnapshotTesting.NoneUniqueOptions data) => data switch
-    {
-        SnapshotTesting.NoneUniqueOptions.None => "0000000000000000",
-        SnapshotTesting.NoneUniqueOptions.ToStringFormat => "0000000000000001",
-        SnapshotTesting.NoneUniqueOptions.Parse => "0000000000000002",
-        _ => global::System.String.Create(sizeof(global::System.UInt64) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOptions, global::System.UInt64>(ref data), (buffer, value) =>
-        {
-             global::System.Byte byteValue = (global::System.Byte)(value >> 56);
-             global::System.UInt32 difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-             global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-             buffer[1] = (global::System.Char)(packedResult & 0xFFU);
-             buffer[0] = (global::System.Char)(packedResult >> 8);
-
-             byteValue = (global::System.Byte)(value >> 48);
-             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-             buffer[3] = (global::System.Char)(packedResult & 0xFFU);
-             buffer[2] = (global::System.Char)(packedResult >> 8);
-
-             byteValue = (global::System.Byte)(value >> 40);
-             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-             buffer[5] = (global::System.Char)(packedResult & 0xFFU);
-             buffer[4] = (global::System.Char)(packedResult >> 8);
-
-             byteValue = (global::System.Byte)(value >> 32);
-             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-             buffer[7] = (global::System.Char)(packedResult & 0xFFU);
-             buffer[6] = (global::System.Char)(packedResult >> 8);
-
-             byteValue = (global::System.Byte)(value >> 24);
-             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-             buffer[9] = (global::System.Char)(packedResult & 0xFFU);
-             buffer[8] = (global::System.Char)(packedResult >> 8);
-
-             byteValue = (global::System.Byte)(value >> 16);
-             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-             buffer[11] = (global::System.Char)(packedResult & 0xFFU);
-             buffer[10] = (global::System.Char)(packedResult >> 8);
-
-             byteValue = (global::System.Byte)(value >> 8);
-             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-             buffer[13] = (global::System.Char)(packedResult & 0xFFU);
-             buffer[12] = (global::System.Char)(packedResult >> 8);
-
-             byteValue = (global::System.Byte)value;
-             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-             buffer[15] = (global::System.Char)(packedResult & 0xFFU);
-             buffer[14] = (global::System.Char)(packedResult >> 8);
-        })
-    };
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.String? FormatFlagNames(SnapshotTesting.NoneUniqueOptions value) => value switch
-    {
-        SnapshotTesting.NoneUniqueOptions.None => nameof(SnapshotTesting.NoneUniqueOptions.None),
-        SnapshotTesting.NoneUniqueOptions.ToStringFormat => nameof(SnapshotTesting.NoneUniqueOptions.ToStringFormat),
-        SnapshotTesting.NoneUniqueOptions.Parse => nameof(SnapshotTesting.NoneUniqueOptions.Parse),
-        _ => ProcessMultipleFlagsNames(value)
-    };
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.NoneUniqueOptions result)
