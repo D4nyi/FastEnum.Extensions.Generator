@@ -7,7 +7,7 @@ namespace FastEnum.Extensions.Generator.Emitters;
 
 internal static class GeneralEmitter
 {
-    internal static void AddFileAndClassHeader(StringBuilder sb, EnumGenerationSpec spec)
+    internal static StringBuilder AddFileAndClassHeader(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb.AppendLine(Constants.FileHeader);
 
@@ -17,19 +17,20 @@ internal static class GeneralEmitter
                 .Append("namespace ").Append(spec.Namespace).AppendLine(";").AppendLine();
         }
 
-        sb
-            .AppendFormat(CultureInfo.InvariantCulture,
-                """
-                /// <summary>
-                /// Extension methods for <see cref="{0}" />
-                /// </summary>
-                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("{1}", "{2}")]
-                {3} static class {4}Extensions
-                {{
-                """, spec.FullName, Constants.EnumExtensionsGenerator, Constants.Version, spec.Modifier, spec.Name);
+        return
+            sb
+                .AppendFormat(CultureInfo.InvariantCulture,
+                    """
+                    /// <summary>
+                    /// Extension methods for <see cref="{0}" />
+                    /// </summary>
+                    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("{1}", "{2}")]
+                    {3} static class {4}Extensions
+                    {{
+                    """, spec.FullName, Constants.EnumExtensionsGenerator, Constants.Version, spec.Modifier, spec.Name);
     }
 
-    internal static void AddFieldsAndGetMethods(StringBuilder sb, EnumGenerationSpec spec)
+    internal static StringBuilder AddFieldsAndGetMethods(this StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -75,46 +76,47 @@ internal static class GeneralEmitter
             sb.Append("        ").Append("nameof(").Append(member.FullName).AppendLine("),");
         }
 
-        sb
-            .AppendFormat(CultureInfo.InvariantCulture,
-                """
-                    }};
+        return
+            sb
+                .AppendFormat(CultureInfo.InvariantCulture,
+                    """
+                        }};
 
-                    /// <summary>
-                    /// The number of members in the enum.
-                    /// </summary>
-                    public const global::System.Int32 MembersCount = {0};
+                        /// <summary>
+                        /// The number of members in the enum.
+                        /// </summary>
+                        public const global::System.Int32 MembersCount = {0};
 
-                    /// <summary>
-                    /// Retrieves an array of the values of the members defined in <see cref="{1}" />.
-                    /// </summary>
-                    /// <returns>An array of the values defined in <see cref="{1}" />.</returns>
-                    public static {1}[] GetValues() => _values;
+                        /// <summary>
+                        /// Retrieves an array of the values of the members defined in <see cref="{1}" />.
+                        /// </summary>
+                        /// <returns>An array of the values defined in <see cref="{1}" />.</returns>
+                        public static {1}[] GetValues() => _values;
 
-                    /// <summary>
-                    /// Retrieves an array of the underlying vales of the members defined in <see cref="{1}" />
-                    /// </summary>
-                    /// <returns>An array of the underlying values defined in <see cref="{1}" />.</returns>
-                    public static {2}[] GetUnderlyingValues() => _underlyingValues;
+                        /// <summary>
+                        /// Retrieves an array of the underlying vales of the members defined in <see cref="{1}" />
+                        /// </summary>
+                        /// <returns>An array of the underlying values defined in <see cref="{1}" />.</returns>
+                        public static {2}[] GetUnderlyingValues() => _underlyingValues;
 
-                    /// <summary>
-                    /// Retrieves an array of the names of the members defined in <see cref="{1}" />
-                    /// </summary>
-                    /// <returns>An array of the names of the members defined in <see cref="{1}" />.</returns>
-                    public static global::System.String[] GetNames() => _names;
+                        /// <summary>
+                        /// Retrieves an array of the names of the members defined in <see cref="{1}" />
+                        /// </summary>
+                        /// <returns>An array of the names of the members defined in <see cref="{1}" />.</returns>
+                        public static global::System.String[] GetNames() => _names;
 
-                    /// <summary>Determines whether one or more bit fields are set in the current instance.</summary>
-                    /// <param name="instance">The instance in which the flags are searched.</param>
-                    /// <param name="flags">The flags that will be looked up in the instance.</param>
-                    /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
-                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static global::System.Boolean HasFlag(this {1} instance, {1} flags) => (instance & flags) == flags;
+                        /// <summary>Determines whether one or more bit fields are set in the current instance.</summary>
+                        /// <param name="instance">The instance in which the flags are searched.</param>
+                        /// <param name="flags">The flags that will be looked up in the instance.</param>
+                        /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
+                        [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                        public static global::System.Boolean HasFlag(this {1} instance, {1} flags) => (instance & flags) == flags;
 
 
-                """, spec.Members.Length, spec.FullName, spec.UnderlyingType);
+                    """, spec.Members.Length, spec.FullName, spec.UnderlyingType);
     }
 
-    internal static void AddIsDefined(StringBuilder sb, EnumGenerationSpec spec)
+    internal static void AddIsDefined(this StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -175,6 +177,11 @@ internal static class GeneralEmitter
 
                         while (true)
                         {{
+                            if ((global::System.UInt32)index >= (global::System.UInt32)values.Length)
+                            {{
+                                break;
+                            }}
+
                             {1} currentValue = values[index];
                             if (index == 0 && currentValue == 0)
                             {{
@@ -233,9 +240,18 @@ internal static class GeneralEmitter
                         return new global::System.String(destination);
                     }
 
-                [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
-                private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
-                    new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
-            """);
+
+                """);
+    }
+
+    internal static StringBuilder AddExceptionHelper(this StringBuilder sb)
+    {
+        return
+            sb.Append(
+                """
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
+                    private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
+                        new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
+                """);
     }
 }

@@ -21,14 +21,14 @@ public static class NestingClass
 [Extensions, Flags]
 public enum Color
 {
-    [Description("Crimson Red")]
-    Red = 0x990000,
+    [Description("Red")]
+    Red = 0xFF0000,
 
-    [Display(Name = "Pine", Description = "Pine")]
-    Green = 0x166138,
+    [Display(Name = "Green", Description = "Green")]
+    Green = 0x00FF00,
 
-    [EnumMember(Value = "Sky")]
-    Blue = 0x87CEEB
+    [EnumMember(Value = "Blue")]
+    Blue = 0x0000FF
 }
 
 [Extensions, Flags]

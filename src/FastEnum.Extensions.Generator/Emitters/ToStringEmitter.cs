@@ -8,7 +8,7 @@ namespace FastEnum.Extensions.Generator.Emitters;
 
 internal static class ToStringEmitter
 {
-    internal static void AddToString(StringBuilder sb, EnumGenerationSpec spec)
+    internal static StringBuilder AddToString(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -28,14 +28,15 @@ internal static class ToStringEmitter
                 .Append(member.FullName).AppendLine("),");
         }
 
-        sb
-            .Append("        _ => (")
-            .AddCast(spec.FullName, spec.UnderlyingType).AppendLine(").ToString()")
-            .AppendLine("    };")
-            .AppendLine();
+        return
+            sb
+                .Append("        _ => (")
+                .AddCast(spec.FullName, spec.UnderlyingType).AppendLine(").ToString()")
+                .AppendLine("    };")
+                .AppendLine();
     }
 
-    internal static void AddToStringFormat(StringBuilder sb, EnumGenerationSpec spec)
+    internal static void AddToStringFormat(this StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -64,40 +65,113 @@ internal static class ToStringEmitter
                 """).Append(' ').AddCast(spec.FullName, spec.UnderlyingType).AppendLine(".ToString();")
             .Append(
                 """
-                            case 'x': return value switch
-                            {
+                            case 'x': return FormatNumberAsHex(value);
+                            case 'f':
+                                global::System.String? result = FormatFlagNames(value);
+                                if (result is null) goto case 'd';
+                                return result;
+                            default: throw CreateInvalidFormatSpecifierException();
+                        }
+                    }
+
 
                 """);
-
-        AddFormatAsHexHelper(sb, spec);
-
-        sb.Append(
-            """
-                            })
-                        };
-                        case 'f':
-                            global::System.String? result = value switch
-                            {
-
-            """);
-
-        AddFormatFlagNames(sb, spec);
-
-        sb.Append(
-            """
-                                _ => ProcessMultipleFlagsNames(value)
-                            };
-                            if (result is null) goto case 'd';
-                            return result;
-                        default: throw CreateInvalidFormatSpecifierException();
-                    }
-                }
-
-
-            """);
     }
 
-    private static void AddFormatAsHexHelper(StringBuilder sb, EnumGenerationSpec spec)
+    internal static void AddFormatFlagNames(this StringBuilder sb, EnumGenerationSpec spec)
+    {
+        sb
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    private static global::System.String? FormatFlagNames({0} value) => value switch
+                    {{
+
+                """, spec.FullName);
+
+        // Necessary to change the type of the number ZERO if the underlying type is not Int32,
+        // otherwise the Equals will return false, no matter what the actual first value is in the enum
+        // because of the type mismatch
+        object zero = spec.Members[0].Value.GetType().GetCorrectZero();
+
+        if (!spec.Members[0].Value.Equals(zero))
+        {
+            sb.AppendLine("        0 => \"0\",");
+        }
+
+        foreach (EnumMemberSpec member in spec.DistinctFlagMembers)
+        {
+            sb
+                .Append("        ").Append(member.FullName).Append(" => nameof(")
+                .Append(member.FullName).AppendLine("),");
+        }
+
+
+        if (spec.HasFlags)
+        {
+            sb.AppendLine("        _ => ProcessMultipleFlagsNames(value)");
+        }
+        else
+        {
+            sb.AppendLine("        _ => null // will jump to case 'd' for a numeric conversion");
+        }
+
+        sb
+            .Append(
+                """
+                    };
+
+
+                """);
+    }
+
+    internal static StringBuilder AddFormatAsHexHelper(StringBuilder sb, EnumGenerationSpec spec)
+    {
+        sb
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    private static global::System.String FormatNumberAsHex({0} data) => data switch
+                    {{
+
+                """, spec.FullName);
+
+        AddHexValuesForKnownFields(sb, spec);
+
+        bool isByteSized = spec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase);
+
+        string underlyingType = isByteSized ? "global::System.Byte" : spec.UnderlyingType;
+
+        sb
+            .AppendFormat(CultureInfo.InvariantCulture,
+                """
+                        _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), (buffer, value) =>
+                        {{
+
+                """, underlyingType, spec.FullName);
+
+        if (isByteSized)
+        {
+            return
+                sb
+                    .Append(
+                        """
+                                    global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
+                                    global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+                                    buffer[1] = (global::System.Char)(packedResult & 0xFFU);
+                                    buffer[0] = (global::System.Char)(packedResult >> 8);
+                                })
+                            };
+
+
+                        """);
+        }
+
+        return sb.UseToCharsBufferHelperInlined(spec.OriginalUnderlyingType);
+    }
+
+    private static void AddHexValuesForKnownFields(StringBuilder sb, EnumGenerationSpec spec)
     {
         Type membersType = spec.Members[0].Value.GetType(); // an enum has only one backing type
         MethodInfo toStringFormat = Helpers.GetToStringFormat(membersType);
@@ -107,61 +181,12 @@ internal static class ToStringEmitter
         {
             string hex = (string)toStringFormat.Invoke(member.Value, toStringParam);
 
-            sb.Append("                ").Append(member.FullName).Append(" => \"").Append(hex).AppendLine("\",");
-        }
-
-        bool isByteSized = spec.OriginalUnderlyingType.EndsWith("byte", StringComparison.OrdinalIgnoreCase);
-
-        string underlyingType = isByteSized ? "global::System.Byte" : spec.UnderlyingType;
-
-        sb
-            .AppendFormat(CultureInfo.InvariantCulture,
-                """
-                                _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref value), static (buffer, value) =>
-                                {{
-
-                """, underlyingType, spec.FullName);
-
-        if (isByteSized)
-        {
             sb
-                .Append(
-                    """
-                                        global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
-                                        global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-                                        buffer[1] = (global::System.Char)(packedResult & 0xFFU);
-                                        buffer[0] = (global::System.Char)(packedResult >> 8);
-                    """)
-                .AppendLine();
-
-            return;
-        }
-
-        UseToCharsBufferHelperInlined(sb, spec.OriginalUnderlyingType);
-    }
-
-    private static void AddFormatFlagNames(StringBuilder sb, EnumGenerationSpec spec)
-    {
-        // Necessary to change the type of the number ZERO if the underlying type is not Int32,
-        // otherwise the Equals will return false, no matter what the actual first value is in the enum
-        // because of the type mismatch
-        object zero = spec.Members[0].Value.GetType().GetCorrectZero();
-
-        if (!spec.Members[0].Value.Equals(zero))
-        {
-            sb.AppendLine("                    0 => \"0\",");
-        }
-
-        foreach (EnumMemberSpec member in spec.DistinctFlagMembers)
-        {
-            sb
-                .Append("                    ").Append(member.FullName).Append(" => nameof(")
-                .Append(member.FullName).AppendLine("),");
+                .Append("        ").Append(member.FullName).Append(" => \"").Append(hex).AppendLine("\",");
         }
     }
 
-    private static void UseToCharsBufferHelperInlined(StringBuilder sb, string originalUnderlyingType)
+    private static StringBuilder UseToCharsBufferHelperInlined(this StringBuilder sb, string originalUnderlyingType)
     {
         int shiftValue = originalUnderlyingType switch
         {
@@ -171,39 +196,47 @@ internal static class ToStringEmitter
             _ => 0
         };
 
-        if (shiftValue == 0)
+        if (shiftValue != 0)
         {
-            return;
-        }
+            bool firstItem = true;
+            int startIndex = 0;
 
-        bool firstItem = true;
-        int startIndex = 0;
-
-        for (; shiftValue >= 0; shiftValue -= 8)
-        {
-            sb
-                .Append("                    ")
-                .AddTypeDefinition("Byte", firstItem)
-                .Append("byteValue = (global::System.Byte)").AddShift(shiftValue)
-                .Append("                    ")
-                .AddTypeDefinition("UInt32", firstItem)
-                .AppendLine("difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;")
-                .Append("                    ")
-                .AddTypeDefinition("UInt32", firstItem)
-                .AppendLine("packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;")
-                .AppendLine();
-
-            firstItem = false;
-
-            sb.Append("                    buffer[").Append(startIndex + 1).AppendLine("] = (global::System.Char)(packedResult & 0xFFU);");
-            sb.Append("                    buffer[").Append(startIndex).AppendLine("] = (global::System.Char)(packedResult >> 8);");
-
-            if (shiftValue >= 8)
+            for (; shiftValue >= 0; shiftValue -= 8)
             {
-                sb.AppendLine();
-            }
+                sb
+                    .Append("             ")
+                    .AddTypeDefinition("Byte", firstItem)
+                    .Append("byteValue = (global::System.Byte)").AddShift(shiftValue)
+                    .Append("             ")
+                    .AddTypeDefinition("UInt32", firstItem)
+                    .AppendLine("difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;")
+                    .Append("             ")
+                    .AddTypeDefinition("UInt32", firstItem)
+                    .AppendLine("packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;")
+                    .AppendLine();
 
-            startIndex += 2;
+                firstItem = false;
+
+                sb.Append("             buffer[").Append(startIndex + 1).AppendLine("] = (global::System.Char)(packedResult & 0xFFU);");
+                sb.Append("             buffer[").Append(startIndex).AppendLine("] = (global::System.Char)(packedResult >> 8);");
+
+                if (shiftValue >= 8)
+                {
+                    sb.AppendLine();
+                }
+
+                startIndex += 2;
+            }
         }
+
+        return
+            sb
+                .Append(
+                    """
+                            })
+                        };
+
+
+                    """);
     }
 }
