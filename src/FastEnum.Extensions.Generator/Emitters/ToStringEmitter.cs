@@ -106,19 +106,10 @@ internal static class ToStringEmitter
                 .Append(member.FullName).AppendLine("),");
         }
 
-
-        if (spec.HasFlags)
-        {
-            sb.AppendLine("        _ => ProcessMultipleFlagsNames(value)");
-        }
-        else
-        {
-            sb.AppendLine("        _ => null // will jump to case 'd' for a numeric conversion");
-        }
-
         sb
             .Append(
                 """
+                        _ => ProcessMultipleFlagsNames(value)
                     };
 
 
@@ -145,7 +136,7 @@ internal static class ToStringEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                        _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), (buffer, value) =>
+                        _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), static (buffer, value) =>
                         {{
 
                 """, underlyingType, spec.FullName);

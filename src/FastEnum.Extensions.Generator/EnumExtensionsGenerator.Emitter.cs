@@ -36,14 +36,9 @@ public sealed partial class EnumExtensionsGenerator
 
         TryParseSpanEmitter.AddTryParsePrivate(sb, enumGenerationSpec);
 
-        if (enumGenerationSpec.HasFlags)
-        {
-            GeneralEmitter.AddPrivateHelperMethods(sb, enumGenerationSpec);
-        }
-
-        sb
-            .AddExceptionHelper()
-            .AppendLine().Append('}');
+        GeneralEmitter
+            .AddPrivateHelperMethods(sb, enumGenerationSpec)
+            .Append('}');
 
         return StringBuilderPool.Return(sb);
     }

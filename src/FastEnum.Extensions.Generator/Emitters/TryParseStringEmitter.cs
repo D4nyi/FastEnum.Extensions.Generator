@@ -21,13 +21,14 @@ internal static class TryParseStringEmitter
                     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
                     public static global::System.Boolean TryParse([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out {0} result)
                     {{
-                        if (value is not null)
+                        if (global::System.String.IsNullOrEmpty(value))
                         {{
-                            return TryParseSpan(value.AsSpan(), false, out result);
+                            result = default;
+                            return false;
                         }}
 
-                        result = default;
-                        return false;
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                        return TryParseSpan(value.AsSpan(), false, out result);
                     }}
 
                     /// <summary>
@@ -39,13 +40,14 @@ internal static class TryParseStringEmitter
                     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
                     public static global::System.Boolean TryParseIgnoreCase([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out {0} result)
                     {{
-                        if (value is not null)
+                        if (global::System.String.IsNullOrEmpty(value))
                         {{
-                            return TryParseSpan(value.AsSpan(), true, out result);
+                            result = default;
+                            return false;
                         }}
 
-                        result = default;
-                        return false;
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                        return TryParseSpan(value.AsSpan(), true, out result);
                     }}
 
 

@@ -16,7 +16,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
     internal string Modifier { get; }
     internal string UnderlyingType { get; }
     internal string OriginalUnderlyingType { get; }
-    public bool HasFlags { get; }
+    //public bool HasFlags { get; }
     internal string ToStringFormat { get; }
 
     internal ImmutableArray<EnumMemberSpec> Members { get; }
@@ -44,7 +44,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
 
         Namespace = @namespace;
         OriginalUnderlyingType = underlyingTypeName;
-        HasFlags = hasFlags;
+        //HasFlags = hasFlags;
         IsGlobalNamespace = isGlobalNamespace;
 
         if (members.IsDefaultOrEmpty)
@@ -75,7 +75,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
             hashCode = (hashCode * 397) ^ Modifier.GetHashCode();
             hashCode = (hashCode * 397) ^ UnderlyingType.GetHashCode();
             hashCode = (hashCode * 397) ^ ToStringFormat.GetHashCode();
-            hashCode = (hashCode * 397) ^ HasFlags.GetHashCode();
+            //hashCode = (hashCode * 397) ^ HasFlags.GetHashCode();
             hashCode = (hashCode * 397) ^ Members.GetHashCode();
             return hashCode;
         }
@@ -92,7 +92,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
         && Modifier.Equals(other.Modifier)
         && UnderlyingType.Equals(other.UnderlyingType)
         && ToStringFormat.Equals(other.ToStringFormat)
-        && HasFlags.Equals(other.HasFlags)
+        //&& HasFlags.Equals(other.HasFlags)
         && _comparer.Equals(Members, other.Members);
 #pragma warning restore CA1309
 #pragma warning restore CA1307

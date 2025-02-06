@@ -138,50 +138,9 @@ public static class NoneUniqueOptionExtensions
         {
             case 'g': return value.FastToString();
             case 'd': return global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOption, global::System.Int32>(ref value).ToString();
-            case 'x': return value switch
-            {
-                SnapshotTesting.NoneUniqueOption.None => "00000000",
-                SnapshotTesting.NoneUniqueOption.ToString => "00000001",
-                SnapshotTesting.NoneUniqueOption.Parse => "00000002",
-                _ => global::System.String.Create(sizeof(global::System.Int32) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOption, global::System.Int32>(ref value), static (buffer, value) =>
-                {
-                    global::System.Byte byteValue = (global::System.Byte)(value >> 24);
-                    global::System.UInt32 difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-                    global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-                    buffer[1] = (global::System.Char)(packedResult & 0xFFU);
-                    buffer[0] = (global::System.Char)(packedResult >> 8);
-
-                    byteValue = (global::System.Byte)(value >> 16);
-                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-                    buffer[3] = (global::System.Char)(packedResult & 0xFFU);
-                    buffer[2] = (global::System.Char)(packedResult >> 8);
-
-                    byteValue = (global::System.Byte)(value >> 8);
-                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-                    buffer[5] = (global::System.Char)(packedResult & 0xFFU);
-                    buffer[4] = (global::System.Char)(packedResult >> 8);
-
-                    byteValue = (global::System.Byte)value;
-                    difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
-                    packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
-
-                    buffer[7] = (global::System.Char)(packedResult & 0xFFU);
-                    buffer[6] = (global::System.Char)(packedResult >> 8);
-                })
-            };
+            case 'x': return FormatNumberAsHex(value);
             case 'f':
-                global::System.String? result = value switch
-                {
-                    SnapshotTesting.NoneUniqueOption.None => nameof(SnapshotTesting.NoneUniqueOption.None),
-                    SnapshotTesting.NoneUniqueOption.ToStringFormat => nameof(SnapshotTesting.NoneUniqueOption.ToStringFormat),
-                    SnapshotTesting.NoneUniqueOption.Parse => nameof(SnapshotTesting.NoneUniqueOption.Parse),
-                    _ => ProcessMultipleFlagsNames(value)
-                };
+                global::System.String? result = FormatFlagNames(value);
                 if (result is null) goto case 'd';
                 return result;
             default: throw CreateInvalidFormatSpecifierException();
@@ -197,13 +156,14 @@ public static class NoneUniqueOptionExtensions
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParse([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out SnapshotTesting.NoneUniqueOption result)
     {
-        if (value is not null)
+        if (global::System.String.IsNullOrEmpty(value))
         {
-            return TryParseSpan(value.AsSpan(), false, out result);
+            result = default;
+            return false;
         }
 
-        result = default;
-        return false;
+        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+        return TryParseSpan(value.AsSpan(), false, out result);
     }
 
     /// <summary>
@@ -215,13 +175,14 @@ public static class NoneUniqueOptionExtensions
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
     public static global::System.Boolean TryParseIgnoreCase([global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] global::System.String? value, out SnapshotTesting.NoneUniqueOption result)
     {
-        if (value is not null)
+        if (global::System.String.IsNullOrEmpty(value))
         {
-            return TryParseSpan(value.AsSpan(), true, out result);
+            result = default;
+            return false;
         }
 
-        result = default;
-        return false;
+        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+        return TryParseSpan(value.AsSpan(), true, out result);
     }
 
     /// <summary>
@@ -231,8 +192,17 @@ public static class NoneUniqueOptionExtensions
     /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NoneUniqueOption result) =>
-        TryParseSpan(value, false, out result);
+    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NoneUniqueOption result)
+    {
+        if (value.IsEmpty)
+        {
+           result = default;
+           return false;
+       }
+
+       global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+       return TryParseSpan(value, false, out result);
+    }
 
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NoneUniqueOption" />.
@@ -242,41 +212,94 @@ public static class NoneUniqueOptionExtensions
     /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NoneUniqueOption result) =>
-        TryParseSpan(value, true, out result);
+    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NoneUniqueOption result)
+    {
+        if (value.IsEmpty)
+        {
+            result = default;
+            return false;
+        }
+
+        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+        return TryParseSpan(value, true, out result);
+    }
+
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    private static global::System.String FormatNumberAsHex(SnapshotTesting.NoneUniqueOption data) => data switch
+    {
+        SnapshotTesting.NoneUniqueOption.None => "00000000",
+        SnapshotTesting.NoneUniqueOption.ToString => "00000001",
+        SnapshotTesting.NoneUniqueOption.Parse => "00000002",
+        _ => global::System.String.Create(sizeof(global::System.Int32) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOption, global::System.Int32>(ref data), static (buffer, value) =>
+        {
+             global::System.Byte byteValue = (global::System.Byte)(value >> 24);
+             global::System.UInt32 difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+             global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+             buffer[1] = (global::System.Char)(packedResult & 0xFFU);
+             buffer[0] = (global::System.Char)(packedResult >> 8);
+
+             byteValue = (global::System.Byte)(value >> 16);
+             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+             buffer[3] = (global::System.Char)(packedResult & 0xFFU);
+             buffer[2] = (global::System.Char)(packedResult >> 8);
+
+             byteValue = (global::System.Byte)(value >> 8);
+             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+             buffer[5] = (global::System.Char)(packedResult & 0xFFU);
+             buffer[4] = (global::System.Char)(packedResult >> 8);
+
+             byteValue = (global::System.Byte)value;
+             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+             buffer[7] = (global::System.Char)(packedResult & 0xFFU);
+             buffer[6] = (global::System.Char)(packedResult >> 8);
+        })
+    };
+
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    private static global::System.String? FormatFlagNames(SnapshotTesting.NoneUniqueOption value) => value switch
+    {
+        SnapshotTesting.NoneUniqueOption.None => nameof(SnapshotTesting.NoneUniqueOption.None),
+        SnapshotTesting.NoneUniqueOption.ToStringFormat => nameof(SnapshotTesting.NoneUniqueOption.ToStringFormat),
+        SnapshotTesting.NoneUniqueOption.Parse => nameof(SnapshotTesting.NoneUniqueOption.Parse),
+        _ => ProcessMultipleFlagsNames(value)
+    };
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.NoneUniqueOption result)
     {
-        if (!value.IsEmpty)
+        global::System.Char c = value[0];
+        if (global::System.Char.IsWhiteSpace(c))
         {
-            global::System.Char c = value[0];
-            if (global::System.Char.IsWhiteSpace(c))
+            value = value.TrimStart();
+            if (value.IsEmpty)
             {
-                value = value.TrimStart();
-                if (value.IsEmpty)
-                {
-                    goto Done;
-                }
-
-                c = value[0];
+                goto Done;
             }
 
-            if (!global::System.Char.IsAsciiDigit(c) && c != '-' && c != '+')
-            {
-                global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-                return TryParseByName(value, ignoreCase, out result);
-            }
+            c = value[0];
+        }
 
-            const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
-            global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
-            global::System.Boolean status = global::System.Int32.TryParse(value, NumberStyle, numberFormat, out global::System.Int32 parseResult);
+        if (!global::System.Char.IsAsciiDigit(c) && c != '-' && c != '+')
+        {
+            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+            return TryParseByName(value, ignoreCase, out result);
+        }
 
-            if (status)
-            {
-                result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Int32, SnapshotTesting.NoneUniqueOption>(ref parseResult);
-                return true;
-            }
+        const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
+        global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
+        global::System.Boolean status = global::System.Int32.TryParse(value, NumberStyle, numberFormat, out global::System.Int32 parseResult);
+
+        if (status)
+        {
+            result = global::System.Runtime.CompilerServices.Unsafe.As<global::System.Int32, SnapshotTesting.NoneUniqueOption>(ref parseResult);
+            return true;
         }
 
     Done:
@@ -284,11 +307,10 @@ public static class NoneUniqueOptionExtensions
         return false;
     }
 
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.NoneUniqueOption result)
     {
-        global::System.String[] enumNames = _names;
-        global::System.Int32[] enumValues = _underlyingValues;
+        global::System.ReadOnlySpan<global::System.String> enumNames = _names;
+        global::System.ReadOnlySpan<global::System.Int32> enumValues = _underlyingValues;
         global::System.Boolean parsed = true;
         global::System.Int32 localResult = 0;
 
@@ -360,7 +382,7 @@ public static class NoneUniqueOptionExtensions
         return false;
     }
 
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
     private static global::System.String? ProcessMultipleFlagsNames(SnapshotTesting.NoneUniqueOption value)
     {
         global::System.Int32 resultValue = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOption, global::System.Int32>(ref value);
@@ -377,6 +399,11 @@ public static class NoneUniqueOptionExtensions
 
         while (true)
         {
+            if ((global::System.UInt32)index >= (global::System.UInt32)values.Length)
+            {
+                break;
+            }
+
             global::System.Int32 currentValue = values[index];
             if (index == 0 && currentValue == 0)
             {
@@ -386,50 +413,52 @@ public static class NoneUniqueOptionExtensions
             if ((resultValue & currentValue) == currentValue)
             {
                 resultValue = (global::System.Int32)(resultValue & ~currentValue);
-                    foundItems[foundItemsCount] = index;
-                    foundItemsCount++;
-                    resultLength = checked(resultLength + names[index].Length);
-                    if (resultValue == 0)
-                    {
-                        break;
-                    }
+                foundItems[foundItemsCount] = index;
+                foundItemsCount++;
+                resultLength = checked(resultLength + names[index].Length);
+                if (resultValue == 0)
+                {
+                    break;
                 }
-
-                index--;
             }
 
-            // If we exhausted looking through all the values, and we still have
-            // a non-zero result, we couldn't match the result to only named values.
-            // In that case, we return null and let the call site just generate
-            // a string for the integral value if it desires.
-            if (resultValue != 0)
-            {
-                return null;
-            }
-
-            foundItems = foundItems[..foundItemsCount];
-
-            global::System.Int32 length = checked(resultLength + 2 * (foundItemsCount - 1)); // ", ".Length == 2
-
-            global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
-
-            global::System.Span<global::System.Char> workingSpan = destination;
-
-            for (global::System.Int32 i = foundItems.Length - 1; i != 0; i--)
-            {
-                global::System.String name = names[foundItems[i]];
-                name.CopyTo(workingSpan);
-                workingSpan = workingSpan[name.Length..];
-                global::System.Span<global::System.Char> afterSeparator = workingSpan[2..]; // done before copying ", " to eliminate those two bounds checks
-                workingSpan[0] = ',';
-                workingSpan[1] = ' ';
-                workingSpan = afterSeparator;
-            }
-
-            names[foundItems[0]].CopyTo(workingSpan);
-
-            return new global::System.String(destination);
+            index--;
         }
+
+        // If we exhausted looking through all the values, and we still have
+        // a non-zero result, we couldn't match the result to only named values.
+        // In that case, we return null and let the call site just generate
+        // a string for the integral value if it desires.
+        if (resultValue != 0)
+        {
+            return null;
+        }
+
+        foundItems = foundItems[..foundItemsCount];
+
+        foundItemsCount--;
+
+        global::System.Int32 length = checked(resultLength + 2 * foundItemsCount); // ", ".Length == 2
+
+        global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
+
+        global::System.Span<global::System.Char> workingSpan = destination;
+
+        for (global::System.Int32 i = foundItemsCount; i != 0; i--)
+        {
+            global::System.String name = names[foundItems[i]];
+            name.CopyTo(workingSpan);
+            workingSpan = workingSpan[name.Length..];
+            global::System.Span<global::System.Char> afterSeparator = workingSpan[2..]; // done before copying ", " to eliminate those two bounds checks
+            workingSpan[0] = ',';
+            workingSpan[1] = ' ';
+            workingSpan = afterSeparator;
+        }
+
+        names[foundItems[0]].CopyTo(workingSpan);
+
+        return new global::System.String(destination);
+    }
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300
     private static global::System.FormatException CreateInvalidFormatSpecifierException() =>
