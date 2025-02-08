@@ -19,8 +19,17 @@ internal static class TryParseSpanEmitter
                     /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
                     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
                     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-                    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out {0} result) =>
-                        TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
+                    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out {0} result)
+                    {{
+                        if (value.IsEmpty)
+                        {{
+                           result = default;
+                           return false;
+                       }}
+
+                       global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                       return TryParseSpan(value, false, out result);
+                    }}
 
                     /// <summary>
                     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="{0}" />.
@@ -30,23 +39,7 @@ internal static class TryParseSpanEmitter
                     /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
                     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
                     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-                    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out {0} result) =>
-                        TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
-
-
-                """, spec.FullName);
-    }
-
-    internal static void AddTryParsePrivate(StringBuilder sb, EnumGenerationSpec spec)
-    {
-        string methodBodyIndent = Indentation.MethodBody.Get();
-        string nesting1Indent = Indentation.Nesting1.Get();
-
-        sb
-            .AppendFormat(CultureInfo.InvariantCulture,
-                """
-                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.StringComparison comparison, out {0} result)
+                    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out {0} result)
                     {{
                         if (value.IsEmpty)
                         {{
@@ -54,46 +47,43 @@ internal static class TryParseSpanEmitter
                             return false;
                         }}
 
-                        if (CheckIfNumber(value))
-                        {{
-                            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-                            return TryParseAsNumber(value, out result);
-                        }}
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                        return TryParseSpan(value, true, out result);
+                    }}
 
 
                 """, spec.FullName);
+    }
 
-        foreach (EnumMemberSpec member in spec.Members)
-        {
-            sb
-                .Append(methodBodyIndent).Append("if (value.Equals(nameof(").Append(member.FullName).AppendLine(").AsSpan(), comparison))")
-                .Append(methodBodyIndent).AppendLine("{")
-                .Append(nesting1Indent).Append("result = ").Append(member.FullName).AppendLine(";")
-                .Append(nesting1Indent).AppendLine("return true;")
-                .Append(methodBodyIndent).AppendLine("}");
-        }
-
+    internal static void AddTryParsePrivate(StringBuilder sb, EnumGenerationSpec spec)
+    {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
-
-                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-                        return TryParseByName(value, comparison == global::System.StringComparison.OrdinalIgnoreCase, out result);
-                    }}
-
                     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    private static global::System.Boolean CheckIfNumber(global::System.ReadOnlySpan<global::System.Char> value)
+                    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out {0} result)
                     {{
                         global::System.Char c = value[0];
+                        if (global::System.Char.IsWhiteSpace(c))
+                        {{
+                            value = value.TrimStart();
+                            if (value.IsEmpty)
+                            {{
+                                goto Done;
+                            }}
 
-                        return global::System.Char.IsAsciiDigit(c) || c == '-' || c == '+';
-                    }}
+                            c = value[0];
+                        }}
 
-                    private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out {0} result)
-                    {{
+                        if (!global::System.Char.IsAsciiDigit(c) && c != '-' && c != '+')
+                        {{
+                            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                            return TryParseByName(value, ignoreCase, out result);
+                        }}
+
                         const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
                         global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
-                        global::System.Boolean status = {1}.TryParse(value, NumberStyle, numberFormat, out var parseResult);
+                        global::System.Boolean status = {1}.TryParse(value, NumberStyle, numberFormat, out {1} parseResult);
 
                         if (status)
                         {{
@@ -101,14 +91,15 @@ internal static class TryParseSpanEmitter
                             return true;
                         }}
 
+                    Done:
                         result = default;
                         return false;
                     }}
 
                     private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out {0} result)
                     {{
-                        global::System.String[] enumNames = _names;
-                        {1}[] enumValues = _underlyingValues;
+                        global::System.ReadOnlySpan<global::System.String> enumNames = _names;
+                        global::System.ReadOnlySpan<{1}> enumValues = _underlyingValues;
                         global::System.Boolean parsed = true;
                         {1} localResult = 0;
 

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>Latest</LangVersion>
+        <LangVersion>Preview</LangVersion>
 
         <IsRoslynComponent>True</IsRoslynComponent>
 
@@ -19,8 +19,11 @@
         <PackageReleaseNotes>
             - No source file is generated for empty enum's, an info analyzer warning is emitted instead.
  - Analyzer warning placemnet changed, now the declaration line will be highlighted. (e.g.: "public enum Demo")
+ - Fixed an error when `System.ComponentModel.DataAnnotations.DisplayAttribute` is used with one named argument (i.e. either `Name` or  `Description`) the extension helper wasn't generated.
+ - Generated code is performance tested and any performance degradation is resolved compared to the .NET implementation. 
  - Internals updated for more efficient and faster code generation.
  - Cosmetic changes in generated code.
+ - Some generated methods are inlined.
         </PackageReleaseNotes>
 
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>

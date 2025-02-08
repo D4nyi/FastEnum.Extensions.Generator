@@ -2,9 +2,9 @@
 
 namespace FastEnum.Extensions.NetCore.Example;
 
+[MemoryDiagnoser]
 [CategoriesColumn]
 [GroupBenchmarksBy(BenchmarkDotNet.Configs.BenchmarkLogicalGroupRule.ByCategory)]
-[MemoryDiagnoser]
 public class ToStringIsDefinedBenchmarks
 {
     [Params(Big.Value0, Big.Value512, Big.Value1023, (Big)2048)]

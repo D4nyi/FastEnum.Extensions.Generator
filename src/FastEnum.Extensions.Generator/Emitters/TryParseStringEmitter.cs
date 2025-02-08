@@ -9,9 +9,6 @@ internal static class TryParseStringEmitter
 {
     internal static void AddTryParseString(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Indentation.MethodBody.Get();
-        string nesting1Indent = Indentation.Nesting1.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -30,37 +27,8 @@ internal static class TryParseStringEmitter
                             return false;
                         }}
 
-                        global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
-                        if (span.IsEmpty)
-                        {{
-                            result = default;
-                            return false;
-                        }}
-
-                        if (CheckIfNumber(span))
-                        {{
-                            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-                            return TryParseAsNumber(span, out result);
-                        }}
-
-
-                """, spec.FullName);
-
-        foreach (EnumMemberSpec member in spec.Members)
-        {
-            sb
-                .Append(methodBodyIndent).Append("if (value.Equals(nameof(").Append(member.FullName).AppendLine(")))")
-                .Append(methodBodyIndent).AppendLine("{")
-                .Append(nesting1Indent).Append("result = ").Append(member.FullName).AppendLine(";")
-                .Append(nesting1Indent).AppendLine("return true;")
-                .Append(methodBodyIndent).AppendLine("}");
-        }
-
-        sb
-            .AppendFormat(CultureInfo.InvariantCulture,
-                """
-
-                        return TryParseByName(value, false, out result);
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                        return TryParseSpan(value.AsSpan(), false, out result);
                     }}
 
                     /// <summary>
@@ -78,40 +46,11 @@ internal static class TryParseStringEmitter
                             return false;
                         }}
 
-                        global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
-                        if (span.IsEmpty)
-                        {{
-                            result = default;
-                            return false;
-                        }}
-
-                        if (CheckIfNumber(span))
-                        {{
-                            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-                            return TryParseAsNumber(span, out result);
-                        }}
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+                        return TryParseSpan(value.AsSpan(), true, out result);
+                    }}
 
 
                 """, spec.FullName);
-
-        foreach (EnumMemberSpec member in spec.Members)
-        {
-            sb
-                .Append(methodBodyIndent).Append("if (value.Equals(nameof(").Append(member.FullName)
-                .Append("), global::System.StringComparison.OrdinalIgnoreCase").AppendLine("))")
-                .Append(methodBodyIndent).AppendLine("{")
-                .Append(nesting1Indent).Append("result = ").Append(member.FullName).AppendLine(";")
-                .Append(nesting1Indent).AppendLine("return true;")
-                .Append(methodBodyIndent).AppendLine("}");
-        }
-
-        sb.Append(
-            """
-
-                    return TryParseByName(value, true, out result);
-                }
-
-
-            """);
     }
 }

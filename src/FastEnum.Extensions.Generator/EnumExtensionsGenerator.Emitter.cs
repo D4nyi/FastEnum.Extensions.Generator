@@ -13,30 +13,32 @@ public sealed partial class EnumExtensionsGenerator
         StringBuilder sb = StringBuilderPool.Get();
 
         // General
-        GeneralEmitter.AddFileAndClassHeader(sb, enumGenerationSpec);
-        GeneralEmitter.AddFieldsAndGetMethods(sb, enumGenerationSpec);
-        GeneralEmitter.AddHasFlag(sb, enumGenerationSpec);
-        GeneralEmitter.AddIsDefined(sb, enumGenerationSpec);
+        GeneralEmitter
+            .AddFileAndClassHeader(sb, enumGenerationSpec)
+            .AddFieldsAndGetMethods(enumGenerationSpec)
+            .AddIsDefined(enumGenerationSpec);
 
         AttributeDataEmitter.AddAttributeMethods(sb, enumGenerationSpec);
 
         // ToString
-        ToStringEmitter.AddToString(sb, enumGenerationSpec);
-        ToStringEmitter.AddToStringFormat(sb, enumGenerationSpec);
+        ToStringEmitter
+            .AddToString(sb, enumGenerationSpec)
+            .AddToStringFormat(enumGenerationSpec);
 
         // TryParse
         TryParseStringEmitter.AddTryParseString(sb, enumGenerationSpec);
         TryParseSpanEmitter.AddTryParseSpan(sb, enumGenerationSpec);
 
         // Private Helpers
-        ToStringEmitter.AddFormatAsHexHelper(sb, enumGenerationSpec);
-        ToStringEmitter.AddFormatFlagNames(sb, enumGenerationSpec);
+        ToStringEmitter
+            .AddFormatAsHexHelper(sb, enumGenerationSpec)
+            .AddFormatFlagNames(enumGenerationSpec);
 
         TryParseSpanEmitter.AddTryParsePrivate(sb, enumGenerationSpec);
 
-        GeneralEmitter.AddPrivateHelperMethods(sb, enumGenerationSpec);
-
-        sb.Append('}').AppendLine();
+        GeneralEmitter
+            .AddPrivateHelperMethods(sb, enumGenerationSpec)
+            .Append('}');
 
         return StringBuilderPool.Return(sb);
     }

@@ -8,7 +8,6 @@ namespace SnapshotTesting;
 /// <summary>
 /// Extension methods for <see cref="SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass" />
 /// </summary>
-[global::System.CodeDom.Compiler.GeneratedCodeAttribute("FastEnum.Extensions.Generator.EnumExtensionsGenerator", "1.4.0")]
 public static class NestedInStaticClassExtensions
 {
     private static readonly global::System.Int32[] _underlyingValues =
@@ -53,6 +52,7 @@ public static class NestedInStaticClassExtensions
     /// <param name="instance">The instance in which the flags are searched.</param>
     /// <param name="flags">The flags that will be looked up in the instance.</param>
     /// <returns><see langword="true"/> if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, <see langword="false"/>.</returns>
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public static global::System.Boolean HasFlag(this SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass instance, SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass flags) => (instance & flags) == flags;
 
     /// <summary>Returns a <see langword="global::System.Boolean"/> telling whether the given enum value exists in the enumeration.</summary>
@@ -98,9 +98,7 @@ public static class NestedInStaticClassExtensions
     /// <param name="format">A format string.</param>
     /// <returns>The string representation of the value of this instance as specified by format.</returns>
     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
-    public static global::System.String FastToString(this SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass value,
-        [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
-        global::System.String? format)
+    public static global::System.String FastToString(this SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass value, [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute("EnumFormat")] global::System.String? format)
     {
         if (global::System.String.IsNullOrEmpty(format)) return value.FastToString();
 
@@ -135,26 +133,8 @@ public static class NestedInStaticClassExtensions
             return false;
         }
 
-        global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
-        if (span.IsEmpty)
-        {
-            result = default;
-            return false;
-        }
-
-        if (CheckIfNumber(span))
-        {
-            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-            return TryParseAsNumber(span, out result);
-        }
-
-        if (value.Equals(nameof(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None)))
-        {
-            result = SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None;
-            return true;
-        }
-
-        return TryParseByName(value, false, out result);
+        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+        return TryParseSpan(value.AsSpan(), false, out result);
     }
 
     /// <summary>
@@ -172,26 +152,8 @@ public static class NestedInStaticClassExtensions
             return false;
         }
 
-        global::System.ReadOnlySpan<global::System.Char> span = value.AsSpan().TrimStart();
-        if (span.IsEmpty)
-        {
-            result = default;
-            return false;
-        }
-
-        if (CheckIfNumber(span))
-        {
-            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-            return TryParseAsNumber(span, out result);
-        }
-
-        if (value.Equals(nameof(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None), global::System.StringComparison.OrdinalIgnoreCase))
-        {
-            result = SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None;
-            return true;
-        }
-
-        return TryParseByName(value, true, out result);
+        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+        return TryParseSpan(value.AsSpan(), true, out result);
     }
 
     /// <summary>
@@ -201,8 +163,17 @@ public static class NestedInStaticClassExtensions
     /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass result) =>
-        TryParseSpan(value, global::System.StringComparison.Ordinal, out result);
+    public static global::System.Boolean TryParse(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass result)
+    {
+        if (value.IsEmpty)
+        {
+           result = default;
+           return false;
+       }
+
+       global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+       return TryParseSpan(value, false, out result);
+    }
 
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to <see cref="SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass" />.
@@ -212,30 +183,7 @@ public static class NestedInStaticClassExtensions
     /// <param name="value">The span representation of the name or numeric value of one or more enumerated constants.</param>
     /// <param name="result">When this method returns <see langword="true"/>, an object containing an enumeration constant representing the parsed value.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass result) =>
-        TryParseSpan(value, global::System.StringComparison.OrdinalIgnoreCase, out result);
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.String FormatNumberAsHex(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass data) => data switch
-    {
-        SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None => "00000000",
-        _ => global::System.String.Create(sizeof(global::System.Int32) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass, global::System.Int32>(ref data), (buffer, value) =>
-        {
-             ToCharsBuffer((global::System.Byte)(value >> 24), buffer, 0);
-             ToCharsBuffer((global::System.Byte)(value >> 16), buffer, 2);
-             ToCharsBuffer((global::System.Byte)(value >> 8), buffer, 4);
-             ToCharsBuffer((global::System.Byte)value, buffer, 6);
-        })
-    };
-
-    private static global::System.String? FormatFlagNames(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass value) => value switch
-    {
-        SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None => nameof(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None),
-        _ => ProcessMultipleFlagsNames(value)
-    };
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.StringComparison comparison, out SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass result)
+    public static global::System.Boolean TryParseIgnoreCase(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass result)
     {
         if (value.IsEmpty)
         {
@@ -243,35 +191,77 @@ public static class NestedInStaticClassExtensions
             return false;
         }
 
-        if (CheckIfNumber(value))
-        {
-            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-            return TryParseAsNumber(value, out result);
-        }
-
-        if (value.Equals(nameof(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None).AsSpan(), comparison))
-        {
-            result = SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None;
-            return true;
-        }
-
         global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
-        return TryParseByName(value, comparison == global::System.StringComparison.OrdinalIgnoreCase, out result);
+        return TryParseSpan(value, true, out result);
     }
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.Boolean CheckIfNumber(global::System.ReadOnlySpan<global::System.Char> value)
+    private static global::System.String FormatNumberAsHex(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass data) => data switch
+    {
+        SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None => "00000000",
+        _ => global::System.String.Create(sizeof(global::System.Int32) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass, global::System.Int32>(ref data), static (buffer, value) =>
+        {
+             global::System.Byte byteValue = (global::System.Byte)(value >> 24);
+             global::System.UInt32 difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+             global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+             buffer[1] = (global::System.Char)(packedResult & 0xFFU);
+             buffer[0] = (global::System.Char)(packedResult >> 8);
+
+             byteValue = (global::System.Byte)(value >> 16);
+             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+             buffer[3] = (global::System.Char)(packedResult & 0xFFU);
+             buffer[2] = (global::System.Char)(packedResult >> 8);
+
+             byteValue = (global::System.Byte)(value >> 8);
+             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+             buffer[5] = (global::System.Char)(packedResult & 0xFFU);
+             buffer[4] = (global::System.Char)(packedResult >> 8);
+
+             byteValue = (global::System.Byte)value;
+             difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;
+             packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+
+             buffer[7] = (global::System.Char)(packedResult & 0xFFU);
+             buffer[6] = (global::System.Char)(packedResult >> 8);
+        })
+    };
+
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    private static global::System.String? FormatFlagNames(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass value) => value switch
+    {
+        SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None => nameof(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass.None),
+        _ => ProcessMultipleFlagsNames(value)
+    };
+
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    private static global::System.Boolean TryParseSpan(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass result)
     {
         global::System.Char c = value[0];
+        if (global::System.Char.IsWhiteSpace(c))
+        {
+            value = value.TrimStart();
+            if (value.IsEmpty)
+            {
+                goto Done;
+            }
 
-        return global::System.Char.IsAsciiDigit(c) || c == '-' || c == '+';
-    }
+            c = value[0];
+        }
 
-    private static global::System.Boolean TryParseAsNumber(global::System.ReadOnlySpan<global::System.Char> value, out SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass result)
-    {
+        if (!global::System.Char.IsAsciiDigit(c) && c != '-' && c != '+')
+        {
+            global::System.Runtime.CompilerServices.Unsafe.SkipInit(out result);
+            return TryParseByName(value, ignoreCase, out result);
+        }
+
         const global::System.Globalization.NumberStyles NumberStyle = global::System.Globalization.NumberStyles.AllowLeadingSign | global::System.Globalization.NumberStyles.AllowTrailingWhite;
         global::System.Globalization.NumberFormatInfo numberFormat = global::System.Globalization.CultureInfo.InvariantCulture.NumberFormat;
-        global::System.Boolean status = global::System.Int32.TryParse(value, NumberStyle, numberFormat, out var parseResult);
+        global::System.Boolean status = global::System.Int32.TryParse(value, NumberStyle, numberFormat, out global::System.Int32 parseResult);
 
         if (status)
         {
@@ -279,14 +269,15 @@ public static class NestedInStaticClassExtensions
             return true;
         }
 
+    Done:
         result = default;
         return false;
     }
 
     private static global::System.Boolean TryParseByName(global::System.ReadOnlySpan<global::System.Char> value, global::System.Boolean ignoreCase, out SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass result)
     {
-        global::System.String[] enumNames = _names;
-        global::System.Int32[] enumValues = _underlyingValues;
+        global::System.ReadOnlySpan<global::System.String> enumNames = _names;
+        global::System.ReadOnlySpan<global::System.Int32> enumValues = _underlyingValues;
         global::System.Boolean parsed = true;
         global::System.Int32 localResult = 0;
 
@@ -358,33 +349,16 @@ public static class NestedInStaticClassExtensions
         return false;
     }
 
+    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
     private static global::System.String? ProcessMultipleFlagsNames(SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass value)
     {
         global::System.Int32 resultValue = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NestingTypeStaticClass.NestedInStaticClass, global::System.Int32>(ref value);
 
         global::System.Span<global::System.Int32> foundItems = stackalloc global::System.Int32[1];
-        if (!TryFindFlagsNames(resultValue, foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount))
-        {
-            return null;
-        }
 
-        foundItems = foundItems[..foundItemsCount];
-
-        global::System.Int32 length = checked(resultLength + 2 * (foundItemsCount - 1)); // ", ".Length == 2
-
-        global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
-
-        WriteMultipleFoundFlagsNames(foundItems, destination);
-
-        return new global::System.String(destination);
-    }
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static global::System.Boolean TryFindFlagsNames(global::System.Int32 resultValue, global::System.Span<global::System.Int32> foundItems, out global::System.Int32 resultLength, out global::System.Int32 foundItemsCount)
-    {
         // Now look for multiple matches, storing the indices of the values into our span.
-        resultLength = 0;
-        foundItemsCount = 0;
+        global::System.Int32 resultLength = 0;
+        global::System.Int32 foundItemsCount = 0;
 
         global::System.Int32 index = MembersCount - 1;
         global::System.Int32[] values = _underlyingValues;
@@ -392,6 +366,11 @@ public static class NestedInStaticClassExtensions
 
         while (true)
         {
+            if ((global::System.UInt32)index >= (global::System.UInt32)values.Length)
+            {
+                break;
+            }
+
             global::System.Int32 currentValue = values[index];
             if (index == 0 && currentValue == 0)
             {
@@ -417,34 +396,35 @@ public static class NestedInStaticClassExtensions
         // a non-zero result, we couldn't match the result to only named values.
         // In that case, we return null and let the call site just generate
         // a string for the integral value if it desires.
-        return resultValue == 0;
-    }
-
-    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static void WriteMultipleFoundFlagsNames(global::System.ReadOnlySpan<global::System.Int32> foundItems, global::System.Span<global::System.Char> destination)
-    {
-        for (global::System.Int32 i = foundItems.Length - 1; i != 0; i--)
+        if (resultValue != 0)
         {
-            global::System.String name = _names[foundItems[i]];
-            name.CopyTo(destination);
-            destination = destination[name.Length..];
-            global::System.Span<global::System.Char> afterSeparator = destination[2..]; // done before copying ", " to eliminate those two bounds checks
-            destination[0] = ',';
-            destination[1] = ' ';
-            destination = afterSeparator;
+            return null;
         }
 
-        _names[foundItems[0]].CopyTo(destination);
-    }
+        foundItems = foundItems[..foundItemsCount];
 
-    [global::System.Security.SecuritySafeCriticalAttribute, global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static void ToCharsBuffer(global::System.Byte value, global::System.Span<global::System.Char> buffer, global::System.Int32 startingIndex)
-    {
-        global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
-        global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+        foundItemsCount--;
 
-        buffer[startingIndex + 1] = (global::System.Char)(packedResult & 0xFFU);
-        buffer[startingIndex] = (global::System.Char)(packedResult >> 8);
+        global::System.Int32 length = checked(resultLength + 2 * foundItemsCount); // ", ".Length == 2
+
+        global::System.Span<global::System.Char> destination = stackalloc global::System.Char[length];
+
+        global::System.Span<global::System.Char> workingSpan = destination;
+
+        for (global::System.Int32 i = foundItemsCount; i != 0; i--)
+        {
+            global::System.String name = names[foundItems[i]];
+            name.CopyTo(workingSpan);
+            workingSpan = workingSpan[name.Length..];
+            global::System.Span<global::System.Char> afterSeparator = workingSpan[2..]; // done before copying ", " to eliminate those two bounds checks
+            workingSpan[0] = ',';
+            workingSpan[1] = ' ';
+            workingSpan = afterSeparator;
+        }
+
+        names[foundItems[0]].CopyTo(workingSpan);
+
+        return new global::System.String(destination);
     }
 
     [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)] // https://github.com/dotnet/runtime/issues/78300

@@ -24,10 +24,15 @@ public sealed partial class EnumExtensionsGenerator : IIncrementalGenerator
                 predicate: static (node, _) => node is EnumDeclarationSyntax,
                 transform: Transform)
             .WithTrackingName(Constants.InitialExtraction)
-            .Where(static m => m is not null)
+            .Where(static m => m.HasValue)
+            .Select(static (x, _) => x!.Value)
             .WithTrackingName(Constants.RemovingNulls)
+            .Select(CreateDiagnostics)
+            .WithTrackingName(Constants.CreateDiagnostics)
+            .Select(BuildGenerationSpec)
+            .WithTrackingName(Constants.BuildGenerationSpec)
             .Collect()
-            .WithTrackingName(Constants.CollectedGenerationData)!
+            .WithTrackingName(Constants.CollectedGenerationData)
 
             // Apply sequence equality comparison on the result array for incremental caching.
             .WithComparer(new ObjectImmutableArraySequenceEqualityComparer<object>());

@@ -16,6 +16,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
     internal string Modifier { get; }
     internal string UnderlyingType { get; }
     internal string OriginalUnderlyingType { get; }
+    //public bool HasFlags { get; }
     internal string ToStringFormat { get; }
 
     internal ImmutableArray<EnumMemberSpec> Members { get; }
@@ -43,6 +44,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
 
         Namespace = @namespace;
         OriginalUnderlyingType = underlyingTypeName;
+        //HasFlags = hasFlags;
         IsGlobalNamespace = isGlobalNamespace;
 
         if (members.IsDefaultOrEmpty)
@@ -67,14 +69,16 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
 
     public override int GetHashCode()
     {
-        const int multiplier = -1521134295;
-
-        return (((((EqualityComparer<string>.Default.GetHashCode(ToStringFormat) * multiplier +
-                    EqualityComparer<string>.Default.GetHashCode(FullName)) * multiplier +
-                   EqualityComparer<string>.Default.GetHashCode(Modifier)) * multiplier +
-                  EqualityComparer<string>.Default.GetHashCode(UnderlyingType)) * multiplier +
-                 EqualityComparer<string>.Default.GetHashCode(OriginalUnderlyingType)) * multiplier +
-                EqualityComparer<ImmutableArray<EnumMemberSpec>>.Default.GetHashCode(Members)) * multiplier;
+        unchecked
+        {
+            int hashCode = FullName.GetHashCode();
+            hashCode = (hashCode * 397) ^ Modifier.GetHashCode();
+            hashCode = (hashCode * 397) ^ UnderlyingType.GetHashCode();
+            hashCode = (hashCode * 397) ^ ToStringFormat.GetHashCode();
+            //hashCode = (hashCode * 397) ^ HasFlags.GetHashCode();
+            hashCode = (hashCode * 397) ^ Members.GetHashCode();
+            return hashCode;
+        }
     }
 
     public override bool Equals(object? obj) => obj is EnumGenerationSpec spec && Equals(spec);
@@ -82,10 +86,14 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
     private static readonly ObjectImmutableArraySequenceEqualityComparer<EnumMemberSpec> _comparer = new();
 
     public bool Equals(EnumGenerationSpec other) =>
-        EqualityComparer<string>.Default.Equals(ToStringFormat, other.ToStringFormat)
-        && EqualityComparer<string>.Default.Equals(FullName, other.FullName)
-        && EqualityComparer<string>.Default.Equals(Modifier, other.Modifier)
-        && EqualityComparer<string>.Default.Equals(UnderlyingType, other.UnderlyingType)
-        && EqualityComparer<string>.Default.Equals(OriginalUnderlyingType, other.OriginalUnderlyingType)
+#pragma warning disable CA1307
+#pragma warning disable CA1309 // No need for checking cultures and casing
+        FullName.Equals(other.FullName)
+        && Modifier.Equals(other.Modifier)
+        && UnderlyingType.Equals(other.UnderlyingType)
+        && ToStringFormat.Equals(other.ToStringFormat)
+        //&& HasFlags.Equals(other.HasFlags)
         && _comparer.Equals(Members, other.Members);
+#pragma warning restore CA1309
+#pragma warning restore CA1307
 }

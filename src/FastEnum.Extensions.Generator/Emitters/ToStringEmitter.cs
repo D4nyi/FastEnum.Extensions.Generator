@@ -8,11 +8,8 @@ namespace FastEnum.Extensions.Generator.Emitters;
 
 internal static class ToStringEmitter
 {
-    internal static void AddToString(StringBuilder sb, EnumGenerationSpec spec)
+    internal static StringBuilder AddToString(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodIndent = Indentation.Method.Get();
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -27,21 +24,20 @@ internal static class ToStringEmitter
         foreach (EnumMemberSpec member in spec.DistinctMembers)
         {
             sb
-                .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")
+                .Append("        ").Append(member.FullName).Append(" => nameof(")
                 .Append(member.FullName).AppendLine("),");
         }
 
-        sb
-            .Append(methodBodyIndent).Append("_ => (")
+        return
+            sb
+                .Append("        _ => (")
                 .AddCast(spec.FullName, spec.UnderlyingType).AppendLine(").ToString()")
-            .Append(methodIndent).AppendLine("};")
-            .AppendLine();
+                .AppendLine("    };")
+                .AppendLine();
     }
 
-    internal static void AddToStringFormat(StringBuilder sb, EnumGenerationSpec spec)
+    internal static void AddToStringFormat(this StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodIndent = Indentation.Method.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
@@ -52,11 +48,10 @@ internal static class ToStringEmitter
                     /// <exception cref="global::System.FormatException"><paramref name="format"/> contains an invalid specification.</exception>
 
                 """, spec.FullName)
-            .Append(methodIndent).Append(spec.Modifier).Append(" static global::System.String FastToString(this ").Append(spec.FullName).AppendLine(" value,")
+            .Append("    ").Append(spec.Modifier).Append(" static global::System.String FastToString(this ").Append(spec.FullName)
+            .AppendLine(" value, [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(\"EnumFormat\")] global::System.String? format)")
             .Append(
                 """
-                        [global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat)]
-                        global::System.String? format)
                     {
                         if (global::System.String.IsNullOrEmpty(format)) return value.FastToString();
 
@@ -83,13 +78,12 @@ internal static class ToStringEmitter
                 """);
     }
 
-    internal static void AddFormatFlagNames(StringBuilder sb, EnumGenerationSpec spec)
+    internal static void AddFormatFlagNames(this StringBuilder sb, EnumGenerationSpec spec)
     {
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
+                    [global::System.Runtime.CompilerServices.MethodImplAttribute(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     private static global::System.String? FormatFlagNames({0} value) => value switch
                     {{
 
@@ -108,7 +102,7 @@ internal static class ToStringEmitter
         foreach (EnumMemberSpec member in spec.DistinctFlagMembers)
         {
             sb
-                .Append(methodBodyIndent).Append(member.FullName).Append(" => nameof(")
+                .Append("        ").Append(member.FullName).Append(" => nameof(")
                 .Append(member.FullName).AppendLine("),");
         }
 
@@ -122,7 +116,7 @@ internal static class ToStringEmitter
                 """);
     }
 
-    internal static void AddFormatAsHexHelper(StringBuilder sb, EnumGenerationSpec spec)
+    internal static StringBuilder AddFormatAsHexHelper(StringBuilder sb, EnumGenerationSpec spec)
     {
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
@@ -142,37 +136,34 @@ internal static class ToStringEmitter
         sb
             .AppendFormat(CultureInfo.InvariantCulture,
                 """
-                        _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), (buffer, value) =>
+                        _ => global::System.String.Create(sizeof({0}) * 2, global::System.Runtime.CompilerServices.Unsafe.As<{1}, {0}>(ref data), static (buffer, value) =>
                         {{
 
                 """, underlyingType, spec.FullName);
 
         if (isByteSized)
         {
-            sb
-                .Append(
-                    """
-                                global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
-                                global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
+            return
+                sb
+                    .Append(
+                        """
+                                    global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
+                                    global::System.UInt32 packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;
 
-                                buffer[1] = (global::System.Char)(packedResult & 0xFFU);
-                                buffer[0] = (global::System.Char)(packedResult >> 8);
-                            })
-                        };
+                                    buffer[1] = (global::System.Char)(packedResult & 0xFFU);
+                                    buffer[0] = (global::System.Char)(packedResult >> 8);
+                                })
+                            };
 
 
-                    """);
-
-            return;
+                        """);
         }
 
-        UseToCharsBufferHelper(sb, spec.OriginalUnderlyingType);
+        return sb.UseToCharsBufferHelperInlined(spec.OriginalUnderlyingType);
     }
 
     private static void AddHexValuesForKnownFields(StringBuilder sb, EnumGenerationSpec spec)
     {
-        string nesting1Indent = Indentation.MethodBody.Get();
-
         Type membersType = spec.Members[0].Value.GetType(); // an enum has only one backing type
         MethodInfo toStringFormat = Helpers.GetToStringFormat(membersType);
         object[] toStringParam = [spec.ToStringFormat];
@@ -182,11 +173,11 @@ internal static class ToStringEmitter
             string hex = (string)toStringFormat.Invoke(member.Value, toStringParam);
 
             sb
-                .Append(nesting1Indent).Append(member.FullName).Append(" => \"").Append(hex).AppendLine("\",");
+                .Append("        ").Append(member.FullName).Append(" => \"").Append(hex).AppendLine("\",");
         }
     }
 
-    private static void UseToCharsBufferHelper(StringBuilder sb, string originalUnderlyingType)
+    private static StringBuilder UseToCharsBufferHelperInlined(this StringBuilder sb, string originalUnderlyingType)
     {
         int shiftValue = originalUnderlyingType switch
         {
@@ -198,32 +189,45 @@ internal static class ToStringEmitter
 
         if (shiftValue != 0)
         {
+            bool firstItem = true;
             int startIndex = 0;
+
             for (; shiftValue >= 0; shiftValue -= 8)
             {
-                sb.Append("             ToCharsBuffer((global::System.Byte)");
+                sb
+                    .Append("             ")
+                    .AddTypeDefinition("Byte", firstItem)
+                    .Append("byteValue = (global::System.Byte)").AddShift(shiftValue)
+                    .Append("             ")
+                    .AddTypeDefinition("UInt32", firstItem)
+                    .AppendLine("difference = ((byteValue & 0xF0U) << 4) + (byteValue & 0x0FU) - 0x8989U;")
+                    .Append("             ")
+                    .AddTypeDefinition("UInt32", firstItem)
+                    .AppendLine("packedResult = ((((global::System.UInt32)(-(global::System.Int32)difference & 0x7070U)) >> 4) + difference + 0xB9B9U) | 0U;")
+                    .AppendLine();
+
+                firstItem = false;
+
+                sb.Append("             buffer[").Append(startIndex + 1).AppendLine("] = (global::System.Char)(packedResult & 0xFFU);");
+                sb.Append("             buffer[").Append(startIndex).AppendLine("] = (global::System.Char)(packedResult >> 8);");
+
                 if (shiftValue >= 8)
                 {
-                    sb.Append("(value >> ").Append(shiftValue).Append(')');
+                    sb.AppendLine();
                 }
-                else
-                {
-                    sb.Append("value");
-                }
-
-                sb.Append(", buffer, ").Append(startIndex).AppendLine(");");
 
                 startIndex += 2;
             }
         }
 
-        sb
-            .Append(
-                """
-                        })
-                    };
+        return
+            sb
+                .Append(
+                    """
+                            })
+                        };
 
 
-                """);
+                    """);
     }
 }

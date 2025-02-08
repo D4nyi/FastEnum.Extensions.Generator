@@ -23,7 +23,7 @@ internal static class AttributeDataEmitter
                     /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
-                    public static global::System.String? GetEnumMemberValue(this
+                    public static global::System.String? GetEnumMemberValue(this {0} value)
                 """, spec.FullName);
 
         AddAttributeMethodBody(sb, spec, static x => x.EnumMemberValue);
@@ -37,7 +37,7 @@ internal static class AttributeDataEmitter
                     /// <summary>Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> if exists; otherwise null.</returns>
-                    public static global::System.String? GetDisplayName(this
+                    public static global::System.String? GetDisplayName(this {0} value)
                 """, spec.FullName);
 
         AddAttributeMethodBody(sb, spec, static x => x.DisplayName);
@@ -51,7 +51,7 @@ internal static class AttributeDataEmitter
                     /// <summary>Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
-                    public static global::System.String? GetDisplayDescription(this
+                    public static global::System.String? GetDisplayDescription(this {0} value)
                 """, spec.FullName);
 
         AddAttributeMethodBody(sb, spec, static x => x.DisplayDescription);
@@ -65,7 +65,7 @@ internal static class AttributeDataEmitter
                     /// <summary>Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.</summary>
                     /// <param name="value">A(n) <see cref="{0}"/> enum value from which the attribute value is read.</param>
                     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
-                    public static global::System.String? GetDescription(this
+                    public static global::System.String? GetDescription(this {0} value)
                 """, spec.FullName);
 
         AddAttributeMethodBody(sb, spec, static x => x.Description);
@@ -73,8 +73,6 @@ internal static class AttributeDataEmitter
 
     private static void AddAttributeMethodBody(StringBuilder sb, EnumGenerationSpec spec, Func<AttributeValues, string?> accessor)
     {
-        sb.Append(' ').Append(spec.FullName).Append(" value)");
-
         List<EnumMemberSpec> notNulls = spec.DistinctMembers.Where(x => accessor(x.Data) is not null).ToList();
         if (notNulls.Count == 0)
         {
@@ -82,23 +80,20 @@ internal static class AttributeDataEmitter
             return;
         }
 
-        string methodIndent = Indentation.Method.Get();
-        string methodBodyIndent = Indentation.MethodBody.Get();
-
         sb
             .AppendLine(" => value switch")
-            .Append(methodIndent).AppendLine("{");
+            .AppendLine("    {");
 
         foreach (EnumMemberSpec member in notNulls)
         {
             sb
-                .Append(methodBodyIndent).Append(member.FullName).Append(" => \"")
+                .Append("        ").Append(member.FullName).Append(" => \"")
                 .Append(accessor(member.Data)).AppendLine("\",");
         }
 
         sb
-            .Append(methodBodyIndent).AppendLine("_ => null")
-            .Append(methodIndent).AppendLine("};")
+            .AppendLine("        _ => null")
+            .AppendLine("    };")
             .AppendLine();
     }
 }

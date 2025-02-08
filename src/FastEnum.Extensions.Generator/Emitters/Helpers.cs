@@ -2,8 +2,6 @@
 using System.Reflection;
 using System.Text;
 
-using FastEnum.Extensions.Generator.Specs;
-
 namespace FastEnum.Extensions.Generator.Emitters;
 
 internal static class Helpers
@@ -16,13 +14,38 @@ internal static class Helpers
 
     internal static StringBuilder AddCorrectBitwiseOperation(this StringBuilder sb, string underlyingTypeName)
     {
+        sb.Append("                resultValue ");
         if (underlyingTypeName is "int" or "uint" or "long" or "ulong")
         {
-            return sb.AppendLine("resultValue &= ~currentValue;");
+            return sb.AppendLine("&= ~currentValue;");
         }
 
         // "byte" or "sbyte" or "short" or "ushort" or others
-        return sb.Append("                resultValue = (").Append(underlyingTypeName).AppendLine(")(resultValue & ~currentValue);");
+        return sb.Append("= (").Append(underlyingTypeName).AppendLine(")(resultValue & ~currentValue);");
+    }
+
+    internal static StringBuilder AddShift(this StringBuilder sb, int shiftValue)
+    {
+        if (shiftValue >= 8)
+        {
+            sb.Append("(value >> ").Append(shiftValue.ToString(CultureInfo.InvariantCulture)).AppendLine(");");
+        }
+        else
+        {
+            sb.AppendLine("value;");
+        }
+
+        return sb;
+    }
+
+    internal static StringBuilder AddTypeDefinition(this StringBuilder sb, string type, bool add)
+    {
+        if (add)
+        {
+            sb.Append("global::System.").Append(type).Append(' ');
+        }
+
+        return sb;
     }
 
     internal static StringBuilder AddCast(this StringBuilder sb, string enumName, string underlyingType)
@@ -56,9 +79,7 @@ internal static class Helpers
     {
         if (!_toStringFormats.TryGetValue(membersType, out MethodInfo? toString) || toString is null)
         {
-            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, _argTypes,
-                           _modifiers)
-                       ?? throw new InvalidOperationException("'ToString' method is not found!");
+            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, _argTypes, _modifiers)!;
 
             _toStringFormats.Add(membersType, toString);
         }
@@ -70,19 +91,4 @@ internal static class Helpers
         numberType == typeof(int)
             ? 0
             : Convert.ChangeType(0, numberType, CultureInfo.InvariantCulture);
-
-    internal static string Get(this Indentation indentation)
-    {
-        // 4 spaces per indentation.
-        return indentation switch
-        {
-            Indentation.Method     => "    ",
-            Indentation.MethodBody => "        ",
-            Indentation.Nesting1   => "            ",
-            Indentation.Nesting2   => "                ",
-            Indentation.Nesting3   => "                    ",
-            Indentation.Nesting4   => "                        ",
-            _ => ""
-        };
-    }
 }

@@ -19,6 +19,9 @@ internal static class Setups
 
         VerifySettings.UseStrictJson();
         VerifySettings.UseDirectory(CreateDirectoryPath());
+#pragma warning disable CA1307
+        VerifySettings.ScrubLines(static x => x.Contains("[global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"FastEnum.Extensions.Generator.EnumExtensionsGenerator\", \""));
+#pragma warning restore CA1307
     }
 
     internal static int ExpectedSourceCount(this Dictionary<string, string> enums)
