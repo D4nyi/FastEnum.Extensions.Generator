@@ -79,8 +79,7 @@ internal static class Helpers
     {
         if (!_toStringFormats.TryGetValue(membersType, out MethodInfo? toString) || toString is null)
         {
-            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, _argTypes, _modifiers)
-                       ?? throw new InvalidOperationException("'ToString' method is not found!");
+            toString = membersType.GetMethod(nameof(ToString), Binding, null, CallingConventions.Any, _argTypes, _modifiers)!;
 
             _toStringFormats.Add(membersType, toString);
         }

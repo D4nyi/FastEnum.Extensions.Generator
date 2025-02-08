@@ -43,7 +43,7 @@ internal readonly struct EnumBaseDataSpec : IEquatable<EnumBaseDataSpec>
         unchecked
         {
             int hashCode = HasFlags.GetHashCode();
-            hashCode = (hashCode * 397) ^ (int)NestingState;
+            hashCode = (hashCode * 397) ^ NestingState.GetHashCode();
             hashCode = (hashCode * 397) ^ Modifier.GetHashCode();
             hashCode = (hashCode * 397) ^ TypeName.GetHashCode();
             hashCode = (hashCode * 397) ^ UnderlyingTypeName.GetHashCode();

@@ -36,7 +36,9 @@ internal static class SnapshotEnumGenerator
                                          [System.Runtime.Serialization.EnumMember(Value = "generate Parse")]
                                          Parse = 2,
                                          [System.ComponentModel.DataAnnotations.Display(Name = "generate HasFlag", Description = "generate HasFlag")]
-                                         HasFlag = 4
+                                         HasFlag = 4,
+                                         [System.ComponentModel.DataAnnotations.Display(Description = "generate IsDefined")]
+                                         IsDefined = 8
                                      }
                                      """
             },
@@ -47,17 +49,20 @@ internal static class SnapshotEnumGenerator
                                     [FastEnum.Extensions]
                                     public enum NoneUniqueOption : UInt16
                                     {
-                                        [System.Runtime.Serialization.EnumMember(Value = "None")]
+                                        [System.Runtime.Serialization.EnumMember()]
                                         None = 0,
 
-                                        [System.ComponentModel.Description("ToString")]
+                                        [System.ComponentModel.Description()]
                                         ToString = 1,
 
-                                        [System.ComponentModel.Description("ToStringFormat")]
+                                        [System.ComponentModel.Description()]
                                         ToStringFormat = ToString,
 
-                                        [System.ComponentModel.DataAnnotations.Display(Name = "Parse", Description = "Parse")]
-                                        Parse = 2
+                                        [System.ComponentModel.DataAnnotations.Display(Name = "Parse")]
+                                        Parse = 2,
+
+                                        [System.ComponentModel.DataAnnotations.Display()]
+                                        IsDefined = 8
                                     }
                                     """
             },

@@ -16,18 +16,18 @@ internal static class AttributeExtensions
         {
             string? metadataName = spec.MetadataName;
 
-            if (Constants.DisplayAttributeName.Equals(metadataName) && spec.NamedArguments.Length > 1)
+            if (Constants.DisplayAttributeName.Equals(metadataName) && spec.NamedArguments.Length > 0)
             {
                 foreach (KeyValuePair<string, TypedConstant> argument in spec.NamedArguments)
                 {
-                    string key = argument.Key;
-                    if ("Name".Equals(key))
+                    switch (argument.Key)
                     {
-                        data.DisplayName = argument.Value.Value?.ToString();
-                    }
-                    else if ("Description".Equals(key))
-                    {
-                        data.DisplayDescription = argument.Value.Value?.ToString();
+                        case "Name":
+                            data.DisplayName = argument.Value.Value?.ToString();
+                            break;
+                        case "Description":
+                            data.DisplayDescription = argument.Value.Value?.ToString();
+                            break;
                     }
                 }
             }

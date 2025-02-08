@@ -17,6 +17,7 @@ public static class NoneUniqueOptionExtensions
         1,
         1,
         2,
+        8,
     };
 
     private static readonly SnapshotTesting.NoneUniqueOption[] _values =
@@ -25,6 +26,7 @@ public static class NoneUniqueOptionExtensions
         SnapshotTesting.NoneUniqueOption.ToString,
         SnapshotTesting.NoneUniqueOption.ToStringFormat,
         SnapshotTesting.NoneUniqueOption.Parse,
+        SnapshotTesting.NoneUniqueOption.IsDefined,
     };
 
     private static readonly global::System.String[] _names =
@@ -33,12 +35,13 @@ public static class NoneUniqueOptionExtensions
         nameof(SnapshotTesting.NoneUniqueOption.ToString),
         nameof(SnapshotTesting.NoneUniqueOption.ToStringFormat),
         nameof(SnapshotTesting.NoneUniqueOption.Parse),
+        nameof(SnapshotTesting.NoneUniqueOption.IsDefined),
     };
 
     /// <summary>
     /// The number of members in the enum.
     /// </summary>
-    public const global::System.Int32 MembersCount = 4;
+    public const global::System.Int32 MembersCount = 5;
 
     /// <summary>
     /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.NoneUniqueOption" />.
@@ -71,18 +74,14 @@ public static class NoneUniqueOptionExtensions
     public static global::System.Boolean IsDefined(this SnapshotTesting.NoneUniqueOption value) => value switch
     {
         SnapshotTesting.NoneUniqueOption.None or SnapshotTesting.NoneUniqueOption.ToString or SnapshotTesting.NoneUniqueOption.ToStringFormat or 
-        SnapshotTesting.NoneUniqueOption.Parse => true,
+        SnapshotTesting.NoneUniqueOption.Parse or SnapshotTesting.NoneUniqueOption.IsDefined => true,
         _ => false
     };
 
     /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.NoneUniqueOption"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.Runtime.Serialization.EnumMemberAttribute.Value"/> if exists; otherwise null.</returns>
-    public static global::System.String? GetEnumMemberValue(this SnapshotTesting.NoneUniqueOption value) => value switch
-    {
-        SnapshotTesting.NoneUniqueOption.None => "None",
-        _ => null
-    };
+    public static global::System.String? GetEnumMemberValue(this SnapshotTesting.NoneUniqueOption value) => null;
 
     /// <summary>Gets the Name property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.NoneUniqueOption"/> enum value from which the attribute value is read.</param>
@@ -96,20 +95,12 @@ public static class NoneUniqueOptionExtensions
     /// <summary>Gets the Description property from applied <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.NoneUniqueOption"/> enum value from which the attribute value is read.</param>
     /// <returns>The value of <see cref="global::System.ComponentModel.DataAnnotations.DisplayAttribute.Description"/> if exists; otherwise null.</returns>
-    public static global::System.String? GetDisplayDescription(this SnapshotTesting.NoneUniqueOption value) => value switch
-    {
-        SnapshotTesting.NoneUniqueOption.Parse => "Parse",
-        _ => null
-    };
+    public static global::System.String? GetDisplayDescription(this SnapshotTesting.NoneUniqueOption value) => null;
 
     /// <summary>Gets the value of the description from applied <see cref="global::System.ComponentModel.DescriptionAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.NoneUniqueOption"/> enum value from which the attribute value is read.</param>
     /// <returns>The description read from the applied <see cref="global::System.ComponentModel.DescriptionAttribute"/> if exists; otherwise null.</returns>
-    public static global::System.String? GetDescription(this SnapshotTesting.NoneUniqueOption value) => value switch
-    {
-        SnapshotTesting.NoneUniqueOption.ToString => "ToString",
-        _ => null
-    };
+    public static global::System.String? GetDescription(this SnapshotTesting.NoneUniqueOption value) => null;
 
     /// <summary>Converts the value of this instance to its equivalent string representation.</summary>
     /// <param name="value">The <see cref="SnapshotTesting.NoneUniqueOption"/> value to convert to a string.</param>
@@ -119,6 +110,7 @@ public static class NoneUniqueOptionExtensions
         SnapshotTesting.NoneUniqueOption.None => nameof(SnapshotTesting.NoneUniqueOption.None),
         SnapshotTesting.NoneUniqueOption.ToString => nameof(SnapshotTesting.NoneUniqueOption.ToString),
         SnapshotTesting.NoneUniqueOption.Parse => nameof(SnapshotTesting.NoneUniqueOption.Parse),
+        SnapshotTesting.NoneUniqueOption.IsDefined => nameof(SnapshotTesting.NoneUniqueOption.IsDefined),
         _ => (global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOption, global::System.Int32>(ref value)).ToString()
     };
 
@@ -230,6 +222,7 @@ public static class NoneUniqueOptionExtensions
         SnapshotTesting.NoneUniqueOption.None => "00000000",
         SnapshotTesting.NoneUniqueOption.ToString => "00000001",
         SnapshotTesting.NoneUniqueOption.Parse => "00000002",
+        SnapshotTesting.NoneUniqueOption.IsDefined => "00000008",
         _ => global::System.String.Create(sizeof(global::System.Int32) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOption, global::System.Int32>(ref data), static (buffer, value) =>
         {
              global::System.Byte byteValue = (global::System.Byte)(value >> 24);
@@ -268,6 +261,7 @@ public static class NoneUniqueOptionExtensions
         SnapshotTesting.NoneUniqueOption.None => nameof(SnapshotTesting.NoneUniqueOption.None),
         SnapshotTesting.NoneUniqueOption.ToStringFormat => nameof(SnapshotTesting.NoneUniqueOption.ToStringFormat),
         SnapshotTesting.NoneUniqueOption.Parse => nameof(SnapshotTesting.NoneUniqueOption.Parse),
+        SnapshotTesting.NoneUniqueOption.IsDefined => nameof(SnapshotTesting.NoneUniqueOption.IsDefined),
         _ => ProcessMultipleFlagsNames(value)
     };
 
@@ -387,7 +381,7 @@ public static class NoneUniqueOptionExtensions
     {
         global::System.Int32 resultValue = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.NoneUniqueOption, global::System.Int32>(ref value);
 
-        global::System.Span<global::System.Int32> foundItems = stackalloc global::System.Int32[4];
+        global::System.Span<global::System.Int32> foundItems = stackalloc global::System.Int32[5];
 
         // Now look for multiple matches, storing the indices of the values into our span.
         global::System.Int32 resultLength = 0;

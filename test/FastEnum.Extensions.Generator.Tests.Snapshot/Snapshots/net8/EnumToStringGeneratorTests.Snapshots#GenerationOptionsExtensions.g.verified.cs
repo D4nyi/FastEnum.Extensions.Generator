@@ -17,6 +17,7 @@ public static class GenerationOptionsExtensions
         1,
         2,
         4,
+        8,
     };
 
     private static readonly SnapshotTesting.GenerationOptions[] _values =
@@ -25,6 +26,7 @@ public static class GenerationOptionsExtensions
         SnapshotTesting.GenerationOptions.ToString,
         SnapshotTesting.GenerationOptions.Parse,
         SnapshotTesting.GenerationOptions.HasFlag,
+        SnapshotTesting.GenerationOptions.IsDefined,
     };
 
     private static readonly global::System.String[] _names =
@@ -33,12 +35,13 @@ public static class GenerationOptionsExtensions
         nameof(SnapshotTesting.GenerationOptions.ToString),
         nameof(SnapshotTesting.GenerationOptions.Parse),
         nameof(SnapshotTesting.GenerationOptions.HasFlag),
+        nameof(SnapshotTesting.GenerationOptions.IsDefined),
     };
 
     /// <summary>
     /// The number of members in the enum.
     /// </summary>
-    public const global::System.Int32 MembersCount = 4;
+    public const global::System.Int32 MembersCount = 5;
 
     /// <summary>
     /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.GenerationOptions" />.
@@ -71,7 +74,7 @@ public static class GenerationOptionsExtensions
     public static global::System.Boolean IsDefined(this SnapshotTesting.GenerationOptions value) => value switch
     {
         SnapshotTesting.GenerationOptions.None or SnapshotTesting.GenerationOptions.ToString or SnapshotTesting.GenerationOptions.Parse or 
-        SnapshotTesting.GenerationOptions.HasFlag => true,
+        SnapshotTesting.GenerationOptions.HasFlag or SnapshotTesting.GenerationOptions.IsDefined => true,
         _ => false
     };
 
@@ -99,6 +102,7 @@ public static class GenerationOptionsExtensions
     public static global::System.String? GetDisplayDescription(this SnapshotTesting.GenerationOptions value) => value switch
     {
         SnapshotTesting.GenerationOptions.HasFlag => "generate HasFlag",
+        SnapshotTesting.GenerationOptions.IsDefined => "generate IsDefined",
         _ => null
     };
 
@@ -120,6 +124,7 @@ public static class GenerationOptionsExtensions
         SnapshotTesting.GenerationOptions.ToString => nameof(SnapshotTesting.GenerationOptions.ToString),
         SnapshotTesting.GenerationOptions.Parse => nameof(SnapshotTesting.GenerationOptions.Parse),
         SnapshotTesting.GenerationOptions.HasFlag => nameof(SnapshotTesting.GenerationOptions.HasFlag),
+        SnapshotTesting.GenerationOptions.IsDefined => nameof(SnapshotTesting.GenerationOptions.IsDefined),
         _ => (global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.GenerationOptions, global::System.Byte>(ref value)).ToString()
     };
 
@@ -232,6 +237,7 @@ public static class GenerationOptionsExtensions
         SnapshotTesting.GenerationOptions.ToString => "01",
         SnapshotTesting.GenerationOptions.Parse => "02",
         SnapshotTesting.GenerationOptions.HasFlag => "04",
+        SnapshotTesting.GenerationOptions.IsDefined => "08",
         _ => global::System.String.Create(sizeof(global::System.Byte) * 2, global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.GenerationOptions, global::System.Byte>(ref data), static (buffer, value) =>
         {
             global::System.UInt32 difference = ((value & 0xF0U) << 4) + (value & 0x0FU) - 0x8989U;
@@ -249,6 +255,7 @@ public static class GenerationOptionsExtensions
         SnapshotTesting.GenerationOptions.ToString => nameof(SnapshotTesting.GenerationOptions.ToString),
         SnapshotTesting.GenerationOptions.Parse => nameof(SnapshotTesting.GenerationOptions.Parse),
         SnapshotTesting.GenerationOptions.HasFlag => nameof(SnapshotTesting.GenerationOptions.HasFlag),
+        SnapshotTesting.GenerationOptions.IsDefined => nameof(SnapshotTesting.GenerationOptions.IsDefined),
         _ => ProcessMultipleFlagsNames(value)
     };
 
@@ -368,7 +375,7 @@ public static class GenerationOptionsExtensions
     {
         global::System.Byte resultValue = global::System.Runtime.CompilerServices.Unsafe.As<SnapshotTesting.GenerationOptions, global::System.Byte>(ref value);
 
-        global::System.Span<global::System.Int32> foundItems = stackalloc global::System.Int32[4];
+        global::System.Span<global::System.Int32> foundItems = stackalloc global::System.Int32[5];
 
         // Now look for multiple matches, storing the indices of the values into our span.
         global::System.Int32 resultLength = 0;
