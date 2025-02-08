@@ -31,7 +31,7 @@ runs:
       shell: bash
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore --force --use-current-runtime --no-http-cache
       shell: bash
 
     - name: Build

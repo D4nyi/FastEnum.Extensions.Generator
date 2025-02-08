@@ -38,7 +38,7 @@ jobs:
           configuration: ${{ env.BUILD_CONFIGURATION }}
 
       - name: Pack
-        run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c Release --no-build --no-restore --nologo -o output /p:PackageVersion=${{ env.version }}
+        run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c ${{ env.BUILD_CONFIGURATION }} --no-build --no-restore --nologo -o output /p:PackageVersion=${{ env.version }}
 
       - name: Push to NuGet
         run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
@@ -49,18 +49,15 @@ jobs:
           script: |
             try {
               const version = process.env.version;
-              const allTags = JSON.parse(process.env.AllTags).map(x => x.ref);
+              const ref = `refs/tags/v${version}`;
+
+              const exists = JSON.parse(process.env.AllTags).map(x => x.ref).find(t => t === ref);
 
               console.log(version);
-              console.log(allTags);
+              console.log("Tag:", ref, exists);
 
-              const ref = `refs/tags/v${version}`;
-              const tag = allTags.find(t => t === ref);
-
-              console.log("Tag:", ref);
-
-              if (tag) {
-                throw new Error(`Tag already exists: ${tag}`);
+              if (exists) {
+                throw new Error(`Tag already exists: ${ref}`);
               }
 
               github.rest.git.createRef({
