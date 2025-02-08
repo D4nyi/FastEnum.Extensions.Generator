@@ -2,7 +2,7 @@ namespace FastEnum.Extensions.Generator;
 
 internal static class Constants
 {
-    internal const string Version = "1.4.0";
+    internal const string Version = "1.5.0";
 
     internal const string EnumMemberAttributeName = "EnumMemberAttribute";
     internal const string DisplayAttributeName = "DisplayAttribute";
