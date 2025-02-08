@@ -8,7 +8,6 @@ namespace SnapshotTesting;
 /// <summary>
 /// Extension methods for <see cref="SnapshotTesting.NestingTypeClass.NestedInClass" />
 /// </summary>
-[global::System.CodeDom.Compiler.GeneratedCodeAttribute("FastEnum.Extensions.Generator.EnumExtensionsGenerator", "1.4.0")]
 public static class NestedInClassExtensions
 {
     private static readonly global::System.Int32[] _underlyingValues =
