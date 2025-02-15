@@ -5,9 +5,7 @@
 
 namespace SnapshotTesting;
 
-/// <summary>
-/// Extension methods for <see cref="SnapshotTesting.IsInt" />
-/// </summary>
+/// <summary>Extension methods for <see cref="SnapshotTesting.IsInt" /></summary>
 public static class IsIntExtensions
 {
     private static readonly global::System.Int32[] _underlyingValues =
@@ -25,26 +23,18 @@ public static class IsIntExtensions
         nameof(SnapshotTesting.IsInt.None),
     };
 
-    /// <summary>
-    /// The number of members in the enum.
-    /// </summary>
+    /// <summary>The number of members in the enum.</summary>
     public const global::System.Int32 MembersCount = 1;
 
-    /// <summary>
-    /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.IsInt" />.
-    /// </summary>
+    /// <summary>Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.IsInt" />.</summary>
     /// <returns>An array of the values defined in <see cref="SnapshotTesting.IsInt" />.</returns>
     public static SnapshotTesting.IsInt[] GetValues() => _values;
 
-    /// <summary>
-    /// Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.IsInt" />
-    /// </summary>
+    /// <summary>Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.IsInt" /></summary>
     /// <returns>An array of the underlying values defined in <see cref="SnapshotTesting.IsInt" />.</returns>
     public static global::System.Int32[] GetUnderlyingValues() => _underlyingValues;
 
-    /// <summary>
-    /// Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.IsInt" />
-    /// </summary>
+    /// <summary>Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.IsInt" /></summary>
     /// <returns>An array of the names of the members defined in <see cref="SnapshotTesting.IsInt" />.</returns>
     public static global::System.String[] GetNames() => _names;
 
