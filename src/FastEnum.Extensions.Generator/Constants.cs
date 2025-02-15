@@ -32,7 +32,7 @@ internal static class Constants
               /// <summary>Marks an enum to generate optimized extensions for it.</summary>
               [global::System.CodeDom.Compiler.GeneratedCodeAttribute("{{EnumExtensionsGenerator}}", "{{Version}}")]
               [global::System.AttributeUsageAttribute(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
-              internal sealed class ExtensionsAttribute : global::System.Attribute { }
+              internal sealed class ExtensionsAttribute : global::System.Attribute;
           }
           """;
 

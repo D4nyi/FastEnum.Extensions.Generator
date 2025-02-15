@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 using Microsoft.CodeAnalysis;
 
 namespace FastEnum.Extensions.Generator.Specs;
@@ -5,10 +7,10 @@ namespace FastEnum.Extensions.Generator.Specs;
 internal readonly struct AttributeInternalsSpec : IEquatable<AttributeInternalsSpec>
 {
     internal string? MetadataName { get; }
-    internal KeyValuePair<string, TypedConstant>[] NamedArguments { get; }
+    internal Dictionary<string, TypedConstant> NamedArguments { get; }
     internal object? ConstructorArgument { get; }
 
-    internal AttributeInternalsSpec(string? metadataName, KeyValuePair<string, TypedConstant>[] namedArguments, object? constructorArgument)
+    internal AttributeInternalsSpec(string? metadataName, Dictionary<string, TypedConstant> namedArguments, object? constructorArgument)
     {
         MetadataName = metadataName;
         NamedArguments = namedArguments;
@@ -23,8 +25,22 @@ internal readonly struct AttributeInternalsSpec : IEquatable<AttributeInternalsS
     {
         return
             MetadataName == other.MetadataName &&
-            NamedArguments.SequenceEqual(other.NamedArguments) &&
-            Equals(ConstructorArgument, other.ConstructorArgument);
+            Equals(ConstructorArgument, other.ConstructorArgument) &&
+            DictionaryEqual(NamedArguments, other.NamedArguments);
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        static bool DictionaryEqual(Dictionary<string, TypedConstant> first, Dictionary<string, TypedConstant> second)
+        {
+            if (ReferenceEquals(first, second)) return true;
+            if (first.Count != second.Count) return false;
+
+            foreach (KeyValuePair<string, TypedConstant> kvp in first)
+            {
+                if (!second.TryGetValue(kvp.Key, out TypedConstant secondValue)) return false;
+                if (!kvp.Value.Equals(secondValue)) return false;
+            }
+            return true;
+        }
     }
 
     public override bool Equals(object? obj) => obj is AttributeInternalsSpec other && Equals(other);

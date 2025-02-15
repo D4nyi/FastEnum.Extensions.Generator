@@ -5,9 +5,7 @@
 
 namespace SnapshotTesting;
 
-/// <summary>
-/// Extension methods for <see cref="SnapshotTesting.IsULong" />
-/// </summary>
+/// <summary>Extension methods for <see cref="SnapshotTesting.IsULong" /></summary>
 public static class IsULongExtensions
 {
     private static readonly global::System.Int32[] _underlyingValues =
@@ -25,26 +23,18 @@ public static class IsULongExtensions
         nameof(SnapshotTesting.IsULong.None),
     };
 
-    /// <summary>
-    /// The number of members in the enum.
-    /// </summary>
+    /// <summary>The number of members in the enum.</summary>
     public const global::System.Int32 MembersCount = 1;
 
-    /// <summary>
-    /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.IsULong" />.
-    /// </summary>
+    /// <summary>Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.IsULong" />.</summary>
     /// <returns>An array of the values defined in <see cref="SnapshotTesting.IsULong" />.</returns>
     public static SnapshotTesting.IsULong[] GetValues() => _values;
 
-    /// <summary>
-    /// Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.IsULong" />
-    /// </summary>
+    /// <summary>Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.IsULong" /></summary>
     /// <returns>An array of the underlying values defined in <see cref="SnapshotTesting.IsULong" />.</returns>
     public static global::System.Int32[] GetUnderlyingValues() => _underlyingValues;
 
-    /// <summary>
-    /// Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.IsULong" />
-    /// </summary>
+    /// <summary>Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.IsULong" /></summary>
     /// <returns>An array of the names of the members defined in <see cref="SnapshotTesting.IsULong" />.</returns>
     public static global::System.String[] GetNames() => _names;
 

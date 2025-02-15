@@ -100,7 +100,7 @@ public sealed partial class EnumExtensionsGenerator
                 AttributeInternalsSpec[] attributesData = x.GetAttributes()
                     .Select(y => new AttributeInternalsSpec(
                     y.AttributeClass?.MetadataName,
-                    y.NamedArguments.Select(x => new KeyValuePair<string, TypedConstant>(x.Key, x.Value)).ToArray(),
+                    y.NamedArguments.ToDictionary(static x => x.Key, static x => x.Value),
                     y.ConstructorArguments.Length == 1 ? y.ConstructorArguments[0].Value : null
                 )).ToArray();
 
