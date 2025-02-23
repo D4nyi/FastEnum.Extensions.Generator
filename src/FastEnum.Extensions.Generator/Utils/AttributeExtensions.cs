@@ -16,24 +16,17 @@ internal static class AttributeExtensions
         {
             string? metadataName = spec.MetadataName;
 
-            if (Constants.DisplayAttributeName.Equals(metadataName) && spec.NamedArguments.Length > 0)
+            if (Constants.DisplayAttributeName.Equals(metadataName) && spec.NamedArguments.Count > 0)
             {
-                foreach (KeyValuePair<string, TypedConstant> argument in spec.NamedArguments)
-                {
-                    switch (argument.Key)
-                    {
-                        case "Name":
-                            data.DisplayName = argument.Value.Value?.ToString();
-                            break;
-                        case "Description":
-                            data.DisplayDescription = argument.Value.Value?.ToString();
-                            break;
-                    }
-                }
+                spec.NamedArguments.TryGetValue("Name", out TypedConstant name);
+                spec.NamedArguments.TryGetValue("Description", out TypedConstant description);
+
+                data.DisplayName = name.Value?.ToString();
+                data.DisplayDescription = description.Value?.ToString();
             }
-            else if (Constants.EnumMemberAttributeName.Equals(metadataName) && spec.NamedArguments.Length == 1)
+            else if (Constants.EnumMemberAttributeName.Equals(metadataName) && spec.NamedArguments.TryGetValue("Value", out TypedConstant value))
             {
-                data.EnumMemberValue = spec.NamedArguments[0].Value.Value?.ToString();
+                data.EnumMemberValue = value.Value?.ToString();
             }
             else if (Constants.DescriptionAttributeName.Equals(metadataName) && spec.ConstructorArgument is not null)
             {

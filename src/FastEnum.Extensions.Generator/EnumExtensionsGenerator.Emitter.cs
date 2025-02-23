@@ -10,7 +10,7 @@ public sealed partial class EnumExtensionsGenerator
 {
     private static string Emit(EnumGenerationSpec enumGenerationSpec)
     {
-        StringBuilder sb = StringBuilderPool.Get();
+        StringBuilder sb = StringBuilderCache.Get();
 
         // General
         GeneralEmitter
@@ -40,6 +40,6 @@ public sealed partial class EnumExtensionsGenerator
             .AddPrivateHelperMethods(sb, enumGenerationSpec)
             .Append('}');
 
-        return StringBuilderPool.Return(sb);
+        return StringBuilderCache.Return(sb);
     }
 }

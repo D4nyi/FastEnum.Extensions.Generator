@@ -37,7 +37,7 @@ public sealed partial class EnumExtensionsGenerator : IIncrementalGenerator
             // Apply sequence equality comparison on the result array for incremental caching.
             .WithComparer(new ObjectImmutableArraySequenceEqualityComparer<object>());
 
-        context.RegisterSourceOutput(results, static (context, results) =>
+        context.RegisterImplementationSourceOutput(results, static (context, results) =>
         {
             if (results.IsDefaultOrEmpty)
             {

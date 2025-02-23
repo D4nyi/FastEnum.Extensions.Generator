@@ -1,7 +1,7 @@
 ﻿{
   "Diagnostics": [
     {
-      "Location": "SnapshotTesting\\NestedInGenericClass.cs: (4,8)-(8,9)",
+      "Location": "SnapshotTesting\\NestedInGenericClass.cs: (5,20)-(5,40)",
       "Message": "Extension generation for SnapshotTesting.NestingGenericClass<T>.NestedInGenericClass is disabled, because it is nested in a generic type",
       "Severity": "Warning",
       "WarningLevel": 1,
@@ -17,7 +17,7 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\NestedWithInconsistentAccessibility.cs: (4,8)-(8,9)",
+      "Location": "SnapshotTesting\\NestedWithInconsistentAccessibility.cs: (5,20)-(5,55)",
       "Message": "Extension generation for SnapshotTesting.NestingClass.NestedWithInconsistentAccessibility is disabled, because its accessibility modifier (public) is inconsistent with its parent's",
       "Severity": "Warning",
       "WarningLevel": 1,
@@ -33,7 +33,7 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\NestedInGenericClassWithInconsistentAccessibility.cs: (4,8)-(8,9)",
+      "Location": "SnapshotTesting\\NestedInGenericClassWithInconsistentAccessibility.cs: (5,20)-(5,69)",
       "Message": "Extension generation for SnapshotTesting.NestingGenericInconsistentClass<T>.NestedInGenericClassWithInconsistentAccessibility is disabled, because it is nested in a generic type",
       "Severity": "Warning",
       "WarningLevel": 1,
@@ -49,7 +49,7 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\NestedInMultipleClass.cs: (6,12)-(10,13)",
+      "Location": "SnapshotTesting\\NestedInMultipleClass.cs: (7,24)-(7,45)",
       "Message": "Extension generation for SnapshotTesting.NestingGrandParentClass.NestingParentClass.NestedInMultipleClass is disabled, because it has multiple parent types",
       "Severity": "Warning",
       "WarningLevel": 1,
@@ -65,7 +65,7 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\NestedInMultipleClassWithAGenericClass.cs: (6,12)-(10,13)",
+      "Location": "SnapshotTesting\\NestedInMultipleClassWithAGenericClass.cs: (7,24)-(7,62)",
       "Message": "Extension generation for SnapshotTesting.NestingGrandParentClass_Generic.NestingParentGenericClass<T>.NestedInMultipleClassWithAGenericClass is disabled, because it is nested in a generic type",
       "Severity": "Warning",
       "WarningLevel": 1,
@@ -81,7 +81,7 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\EmptyEnum.cs: (2,4)-(5,5)",
+      "Location": "SnapshotTesting\\EmptyEnum.cs: (3,16)-(3,25)",
       "Message": "Extension generation for SnapshotTesting.EmptyEnum is skipped, because it has no defined members",
       "Severity": "Info",
       "WarningLevel": 1,
@@ -97,9 +97,10 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\ProtectedClass.cs: (4,8)-(8,9)",
+      "Location": "SnapshotTesting\\ProtectedClass.cs: (5,23)-(5,45)",
       "Message": "Extension generation for SnapshotTesting.NestingTypeProtectedClass.NestedInProtectedClass is disabled, because it has an unsupported visibility modifier",
-      "Severity": "Error",
+      "Severity": "Warning",
+      "WarningLevel": 1,
       "Descriptor": {
         "Id": "EEG1001",
         "Title": "Invalid visibility modifier",
@@ -107,7 +108,7 @@
         "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
         "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         "Category": "Usage",
-        "DefaultSeverity": "Error",
+        "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true,
         "CustomTags": [
           "NotConfigurable"
@@ -115,9 +116,10 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\ProtectedInternalClass.cs: (4,8)-(8,9)",
+      "Location": "SnapshotTesting\\ProtectedInternalClass.cs: (5,32)-(5,62)",
       "Message": "Extension generation for SnapshotTesting.NestingTypeProtectedInternalClass.NestedInProtectedInternalClass is disabled, because it has an unsupported visibility modifier",
-      "Severity": "Error",
+      "Severity": "Warning",
+      "WarningLevel": 1,
       "Descriptor": {
         "Id": "EEG1001",
         "Title": "Invalid visibility modifier",
@@ -125,7 +127,7 @@
         "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
         "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         "Category": "Usage",
-        "DefaultSeverity": "Error",
+        "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true,
         "CustomTags": [
           "NotConfigurable"
@@ -133,9 +135,10 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\PrivateClass.cs: (4,8)-(8,9)",
+      "Location": "SnapshotTesting\\PrivateClass.cs: (5,21)-(5,41)",
       "Message": "Extension generation for SnapshotTesting.NestingTypePrivateClass.NestedInPrivateClass is disabled, because it has an unsupported visibility modifier",
-      "Severity": "Error",
+      "Severity": "Warning",
+      "WarningLevel": 1,
       "Descriptor": {
         "Id": "EEG1001",
         "Title": "Invalid visibility modifier",
@@ -143,7 +146,7 @@
         "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
         "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         "Category": "Usage",
-        "DefaultSeverity": "Error",
+        "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true,
         "CustomTags": [
           "NotConfigurable"
@@ -151,9 +154,10 @@
       }
     },
     {
-      "Location": "SnapshotTesting\\File.cs: (2,4)-(6,5)",
+      "Location": "SnapshotTesting\\File.cs: (3,14)-(3,20)",
       "Message": "Extension generation for SnapshotTesting.IsFile is disabled, because it has an unsupported visibility modifier",
-      "Severity": "Error",
+      "Severity": "Warning",
+      "WarningLevel": 1,
       "Descriptor": {
         "Id": "EEG1001",
         "Title": "Invalid visibility modifier",
@@ -161,7 +165,7 @@
         "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
         "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         "Category": "Usage",
-        "DefaultSeverity": "Error",
+        "DefaultSeverity": "Warning",
         "IsEnabledByDefault": true,
         "CustomTags": [
           "NotConfigurable"

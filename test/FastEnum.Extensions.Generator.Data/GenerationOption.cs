@@ -2,6 +2,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
+using FastEnum.Attributes;
+
 namespace FastEnum.Extensions.Generator.Data;
 
 [Extensions]
