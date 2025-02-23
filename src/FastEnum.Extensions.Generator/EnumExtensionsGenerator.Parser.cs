@@ -4,7 +4,6 @@ using FastEnum.Extensions.Generator.Specs;
 using FastEnum.Extensions.Generator.Utils;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FastEnum.Extensions.Generator;
 
@@ -17,7 +16,7 @@ public sealed partial class EnumExtensionsGenerator
         title: "Invalid visibility modifier",
         messageFormat: "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Error,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "Current generation strategy only supports extension generation for enums with `public` or `internal` visibility modifiers.",
         helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
@@ -67,8 +66,7 @@ public sealed partial class EnumExtensionsGenerator
 
     private static EnumBaseDataSpec? Transform(GeneratorAttributeSyntaxContext context, CancellationToken ct)
     {
-        if (context.TargetSymbol is not INamedTypeSymbol enumSymbol ||
-            context.TargetNode is not EnumDeclarationSyntax enumDeclarationSyntax)
+        if (context.TargetSymbol is not INamedTypeSymbol enumSymbol)
         {
             // nothing to do if this type isn't available
             return null;
@@ -84,7 +82,20 @@ public sealed partial class EnumExtensionsGenerator
 
         NestingState nestingState = enumSymbol.GetNesting();
 
-        string modifier = enumDeclarationSyntax.Modifiers.ToString();
+        string modifier = enumSymbol.DeclaredAccessibility switch
+        {
+            Accessibility.Private => "private",
+            Accessibility.ProtectedAndInternal or Accessibility.ProtectedOrInternal => "protected internal",
+            Accessibility.Protected => "protected",
+            Accessibility.Internal => "internal",
+            Accessibility.Public => "public",
+            _ => "file"
+        };
+
+        if (enumSymbol.IsFileLocal)
+        {
+            modifier = "file";
+        }
 
         string typeName = enumSymbol.ToString();
 
@@ -99,16 +110,16 @@ public sealed partial class EnumExtensionsGenerator
             {
                 AttributeInternalsSpec[] attributesData = x.GetAttributes()
                     .Select(y => new AttributeInternalsSpec(
-                    y.AttributeClass?.MetadataName,
-                    y.NamedArguments.ToDictionary(static x => x.Key, static x => x.Value),
-                    y.ConstructorArguments.Length == 1 ? y.ConstructorArguments[0].Value : null
-                )).ToArray();
+                        y.AttributeClass?.MetadataName,
+                        y.NamedArguments.ToDictionary(static x => x.Key, static x => x.Value),
+                        y.ConstructorArguments.Length == 1 ? y.ConstructorArguments[0].Value : null
+                    )).ToArray();
 
                 return new EnumFieldSpec(x.Name, x.ConstantValue!, attributesData);
             })
             .ToImmutableArray();
 
-        Location location = GetComparableLocation(enumDeclarationSyntax);
+        Location location = GetComparableLocation(enumSymbol.Locations.First());
 
         return new EnumBaseDataSpec(
             hasFlags,
@@ -204,10 +215,8 @@ public sealed partial class EnumExtensionsGenerator
 
     // Get a Location object that doesn't store a reference to the compilation.
     // That allows it to compare equally across compilations.
-    private static Location GetComparableLocation(EnumDeclarationSyntax syntax)
+    private static Location GetComparableLocation(Location location)
     {
-        Location location = syntax.GetLocation();
-
         string filePath = location.SourceTree?.FilePath ?? String.Empty;
 
         return Location.Create(filePath, location.SourceSpan, location.GetLineSpan().Span);

@@ -6,7 +6,10 @@
 
         <IsRoslynComponent>True</IsRoslynComponent>
 
+        <AssemblyName>FastEnum.Extensions.Generator</AssemblyName>
         <PackageId>$(AssemblyName)</PackageId>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+
         <Authors>Dániel Szöllősi</Authors>
         <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -51,4 +54,5 @@
         <None Include="..\..\README.md" Pack="true" PackagePath="."/>
         <None Update="enum.png" Pack="true" PackagePath="."/>
     </ItemGroup>
+
 </Project>
