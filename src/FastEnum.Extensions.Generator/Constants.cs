@@ -12,15 +12,11 @@ internal static class Constants
     internal const string EnumExtensionsGenerator = "FastEnum.Extensions.Generator.EnumExtensionsGenerator";
 
     internal const string ExtensionsAttributeFullName = "FastEnum.Attributes.ExtensionsAttribute";
+    internal const string ExternalExtensionsAttributeFullName = "FastEnum.Attributes.ExtensionsAttribute`1";
+    internal const string ExternalExtensionsAttributeShortName = "ExtensionsAttribute`1";
     internal const string AttributesFile = "FastEnumExtensionsAttribute.g.cs";
 
     internal static readonly string[] UnsupportedVisibilityModifiers = ["private", "protected", "protected internal", "file"];
-
-    internal const string InitialExtraction = nameof(InitialExtraction);
-    internal const string RemovingNulls = nameof(RemovingNulls);
-    internal const string CreateDiagnostics = nameof(CreateDiagnostics);
-    internal const string BuildGenerationSpec = nameof(BuildGenerationSpec);
-    internal const string CollectedGenerationData = nameof(CollectedGenerationData);
 
     internal const string Attributes =
         $"""
@@ -33,6 +29,12 @@ internal static class Constants
           [global::System.CodeDom.Compiler.GeneratedCodeAttribute("{EnumExtensionsGenerator}", "{Version}")]
           [global::System.AttributeUsageAttribute(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
           internal sealed class ExtensionsAttribute : global::System.Attribute;
+
+          /// <summary>Can be used to mark an owned or an external enum to generate optimized extensions for it.</summary>
+          [global::System.Diagnostics.ConditionalAttribute("DEBUG")]
+          [global::System.CodeDom.Compiler.GeneratedCodeAttribute("{EnumExtensionsGenerator}", "{Version}")]
+          [global::System.AttributeUsageAttribute(global::System.AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
+          internal sealed class ExtensionsAttribute<TEnum> : global::System.Attribute where TEnum : Enum;
           """;
 
     internal const string FileHeader =

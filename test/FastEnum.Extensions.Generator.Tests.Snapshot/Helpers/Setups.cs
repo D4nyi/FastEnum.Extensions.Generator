@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -59,7 +60,8 @@ internal static class Setups
                 MetadataReference.CreateFromFile(systemRuntimeLocation),
                 MetadataReference.CreateFromFile(typeof(DescriptionAttribute).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(EnumMemberAttribute).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(DisplayAttribute).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(DisplayAttribute).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(RegexOptions).Assembly.Location)
             ]);
     }
 

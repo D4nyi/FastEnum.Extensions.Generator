@@ -9,7 +9,10 @@ namespace FastEnum.Extensions.Generator.Tests.Snapshot.Helpers;
 
 internal static class GeneratorInternalsTestHelper
 {
-    private static readonly string[] _stages = ["InitialExtraction", "RemovingNulls", "CreateDiagnostics", "BuildGenerationSpec", "CollectedGenerationData"];
+    private static readonly string[] _stages = typeof(Stages)
+        .GetFields(BindingFlags.Static | BindingFlags.NonPublic)
+        .Select(x => x.Name)
+        .ToArray();
 
     internal static void AssertRunsEqual(GeneratorDriverRunResult runResult1, GeneratorDriverRunResult runResult2)
     {

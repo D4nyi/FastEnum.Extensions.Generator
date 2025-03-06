@@ -64,6 +64,37 @@ public sealed partial class EnumExtensionsGenerator
 
     #endregion
 
+    private static List<EnumBaseDataSpec> TransformExternal(GeneratorAttributeSyntaxContext context, CancellationToken ct)
+    {
+        List<EnumBaseDataSpec> enums = new();
+
+        foreach (AttributeData attribute in context.Attributes)
+        {
+            ct.ThrowIfCancellationRequested();
+
+            INamedTypeSymbol? attributeClass = attribute.AttributeClass;
+
+            if (attributeClass is not { IsGenericType: true, TypeArguments.Length: 1, MetadataName: Constants.ExternalExtensionsAttributeShortName })
+            {
+                // wrong attribute
+                continue;
+            }
+
+            if (attributeClass.TypeArguments[0] is not INamedTypeSymbol enumSymbol)
+            {
+                continue;
+            }
+
+            EnumBaseDataSpec? enumBaseData = TransformCore(enumSymbol);
+            if (enumBaseData is not null)
+            {
+                enums.Add(enumBaseData.Value);
+            }
+        }
+
+        return enums;
+    }
+
     private static EnumBaseDataSpec? Transform(GeneratorAttributeSyntaxContext context, CancellationToken ct)
     {
         if (context.TargetSymbol is not INamedTypeSymbol enumSymbol)
@@ -74,6 +105,11 @@ public sealed partial class EnumExtensionsGenerator
 
         ct.ThrowIfCancellationRequested();
 
+        return TransformCore(enumSymbol);
+    }
+
+    private static EnumBaseDataSpec? TransformCore(INamedTypeSymbol enumSymbol)
+    {
 #pragma warning disable CA1307
 #pragma warning disable CA1309 // No need for checking cultures and casing
         bool hasFlags = enumSymbol.GetAttributes().Any(static attributeData => Constants.FlagsAttributeName.Equals(attributeData.AttributeClass?.MetadataName));

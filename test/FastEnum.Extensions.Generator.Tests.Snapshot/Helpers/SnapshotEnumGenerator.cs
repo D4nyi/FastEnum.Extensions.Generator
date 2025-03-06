@@ -7,6 +7,9 @@ internal static class SnapshotEnumGenerator
         Dictionary<string, string> enums = new()
         {
             {
+                "ExternalEnum", "[assembly: FastEnum.Attributes.ExtensionsAttribute<System.Text.RegularExpressions.RegexOptions>]"
+            },
+            {
                 "Color", """
                          namespace SnapshotTesting
                          {

@@ -3,6 +3,9 @@
     <PropertyGroup>
         <IsPackable>False</IsPackable>
         <IsTestProject>True</IsTestProject>
+
+        <AssemblyName>FastEnum.Extensions.Generator.Tests.Snapshot</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

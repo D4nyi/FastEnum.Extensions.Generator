@@ -7,3 +7,8 @@ namespace FastEnum.Attributes;
 [global::System.Diagnostics.ConditionalAttribute("DEBUG")]
 [global::System.AttributeUsageAttribute(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
 internal sealed class ExtensionsAttribute : global::System.Attribute;
+
+/// <summary>Can be used to mark an owned or an external enum to generate optimized extensions for it.</summary>
+[global::System.Diagnostics.ConditionalAttribute("DEBUG")]
+[global::System.AttributeUsageAttribute(global::System.AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
+internal sealed class ExtensionsAttribute<TEnum> : global::System.Attribute where TEnum : Enum;
