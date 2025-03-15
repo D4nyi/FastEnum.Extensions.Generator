@@ -3,13 +3,18 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Reflection;
 
+using FastEnum.Extensions.Generator.Specs;
+
 using Microsoft.CodeAnalysis;
 
 namespace FastEnum.Extensions.Generator.Tests.Snapshot.Helpers;
 
 internal static class GeneratorInternalsTestHelper
 {
-    private static readonly string[] _stages = ["InitialExtraction", "RemovingNulls", "CreateDiagnostics", "BuildGenerationSpec", "CollectedGenerationData"];
+    private static readonly string[] _stages = typeof(Stages)
+        .GetFields(BindingFlags.Static | BindingFlags.NonPublic)
+        .Select(x => x.Name)
+        .ToArray();
 
     internal static void AssertRunsEqual(GeneratorDriverRunResult runResult1, GeneratorDriverRunResult runResult2)
     {
@@ -79,7 +84,14 @@ internal static class GeneratorInternalsTestHelper
             // - Unchanged is when the _input_ has changed, but the output hasn't
             // - Cached is when the input has not changed, so the cached output is used
             // static x => Assert.Equal(IncrementalStepRunReason.Modified, x.Reason);
-            Assert.All(runStep2.Outputs, static x => Assert.True(x.Reason is IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged));
+            Assert.All(runStep2.Outputs, static x =>
+            {
+                bool asd = x.Value is List<EnumBaseDataSpec>
+                    ? x.Reason == IncrementalStepRunReason.Modified
+                    : x.Reason is IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged;
+
+                Assert.True(asd);
+            });
 
             // Make sure we're not using anything we shouldn't
             AssertObjectGraph(runStep1);

@@ -6,7 +6,10 @@
 
         <IsRoslynComponent>True</IsRoslynComponent>
 
+        <AssemblyName>FastEnum.Extensions.Generator</AssemblyName>
         <PackageId>$(AssemblyName)</PackageId>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+
         <Authors>Dániel Szöllősi</Authors>
         <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -17,13 +20,10 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
         <PackageReleaseNotes>
-            - No source file is generated for empty enum's, an info analyzer warning is emitted instead.
- - Analyzer warning placemnet changed, now the declaration line will be highlighted. (e.g.: "public enum Demo")
- - Fixed an error when `System.ComponentModel.DataAnnotations.DisplayAttribute` is used with one named argument (i.e. either `Name` or  `Description`) the extension helper wasn't generated.
- - Generated code is performance tested and any performance degradation is resolved compared to the .NET implementation. 
- - Internals updated for more efficient and faster code generation.
- - Cosmetic changes in generated code.
- - Some generated methods are inlined.
+            - BREAKING: Attributes namespace modified from `FastEnum` to `FastEnum.Attributes`.
+ - New attribute to support generating extensions for external enums.
+ - Added support for generating extensions for external enums.
+ - Attributes marked with a `[Conditional("DEBUG")]` attribute; therfore, they will be removed from the release build but the extension generation will not be affected.
         </PackageReleaseNotes>
 
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -51,4 +51,5 @@
         <None Include="..\..\README.md" Pack="true" PackagePath="."/>
         <None Update="enum.png" Pack="true" PackagePath="."/>
     </ItemGroup>
+
 </Project>

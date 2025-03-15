@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <RunSettings>
-	<RunConfiguration>
-		<!-- Directory for test run reports. E.g. trx, coverage etc. -->
-		<ResultsDirectory>.\test\coverageresults</ResultsDirectory>
-	</RunConfiguration>
-	<DataCollectionRunSettings>
-		<DataCollectors>
-			<DataCollector friendlyName="XPlat Code Coverage">
-				<Configuration>
-					<Format>cobertura</Format>
-					<Exclude>[*Tests]*</Exclude>
-					<Include>**/ColorExtensions.g.cs</Include>
-					<!-- Globbing filter -->
-					<SingleHit>false</SingleHit>
-					<UseSourceLink>true</UseSourceLink>
-					<IncludeTestAssembly>false</IncludeTestAssembly>
-					<SkipAutoProps>true</SkipAutoProps>
-					<DeterministicReport>false</DeterministicReport>
-				</Configuration>
-			</DataCollector>
-		</DataCollectors>
-	</DataCollectionRunSettings>
+    <RunConfiguration>
+        <!-- Directory for test run reports. E.g. trx, coverage etc. -->
+        <ResultsDirectory>.\test\coverageresults</ResultsDirectory>
+    </RunConfiguration>
+    <DataCollectionRunSettings>
+        <DataCollectors>
+            <DataCollector friendlyName="XPlat Code Coverage">
+                <Configuration>
+                    <Format>cobertura</Format>
+                    <Exclude>[*Tests]*</Exclude>
+                    <Include>**/ColorExtensions.g.cs</Include>
+                    <!-- Globbing filter -->
+                    <SingleHit>false</SingleHit>
+                    <UseSourceLink>true</UseSourceLink>
+                    <IncludeTestAssembly>false</IncludeTestAssembly>
+                    <SkipAutoProps>true</SkipAutoProps>
+                    <DeterministicReport>false</DeterministicReport>
+                </Configuration>
+            </DataCollector>
+        </DataCollectors>
+    </DataCollectionRunSettings>
 </RunSettings>

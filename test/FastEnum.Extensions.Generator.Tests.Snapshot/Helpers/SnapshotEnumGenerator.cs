@@ -7,10 +7,13 @@ internal static class SnapshotEnumGenerator
         Dictionary<string, string> enums = new()
         {
             {
+                "ExternalEnum", "[assembly: FastEnum.Attributes.ExtensionsAttribute<System.Text.RegularExpressions.RegexOptions>]"
+            },
+            {
                 "Color", """
                          namespace SnapshotTesting
                          {
-                             [FastEnum.Extensions]
+                             [FastEnum.Attributes.ExtensionsAttribute]
                              public enum Color
                              {
                                  [System.ComponentModel.Description("Crimson red")]
@@ -27,7 +30,7 @@ internal static class SnapshotEnumGenerator
                 "GenerationOptions", """
                                      namespace SnapshotTesting;
 
-                                     [FastEnum.Extensions, System.Flags]
+                                     [FastEnum.Attributes.ExtensionsAttribute, System.Flags]
                                      public enum GenerationOptions : byte
                                      {
                                          None = 0,
@@ -46,7 +49,7 @@ internal static class SnapshotEnumGenerator
                 "NoneUniqueOption", """
                                     namespace SnapshotTesting;
 
-                                    [FastEnum.Extensions]
+                                    [FastEnum.Attributes.ExtensionsAttribute]
                                     public enum NoneUniqueOption : UInt16
                                     {
                                         [System.Runtime.Serialization.EnumMember()]
@@ -70,7 +73,7 @@ internal static class SnapshotEnumGenerator
                 "NoneUniqueOptions", """
                                     namespace SnapshotTesting;
 
-                                    [FastEnum.Extensions, System.Flags]
+                                    [FastEnum.Attributes.ExtensionsAttribute, System.Flags]
                                     public enum NoneUniqueOptions : System.UInt64
                                     {
                                         [System.Runtime.Serialization.EnumMember(Value = "None")]
@@ -93,7 +96,7 @@ internal static class SnapshotEnumGenerator
                                         {
                                             public class NestingGenericClass<T>
                                             {
-                                                [FastEnum.Extensions]
+                                                [FastEnum.Attributes.ExtensionsAttribute]
                                                 public enum NestedInGenericClass
                                                 {
                                                     None
@@ -108,7 +111,7 @@ internal static class SnapshotEnumGenerator
                                                        {
                                                            internal class NestingClass
                                                            {
-                                                               [FastEnum.Extensions]
+                                                               [FastEnum.Attributes.ExtensionsAttribute]
                                                                public enum NestedWithInconsistentAccessibility
                                                                {
                                                                    None
@@ -123,7 +126,7 @@ internal static class SnapshotEnumGenerator
                                                                      {
                                                                          internal class NestingGenericInconsistentClass<T>
                                                                          {
-                                                                             [FastEnum.Extensions]
+                                                                             [FastEnum.Attributes.ExtensionsAttribute]
                                                                              public enum NestedInGenericClassWithInconsistentAccessibility
                                                                              {
                                                                                  None
@@ -140,7 +143,7 @@ internal static class SnapshotEnumGenerator
                                              {
                                                  public class NestingParentClass
                                                  {
-                                                     [FastEnum.Extensions]
+                                                     [FastEnum.Attributes.ExtensionsAttribute]
                                                      public enum NestedInMultipleClass
                                                      {
                                                          None
@@ -158,7 +161,7 @@ internal static class SnapshotEnumGenerator
                                                               {
                                                                   public class NestingParentGenericClass<T>
                                                                   {
-                                                                      [FastEnum.Extensions]
+                                                                      [FastEnum.Attributes.ExtensionsAttribute]
                                                                       public enum NestedInMultipleClassWithAGenericClass
                                                                       {
                                                                           None
@@ -172,7 +175,7 @@ internal static class SnapshotEnumGenerator
                 "EmptyEnum", """
                              namespace SnapshotTesting
                              {
-                                 [FastEnum.Extensions]
+                                 [FastEnum.Attributes.ExtensionsAttribute]
                                  public enum EmptyEnum
                                  {
                                  }
@@ -207,7 +210,7 @@ internal static class SnapshotEnumGenerator
                                   {
                                       {{type.Visibility}} {{type.TypeName}} NestingType{{type.Key}}
                                       {
-                                          [FastEnum.Extensions]
+                                          [FastEnum.Attributes.ExtensionsAttribute]
                                           public enum NestedIn{{type.Key}}
                                           {
                                               None
@@ -234,7 +237,7 @@ internal static class SnapshotEnumGenerator
                                   {
                                       public {{type.TypeName}} NestingType{{type.Key}}
                                       {
-                                          [FastEnum.Extensions]
+                                          [FastEnum.Attributes.ExtensionsAttribute]
                                           {{type.Visibility}} enum NestedIn{{type.Key}}
                                           {
                                               None
@@ -254,13 +257,12 @@ internal static class SnapshotEnumGenerator
             new("File", "", "file")
         ];
 
-
         foreach (TypeUsage type in types)
         {
             enums.Add(type.Key, $$"""
                                   namespace SnapshotTesting
                                   {
-                                      [FastEnum.Extensions]
+                                      [FastEnum.Attributes.ExtensionsAttribute]
                                       {{type.Visibility}} enum Is{{type.Key}}
                                       {
                                           None
@@ -289,7 +291,7 @@ internal static class SnapshotEnumGenerator
             enums.Add(type.Key, $$"""
                                   namespace SnapshotTesting
                                   {
-                                      [FastEnum.Extensions]
+                                      [FastEnum.Attributes.ExtensionsAttribute]
                                       public enum Is{{type.Key}} : {{type.Key}}
                                       {
                                           None

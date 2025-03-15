@@ -1,4 +1,6 @@
-﻿namespace FastEnum.Extensions.NetCore.Example;
+﻿using FastEnum.Attributes;
+
+namespace FastEnum.Extensions.NetCore.Example;
 
 [Extensions]
 public enum Small

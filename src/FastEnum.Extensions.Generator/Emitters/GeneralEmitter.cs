@@ -21,9 +21,7 @@ internal static class GeneralEmitter
             sb
                 .AppendFormat(CultureInfo.InvariantCulture,
                     """
-                    /// <summary>
-                    /// Extension methods for <see cref="{0}" />
-                    /// </summary>
+                    /// <summary>Extension methods for <see cref="{0}" /></summary>
                     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("{1}", "{2}")]
                     {3} static class {4}Extensions
                     {{
@@ -82,26 +80,18 @@ internal static class GeneralEmitter
                     """
                         }};
 
-                        /// <summary>
-                        /// The number of members in the enum.
-                        /// </summary>
+                        /// <summary>The number of members in the enum.</summary>
                         public const global::System.Int32 MembersCount = {0};
 
-                        /// <summary>
-                        /// Retrieves an array of the values of the members defined in <see cref="{1}" />.
-                        /// </summary>
+                        /// <summary>Retrieves an array of the values of the members defined in <see cref="{1}" />.</summary>
                         /// <returns>An array of the values defined in <see cref="{1}" />.</returns>
                         public static {1}[] GetValues() => _values;
 
-                        /// <summary>
-                        /// Retrieves an array of the underlying vales of the members defined in <see cref="{1}" />
-                        /// </summary>
+                        /// <summary>Retrieves an array of the underlying vales of the members defined in <see cref="{1}" /></summary>
                         /// <returns>An array of the underlying values defined in <see cref="{1}" />.</returns>
                         public static {2}[] GetUnderlyingValues() => _underlyingValues;
 
-                        /// <summary>
-                        /// Retrieves an array of the names of the members defined in <see cref="{1}" />
-                        /// </summary>
+                        /// <summary>Retrieves an array of the names of the members defined in <see cref="{1}" /></summary>
                         /// <returns>An array of the names of the members defined in <see cref="{1}" />.</returns>
                         public static global::System.String[] GetNames() => _names;
 

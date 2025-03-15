@@ -21,7 +21,4 @@
     <Project Path="test\FastEnum.Extensions.Generator.Tests.Integration\FastEnum.Extensions.Generator.Tests.Integration.csproj" />
     <Project Path="test\FastEnum.Extensions.Generator.Tests.Snapshot\FastEnum.Extensions.Generator.Tests.Snapshot.csproj" />
   </Folder>
-  <Properties Name="Visual Studio">
-    <Property Name="OpenWith" Value="17" />
-  </Properties>
 </Solution>

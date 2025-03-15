@@ -5,9 +5,7 @@
 
 namespace SnapshotTesting;
 
-/// <summary>
-/// Extension methods for <see cref="SnapshotTesting.NoneUniqueOption" />
-/// </summary>
+/// <summary>Extension methods for <see cref="SnapshotTesting.NoneUniqueOption" /></summary>
 public static class NoneUniqueOptionExtensions
 {
     private static readonly global::System.Int32[] _underlyingValues =
@@ -37,26 +35,18 @@ public static class NoneUniqueOptionExtensions
         nameof(SnapshotTesting.NoneUniqueOption.IsDefined),
     };
 
-    /// <summary>
-    /// The number of members in the enum.
-    /// </summary>
+    /// <summary>The number of members in the enum.</summary>
     public const global::System.Int32 MembersCount = 5;
 
-    /// <summary>
-    /// Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.NoneUniqueOption" />.
-    /// </summary>
+    /// <summary>Retrieves an array of the values of the members defined in <see cref="SnapshotTesting.NoneUniqueOption" />.</summary>
     /// <returns>An array of the values defined in <see cref="SnapshotTesting.NoneUniqueOption" />.</returns>
     public static SnapshotTesting.NoneUniqueOption[] GetValues() => _values;
 
-    /// <summary>
-    /// Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.NoneUniqueOption" />
-    /// </summary>
+    /// <summary>Retrieves an array of the underlying vales of the members defined in <see cref="SnapshotTesting.NoneUniqueOption" /></summary>
     /// <returns>An array of the underlying values defined in <see cref="SnapshotTesting.NoneUniqueOption" />.</returns>
     public static global::System.Int32[] GetUnderlyingValues() => _underlyingValues;
 
-    /// <summary>
-    /// Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.NoneUniqueOption" />
-    /// </summary>
+    /// <summary>Retrieves an array of the names of the members defined in <see cref="SnapshotTesting.NoneUniqueOption" /></summary>
     /// <returns>An array of the names of the members defined in <see cref="SnapshotTesting.NoneUniqueOption" />.</returns>
     public static global::System.String[] GetNames() => _names;
 
