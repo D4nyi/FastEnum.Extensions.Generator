@@ -11,15 +11,16 @@ namespace FastEnum.Extensions.Generator.Tests.Snapshot;
 
 public sealed class EnumToStringGeneratorTests
 {
+    private static readonly Func<GeneratorDriverRunResult, TimeSpan> GetElapsedTimeDelegate = (Func<GeneratorDriverRunResult, TimeSpan>)Delegate.CreateDelegate(
+        typeof(Func<GeneratorDriverRunResult, TimeSpan>),
+        typeof(GeneratorDriverRunResult).GetProperty("ElapsedTime", BindingFlags.Instance | BindingFlags.NonPublic)!.GetMethod!
+    );
+
     private readonly ITestOutputHelper _output;
-    private readonly Func<GeneratorDriverRunResult, TimeSpan> GetElapsedTimeDelegate;
 
     public EnumToStringGeneratorTests(ITestOutputHelper output)
     {
         _output = output;
-
-        PropertyInfo property = typeof(GeneratorDriverRunResult).GetProperty("ElapsedTime", BindingFlags.Instance | BindingFlags.NonPublic)!;
-        GetElapsedTimeDelegate = (Func<GeneratorDriverRunResult, TimeSpan>)Delegate.CreateDelegate(typeof(Func<GeneratorDriverRunResult, TimeSpan>), property.GetMethod!);
     }
 
     [Fact]
