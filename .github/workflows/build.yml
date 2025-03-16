@@ -59,7 +59,7 @@ jobs:
 #          cache: true
 #          cache-dependency-path: '${{ env.NUGET_PACKAGES }}/**/package-lock.json'
       - name: Restore
-        run: dotnet restore ./FastEnumExtensions.sln
+        run: dotnet restore ./FastEnumExtensions.sln --locked-mode
       - name: List
         run: |
           dotnet nuget locals all --list
