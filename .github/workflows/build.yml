@@ -37,7 +37,7 @@ on:
 
 env:
   BUILD_CONFIGURATION: Debug
-  #NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+#  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
   build:
@@ -56,10 +56,12 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
           dotnet-quality: ga
-          cache: true
+#          cache: true
 #          cache-dependency-path: '${{ env.NUGET_PACKAGES }}/**/package-lock.json'
       - name: Restore
         run: dotnet restore ./FastEnumExtensions.sln
+      - name: List
+        run: ls -lah ${{ github.workspace }}/.nuget/packages
       - name: Build
         run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
 
