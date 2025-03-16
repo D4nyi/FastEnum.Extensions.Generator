@@ -49,6 +49,7 @@ jobs:
 
   build:
     name: Build (${{ matrix.dotnet-version }})
+    needs: checkout
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -67,6 +68,7 @@ jobs:
 
   test:
     name: Test (${{ matrix.dotnet-version }})
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -85,6 +87,7 @@ jobs:
 
   analyze:
     name: Analyze (${{ matrix.language }})
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
