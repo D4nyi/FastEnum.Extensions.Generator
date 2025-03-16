@@ -62,7 +62,7 @@ jobs:
           dotnet-quality: ga
           cache: true
       - name: Restore dependencies
-        run: dotnet restore ./FastEnumExtensions.sln --use-current-runtime --locked-mode
+        run: dotnet restore ./FastEnumExtensions.sln --use-current-runtime
       - name: Build
         run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
 
