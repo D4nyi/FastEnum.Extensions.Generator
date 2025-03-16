@@ -40,14 +40,33 @@ env:
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
-  build:
-    name: Build (${{ matrix.dotnet-version }})
+  restore:
+    name: Restore
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    steps:
+      - name: Checkout Git
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+          dotnet-quality: ga
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - name: Restore
+        run: dotnet restore ./FastEnumExtensions.sln --locked-mode
+
+  test:
+    name: Test (${{ matrix.dotnet-version }})
+    needs: restore
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: [ 9.0.x ]
+        dotnet-version: [ 8.0.x, 9.0.x ]
+    permissions:
+      contents: read
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
@@ -58,29 +77,8 @@ jobs:
           dotnet-quality: ga
           cache: true
           cache-dependency-path: '**/packages.lock.json'
-      - name: Restore
-        run: dotnet restore ./FastEnumExtensions.sln --locked-mode
-      - name: List
-        run: |
-          dotnet nuget locals all --list
-          ls -lah ${{ github.workspace }}/.nuget/packages
-      - name: Build
+      - name: Build (${{ matrix.dotnet-version }})
         run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
-
-  test:
-    name: Test (${{ matrix.dotnet-version }})
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: [ 8.0.x, 9.0.x ]
-    steps:
-#      - name: Setup .NET (${{ matrix.dotnet-version }})
-#        uses: actions/setup-dotnet@v4
-#        with:
-#          dotnet-version: ${{ matrix.dotnet-version }}
-#          dotnet-quality: ga
-#          cache: true
       - name: Integration Tests
         run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build --no-restore --nologo -c ${{ inputs.configuration }}
       - name: Snapshot Tests
@@ -88,7 +86,7 @@ jobs:
 
   analyze:
     name: Analyze (${{ matrix.language }})
-    needs: build
+    needs: restore
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -96,7 +94,7 @@ jobs:
           - language: actions
             build-mode: none
           - language: csharp
-            build-mode: autobuild
+            build-mode: manual
     permissions:
       # required for all workflows
       security-events: write
@@ -115,13 +113,7 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
       - if: matrix.build-mode == 'manual'
         shell: bash
-        run: |
-          echo 'If you are using a "manual" build mode for one or more of the' \
-            'languages you are analyzing, replace this with the commands to build' \
-            'your code, for example:'
-          echo '  make bootstrap'
-          echo '  make release'
-          exit 1
+        run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
