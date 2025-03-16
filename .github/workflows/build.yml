@@ -37,7 +37,7 @@ on:
 
 env:
   BUILD_CONFIGURATION: Debug
-  #NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
   checkout:
@@ -62,7 +62,7 @@ jobs:
           dotnet-quality: ga
           cache: true
       - name: Restore dependencies
-        run: dotnet restore ./FastEnumExtensions.sln --use-current-runtime
+        run: dotnet restore ./FastEnumExtensions.sln --use-current-runtime --locked-mode
       - name: Build
         run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
 

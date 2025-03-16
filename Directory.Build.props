@@ -19,6 +19,11 @@
         <ManagePackageVersionsCentrally>True</ManagePackageVersionsCentrally>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    </PropertyGroup>
+
     <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Generator')) == false">
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     </PropertyGroup>
