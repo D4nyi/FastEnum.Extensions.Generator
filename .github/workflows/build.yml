@@ -60,7 +60,7 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
           dotnet-quality: ga
-          cache: true
+#          cache: true
       - name: Restore dependencies
         run: dotnet restore ./FastEnumExtensions.sln --use-current-runtime
       - name: Build
