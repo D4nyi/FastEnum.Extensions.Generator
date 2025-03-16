@@ -56,8 +56,8 @@ jobs:
           dotnet-quality: ga
 #          cache: true
 #          cache-dependency-path: '${{ env.NUGET_PACKAGES }}/**/package-lock.json'
-      - name: Restore dependencies
-        run: dotnet restore ./FastEnumExtensions.sln --use-current-runtime
+      - name: Restore
+        run: dotnet restore ./FastEnumExtensions.sln
       - name: Build
         run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
 
