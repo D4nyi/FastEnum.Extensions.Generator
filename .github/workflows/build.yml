@@ -56,8 +56,8 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
           dotnet-quality: ga
-#          cache: true
-#          cache-dependency-path: '${{ env.NUGET_PACKAGES }}/**/package-lock.json'
+          cache: true
+          cache-dependency-path: '**/package-lock.json'
       - name: Restore
         run: dotnet restore ./FastEnumExtensions.sln --locked-mode
       - name: List
