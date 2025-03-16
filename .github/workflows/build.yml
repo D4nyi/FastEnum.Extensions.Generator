@@ -37,7 +37,7 @@ on:
 
 env:
   BUILD_CONFIGURATION: Debug
-#  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
   build:
@@ -61,7 +61,9 @@ jobs:
       - name: Restore
         run: dotnet restore ./FastEnumExtensions.sln
       - name: List
-        run: ls -lah ${{ github.workspace }}/.nuget/packages
+        run: |
+          dotnet nuget locals all --list
+          ls -lah ${{ github.workspace }}/.nuget/packages
       - name: Build
         run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
 
