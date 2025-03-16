@@ -43,9 +43,11 @@ jobs:
   build:
     name: Build (${{ matrix.dotnet-version }})
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
-        dotnet-version: [ 8.0.x, 9.0.x ]
+        dotnet-version: [ 8.0.x ]
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
@@ -57,9 +59,9 @@ jobs:
 #          cache: true
 #          cache-dependency-path: '${{ env.NUGET_PACKAGES }}/**/package-lock.json'
       - name: Restore
-        run: dotnet restore ./FastEnumExtensions.sln
+        run: dotnet restore ./FastEnumExtensions.sln --runtime net8.0
       - name: Build
-        run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
+        run: dotnet build ./FastEnumExtensions.sln --runtime net8.0 --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
 
   test:
     name: Test (${{ matrix.dotnet-version }})
