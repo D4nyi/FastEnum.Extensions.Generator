@@ -61,6 +61,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
           dotnet-quality: ga
           cache: true
+          cache-dependency-path: '**/package-lock.json'
       - name: Restore dependencies
         run: dotnet restore ./FastEnumExtensions.sln --use-current-runtime --locked-mode
       - name: Build
