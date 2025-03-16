@@ -10,32 +10,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: |
-          8.0.x
-          9.0.x
-        dotnet-quality: ga
-
-    - name: Set Version
-      run: |
-        releaseYear=$(date -u +"%Y")
-        buildTime=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-        version=$(sed -rn "s/^.*Version = \"(.*)\";/\1/p" ./src/FastEnum.Extensions.Generator/Constants.cs)
-        sed -i -e "s/<Version>/${version}/" -e "s/<BuildTime>/${buildTime}/" -e "s/<ReleaseYear>/${releaseYear}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
-        sed -i -e "s/1.0.0/${version}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
-
-        echo "version=${version}" >> $GITHUB_ENV
-      shell: bash
 
     - name: Restore dependencies
-      run: dotnet restore ./FastEnumExtensions.sln --force --use-current-runtime --no-http-cache
+      run: dotnet restore ./FastEnumExtensions.slnx --use-current-runtime --locked-mode
       shell: bash
 
     - name: Build
-      run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ inputs.configuration }}
+      run: dotnet build ./FastEnumExtensions.slnx --no-restore --nologo -c ${{ inputs.configuration }}
       shell: bash
 
     - name: Integration Tests
