@@ -40,21 +40,15 @@ env:
 #  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
-  checkout:
-    name: Checkout
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Git
-        uses: actions/checkout@v4
-
   build:
     name: Build (${{ matrix.dotnet-version }})
-    needs: checkout
     runs-on: ubuntu-latest
     strategy:
       matrix:
         dotnet-version: [ 8.0.x, 9.0.x ]
     steps:
+      - name: Checkout Git
+        uses: actions/checkout@v4
       - name: Setup .NET (${{ matrix.dotnet-version }})
         uses: actions/setup-dotnet@v4
         with:
