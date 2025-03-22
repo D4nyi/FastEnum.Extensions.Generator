@@ -102,6 +102,14 @@ jobs:
           key: ${{ runner.os }}-nuget-
       - name: Cache hit
         run: echo '${{ steps.restore.outputs.cache-hit }}'
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cache
+          path: |
+            ${{ env.NUGET_PACKAGES }}
+            ./src/*/obj/project.*
+            ./test/*/obj/project.*
       - name: Setup .NET (${{ matrix.dotnet-version }})
         uses: actions/setup-dotnet@v4
         id: setup
