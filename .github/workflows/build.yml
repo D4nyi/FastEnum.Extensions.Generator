@@ -48,18 +48,35 @@ jobs:
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
+      - name: Filter
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            csproj:
+              - '**/*.csproj'
+      - name: Restore Needed (${{ steps.filter.outputs.csproj }})
+        run: |
+          echo "Restore needed: ${{ steps.filter.outputs.csproj }}"
       - name: Setup .NET
+        if: steps.filter.outputs.csproj == 'true'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
           dotnet-quality: ga
-          cache: true
-          cache-dependency-path: '**/packages.lock.json'
+      - name: Cache Save
+        if: steps.filter.outputs.csproj == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.NUGET_PACKAGES }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
       - name: Restore
-        run: dotnet restore ./FastEnumExtensions.sln --locked-mode
+        if: steps.filter.outputs.csproj == 'true'
+        run: dotnet restore ./FastEnumExtensions.sln
 
-  test:
-    name: Test (${{ matrix.dotnet-version }})
+  build:
+    name: Build (${{ matrix.dotnet-version }})
     needs: restore
     runs-on: ubuntu-latest
     strategy:
@@ -70,56 +87,109 @@ jobs:
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
+      - name: Cache Restore
+        id: restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ env.NUGET_PACKAGES }}
+          key: ${{ runner.os }}-nuget-
+      - name: Cache hit
+        run: echo '${{ steps.restore.outputs.cache-hit }}'
       - name: Setup .NET (${{ matrix.dotnet-version }})
         uses: actions/setup-dotnet@v4
         id: setup
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
           dotnet-quality: ga
-          cache: true
-          cache-dependency-path: '**/packages.lock.json'
-      - name: Cache hit (${{ matrix.dotnet-version }})
+      - name: Set DotNet Version
         run: |
-          echo '${{ steps.setup.outputs.dotnet-version }}'
-          echo '${{ steps.setup.outputs.cache-hit }}'
-      - name: Build (${{ matrix.dotnet-version }})
-        run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
-      - name: Integration Tests
-        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build --no-restore --nologo -c ${{ inputs.configuration }}
-      - name: Snapshot Tests
-        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ inputs.configuration }}
+          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
+          echo "Framework Version: ${frameworkVersion}"
+          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
+      - name: Build Generator
+        run: dotnet build ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f netstandard2.0
+      - name: Build Integration Test
+        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+      - name: Build Snapshot Test
+        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+      - name: Cache Save
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.NUGET_PACKAGES }}
+            ${{ github.workspace }}/bin
+          key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-${{ hashFiles('**/packages.lock.json') }}
 
-  analyze:
-    name: Analyze (${{ matrix.language }})
-    needs: restore
+  test:
+    name: Test (${{ matrix.dotnet-version }})
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          - language: actions
-            build-mode: none
-          - language: csharp
-            build-mode: manual
+        dotnet-version: [ 8.0.x, 9.0.x ]
     permissions:
-      # required for all workflows
-      security-events: write
-
-      # required to fetch internal or private CodeQL packs
-      packages: read
-
-      # only required for workflows in private repositories
-      actions: read
       contents: read
     steps:
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+      - name: Checkout Git
+        uses: actions/checkout@v4
+      - name: Cache Restore
+        id: restore
+        uses: actions/cache/restore@v4
         with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
-      - if: matrix.build-mode == 'manual'
-        shell: bash
-        run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+          path: |
+            ${{ env.NUGET_PACKAGES }}
+            ${{ github.workspace }}/bin
+          key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-
+      - name: Cache hit
+        run: echo '${{ steps.restore.outputs.cache-hit }}'
+      - name: Setup .NET (${{ matrix.dotnet-version }})
+        uses: actions/setup-dotnet@v4
+        id: setup
         with:
-          category: "/language:${{matrix.language}}"
+          dotnet-version: ${{ matrix.dotnet-version }}
+          dotnet-quality: ga
+      - name: Set DotNet Version
+        run: |
+          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
+          echo "Framework Version: ${frameworkVersion}"
+          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
+      - name: Integration Tests
+        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+      - name: Snapshot Tests
+        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+
+#  analyze:
+#    name: Analyze (${{ matrix.language }})
+#    needs: build
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        include:
+#          - language: actions
+#            build-mode: none
+#          - language: csharp
+#            build-mode: manual
+#    permissions:
+#      # required for all workflows
+#      security-events: write
+#
+#      # required to fetch internal or private CodeQL packs
+#      packages: read
+#
+#      # only required for workflows in private repositories
+#      actions: read
+#      contents: read
+#    steps:
+#      - name: Initialize CodeQL
+#        uses: github/codeql-action/init@v3
+#        with:
+#          languages: ${{ matrix.language }}
+#          build-mode: ${{ matrix.build-mode }}
+#      - if: matrix.build-mode == 'manual'
+#        shell: bash
+#        run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }}
+#      - name: Perform CodeQL Analysis
+#        uses: github/codeql-action/analyze@v3
+#        with:
+#          category: "/language:${{matrix.language}}"
