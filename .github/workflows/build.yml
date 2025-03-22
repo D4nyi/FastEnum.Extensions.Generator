@@ -69,13 +69,11 @@ jobs:
       - name: Restore
         if: steps.filter.outputs.csproj == 'true'
         run: dotnet restore ./FastEnumExtensions.sln
-      - name: Print
-        run: ls -lah ${{ env.NUGET_PACKAGES }}
       - name: Cache Save
         if: steps.filter.outputs.csproj == 'true'
         uses: actions/cache/save@v4
         with:
-          path:
+          path: |
             '${{ env.NUGET_PACKAGES }}'
             './src/*/obj/project.*'
             './test/*/obj/project.*'
@@ -97,12 +95,10 @@ jobs:
         id: restore
         uses: actions/cache/restore@v4
         with:
-          path:
+          path: |
             '${{ env.NUGET_PACKAGES }}'
-            './src/*/obj/project.assets.json'
-            './src/*/obj/project.nuget.cache'
-            './test/*/obj/project.assets.json'
-            './test/*/obj/project.nuget.cache'
+            './src/*/obj/project.*'
+            './test/*/obj/project.*'
           key: ${{ runner.os }}-nuget-
       - name: Cache hit
         run: echo '${{ steps.restore.outputs.cache-hit }}'
@@ -145,12 +141,10 @@ jobs:
         id: restore
         uses: actions/cache/restore@v4
         with:
-          path:
+          path: |
             '${{ env.NUGET_PACKAGES }}'
-            './src/*/obj/project.assets.json'
-            './src/*/obj/project.nuget.cache'
-            './test/*/obj/project.assets.json'
-            './test/*/obj/project.nuget.cache'
+            './src/*/obj/project.*'
+            './test/*/obj/project.*'
             ${{ github.workspace }}/bin
           key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-
       - name: Cache hit
