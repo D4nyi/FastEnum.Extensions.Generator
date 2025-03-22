@@ -60,9 +60,6 @@ jobs:
       - name: Restore Needed (${{ steps.filter.outputs.csproj }})
         run: |
           echo "Restore needed: ${{ steps.filter.outputs.csproj }}"
-          echo ${{ github.workspace }}
-          realpath ./src/*/obj/project.assets.json
-          realpath ./test/*/obj/project.nuget.cache
       - name: Setup .NET
         if: steps.filter.outputs.csproj == 'true'
         uses: actions/setup-dotnet@v4
@@ -72,6 +69,12 @@ jobs:
       - name: Restore
         if: steps.filter.outputs.csproj == 'true'
         run: dotnet restore ./FastEnumExtensions.sln
+      - name: Print
+        run: |
+          echo ${{ github.workspace }}
+          ls -lah ./src/FastEnum.Extensions.Generator/obj/
+          realpath ./src/*/obj/project.assets.json
+          realpath ./test/*/obj/project.nuget.cache
       - name: Cache Save
         if: steps.filter.outputs.csproj == 'true'
         uses: actions/cache/save@v4
