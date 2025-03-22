@@ -60,6 +60,9 @@ jobs:
       - name: Restore Needed (${{ steps.filter.outputs.csproj }})
         run: |
           echo "Restore needed: ${{ steps.filter.outputs.csproj }}"
+          echo ${{ github.workspace }}
+          realpath ./src/*/obj/project.assets.json
+          realpath ./test/*/obj/project.nuget.cache
       - name: Setup .NET
         if: steps.filter.outputs.csproj == 'true'
         uses: actions/setup-dotnet@v4
