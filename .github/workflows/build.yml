@@ -75,7 +75,7 @@ jobs:
         if: steps.filter.outputs.csproj == 'true'
         uses: actions/cache/save@v4
         with:
-          path: |
+          path:
             '${{ env.NUGET_PACKAGES }}'
             './src/*/obj/project.*'
             './test/*/obj/project.*'
@@ -97,7 +97,7 @@ jobs:
         id: restore
         uses: actions/cache/restore@v4
         with:
-          path: |
+          path:
             '${{ env.NUGET_PACKAGES }}'
             './src/*/obj/project.assets.json'
             './src/*/obj/project.nuget.cache'
@@ -145,7 +145,7 @@ jobs:
         id: restore
         uses: actions/cache/restore@v4
         with:
-          path: |
+          path:
             '${{ env.NUGET_PACKAGES }}'
             './src/*/obj/project.assets.json'
             './src/*/obj/project.nuget.cache'
