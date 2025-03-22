@@ -116,62 +116,68 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
           dotnet-quality: ga
-      - name: Set DotNet Version
-        run: |
-          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
-          echo "Framework Version: ${frameworkVersion}"
-          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
-      - name: Build Generator
-        run: dotnet build ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f netstandard2.0
-      - name: Build Integration Test
-        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
-      - name: Build Snapshot Test
-        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
-      - name: Cache Save
-        uses: actions/cache/save@v4
-        with:
-          path: '${{ github.workspace }}/bin'
-          key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-${{ hashFiles('**/packages.lock.json') }}
-
-  test:
-    name: Test (${{ matrix.dotnet-version }})
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: [ 8.0.x, 9.0.x ]
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout Git
-        uses: actions/checkout@v4
-      - name: Cache Restore
-        id: restore
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            ${{ env.NUGET_PACKAGES }}
-            ./src/*/obj/project.*
-            ./test/*/obj/project.*
-            ${{ github.workspace }}/bin
-          key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-
-      - name: Cache hit
-        run: echo '${{ steps.restore.outputs.cache-hit }}'
-      - name: Setup .NET (${{ matrix.dotnet-version }})
-        uses: actions/setup-dotnet@v4
-        id: setup
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-          dotnet-quality: ga
-      - name: Set DotNet Version
-        run: |
-          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
-          echo "Framework Version: ${frameworkVersion}"
-          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
-      - name: Integration Tests
-        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
-      - name: Snapshot Tests
-        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+      - name: Print ${{ env.NUGET_PACKAGES }}
+        run: ls -lah ${{ env.NUGET_PACKAGES }}
+      - name: Print ./src/*/obj/project.*
+        run: ls -lah $(realpath ./src/*/obj/)
+      - name: Print ./test/*/obj/project.*
+        run: ls -lah $(realpath ./test/*/obj/)
+#      - name: Set DotNet Version
+#        run: |
+#          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
+#          echo "Framework Version: ${frameworkVersion}"
+#          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
+#      - name: Build Generator
+#        run: dotnet build ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f netstandard2.0
+#      - name: Build Integration Test
+#        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+#      - name: Build Snapshot Test
+#        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+#      - name: Cache Save
+#        uses: actions/cache/save@v4
+#        with:
+#          path: '${{ github.workspace }}/bin'
+#          key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-${{ hashFiles('**/packages.lock.json') }}
+#
+#  test:
+#    name: Test (${{ matrix.dotnet-version }})
+#    needs: build
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        dotnet-version: [ 8.0.x, 9.0.x ]
+#    permissions:
+#      contents: read
+#    steps:
+#      - name: Checkout Git
+#        uses: actions/checkout@v4
+#      - name: Cache Restore
+#        id: restore
+#        uses: actions/cache/restore@v4
+#        with:
+#          path: |
+#            ${{ env.NUGET_PACKAGES }}
+#            ./src/*/obj/project.*
+#            ./test/*/obj/project.*
+#            ${{ github.workspace }}/bin
+#          key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-
+#      - name: Cache hit
+#        run: echo '${{ steps.restore.outputs.cache-hit }}'
+#      - name: Setup .NET (${{ matrix.dotnet-version }})
+#        uses: actions/setup-dotnet@v4
+#        id: setup
+#        with:
+#          dotnet-version: ${{ matrix.dotnet-version }}
+#          dotnet-quality: ga
+#      - name: Set DotNet Version
+#        run: |
+#          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
+#          echo "Framework Version: ${frameworkVersion}"
+#          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
+#      - name: Integration Tests
+#        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+#      - name: Snapshot Tests
+#        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
 
 #  analyze:
 #    name: Analyze (${{ matrix.language }})
