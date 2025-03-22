@@ -17,6 +17,12 @@
         <WarningsAsErrors>CA2021</WarningsAsErrors>
 
         <ManagePackageVersionsCentrally>True</ManagePackageVersionsCentrally>
+        <BaseOutputPath>..\..\bin</BaseOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Generator')) == false">
