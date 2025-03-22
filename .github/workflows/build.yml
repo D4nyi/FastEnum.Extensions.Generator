@@ -55,6 +55,8 @@ jobs:
           filters: |
             csproj:
               - '**/*.csproj'
+              - "./Directory.Build.props"
+              - "./Directory.Packages.props"
       - name: Restore Needed (${{ steps.filter.outputs.csproj }})
         run: |
           echo "Restore needed: ${{ steps.filter.outputs.csproj }}"
@@ -69,7 +71,11 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: |
-            ${{ env.NUGET_PACKAGES }}
+            '${{ env.NUGET_PACKAGES }}'
+            './src/*/obj/*.json'
+            './src/*/obj/*.project.nuget.cache'
+            './test/*/obj/*.json'
+            './test/*/obj/*.project.nuget.cache'
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
       - name: Restore
         if: steps.filter.outputs.csproj == 'true'
@@ -92,7 +98,11 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: |
-            ${{ env.NUGET_PACKAGES }}
+            '${{ env.NUGET_PACKAGES }}'
+            './src/*/obj/*.json'
+            './src/*/obj/*.project.nuget.cache'
+            './test/*/obj/*.json'
+            './test/*/obj/*.project.nuget.cache'
           key: ${{ runner.os }}-nuget-
       - name: Cache hit
         run: echo '${{ steps.restore.outputs.cache-hit }}'
@@ -116,9 +126,7 @@ jobs:
       - name: Cache Save
         uses: actions/cache/save@v4
         with:
-          path: |
-            ${{ env.NUGET_PACKAGES }}
-            ${{ github.workspace }}/bin
+          path: '${{ github.workspace }}/bin'
           key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-${{ hashFiles('**/packages.lock.json') }}
 
   test:
@@ -138,7 +146,11 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: |
-            ${{ env.NUGET_PACKAGES }}
+            '${{ env.NUGET_PACKAGES }}'
+            './src/*/obj/*.json'
+            './src/*/obj/*.project.nuget.cache'
+            './test/*/obj/*.json'
+            './test/*/obj/*.project.nuget.cache'
             ${{ github.workspace }}/bin
           key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-
       - name: Cache hit
