@@ -69,22 +69,14 @@ jobs:
       - name: Restore
         if: steps.filter.outputs.csproj == 'true'
         run: dotnet restore ./FastEnumExtensions.sln
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: cache
-          path: |
-            ${{ env.NUGET_PACKAGES }}
-            ./src/*/obj/project.*
-            ./test/*/obj/project.*
       - name: Cache Save
         if: steps.filter.outputs.csproj == 'true'
         uses: actions/cache/save@v4
         with:
           path: |
             ${{ env.NUGET_PACKAGES }}
-            ./src/*/obj/project.*
-            ./test/*/obj/project.*
+            **/obj/project.*
+            **/obj/*.csproj.nuget.*
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
 
   build:
@@ -105,8 +97,8 @@ jobs:
         with:
           path: |
             ${{ env.NUGET_PACKAGES }}
-            ./src/*/obj/project.*
-            ./test/*/obj/project.*
+            **/obj/project.*
+            **/obj/*.csproj.nuget.*
           key: ${{ runner.os }}-nuget-
       - name: Cache hit
         run: echo '${{ steps.restore.outputs.cache-hit }}'
@@ -157,8 +149,8 @@ jobs:
 #        with:
 #          path: |
 #            ${{ env.NUGET_PACKAGES }}
-#            ./src/*/obj/project.*
-#            ./test/*/obj/project.*
+#            **/obj/project.*
+#            **/obj/*.csproj.nuget.*
 #            ${{ github.workspace }}/bin
 #          key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-
 #      - name: Cache hit
