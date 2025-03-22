@@ -108,19 +108,15 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
           dotnet-quality: ga
-      - name: Print ${{ env.NUGET_PACKAGES }}
-        run: ls -lah ${{ env.NUGET_PACKAGES }}
-      - name: Print ./src/*/obj/project.*
-        run: ls -lah $(realpath ./src/*/obj/)
-      - name: Print ./test/*/obj/project.*
-        run: ls -lah $(realpath ./test/*/obj/)
-#      - name: Set DotNet Version
-#        run: |
-#          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
-#          echo "Framework Version: ${frameworkVersion}"
-#          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
-#      - name: Build Generator
-#        run: dotnet build ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f netstandard2.0
+      - name: Print
+        run: echo ${{ github.workspace }}/bin
+      - name: Set DotNet Version
+        run: |
+          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
+          echo "Framework Version: ${frameworkVersion}"
+          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
+      - name: Build Generator
+        run: dotnet build ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f netstandard2.0
 #      - name: Build Integration Test
 #        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
 #      - name: Build Snapshot Test
