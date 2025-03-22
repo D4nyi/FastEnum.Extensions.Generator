@@ -72,10 +72,10 @@ jobs:
         with:
           path: |
             '${{ env.NUGET_PACKAGES }}'
-            './src/*/obj/*.json'
-            './src/*/obj/*.project.nuget.cache'
-            './test/*/obj/*.json'
-            './test/*/obj/*.project.nuget.cache'
+            './src/*/obj/project.assets.json'
+            './src/*/obj/project.nuget.cache'
+            './test/*/obj/project.assets.json'
+            './test/*/obj/project.nuget.cache'
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
       - name: Restore
         if: steps.filter.outputs.csproj == 'true'
@@ -99,10 +99,10 @@ jobs:
         with:
           path: |
             '${{ env.NUGET_PACKAGES }}'
-            './src/*/obj/*.json'
-            './src/*/obj/*.project.nuget.cache'
-            './test/*/obj/*.json'
-            './test/*/obj/*.project.nuget.cache'
+            './src/*/obj/project.assets.json'
+            './src/*/obj/project.nuget.cache'
+            './test/*/obj/project.assets.json'
+            './test/*/obj/project.nuget.cache'
           key: ${{ runner.os }}-nuget-
       - name: Cache hit
         run: echo '${{ steps.restore.outputs.cache-hit }}'
@@ -147,10 +147,10 @@ jobs:
         with:
           path: |
             '${{ env.NUGET_PACKAGES }}'
-            './src/*/obj/*.json'
-            './src/*/obj/*.project.nuget.cache'
-            './test/*/obj/*.json'
-            './test/*/obj/*.project.nuget.cache'
+            './src/*/obj/project.assets.json'
+            './src/*/obj/project.nuget.cache'
+            './test/*/obj/project.assets.json'
+            './test/*/obj/project.nuget.cache'
             ${{ github.workspace }}/bin
           key: ${{ runner.os }}-${{ matrix.dotnet-version }}-${{ env.BUILD_CONFIGURATION }}-
       - name: Cache hit
