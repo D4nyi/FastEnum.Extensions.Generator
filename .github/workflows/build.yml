@@ -66,6 +66,9 @@ jobs:
         with:
           dotnet-version: 9.0.x
           dotnet-quality: ga
+      - name: Restore
+        if: steps.filter.outputs.csproj == 'true'
+        run: dotnet restore ./FastEnumExtensions.sln
       - name: Cache Save
         if: steps.filter.outputs.csproj == 'true'
         uses: actions/cache/save@v4
@@ -77,9 +80,6 @@ jobs:
             './test/*/obj/project.assets.json'
             './test/*/obj/project.nuget.cache'
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-      - name: Restore
-        if: steps.filter.outputs.csproj == 'true'
-        run: dotnet restore ./FastEnumExtensions.sln
 
   build:
     name: Build (${{ matrix.dotnet-version }})
