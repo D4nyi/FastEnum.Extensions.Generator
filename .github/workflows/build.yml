@@ -70,21 +70,15 @@ jobs:
         if: steps.filter.outputs.csproj == 'true'
         run: dotnet restore ./FastEnumExtensions.sln
       - name: Print
-        run: |
-          echo ${{ github.workspace }}
-          ls -lah ./src/FastEnum.Extensions.Generator/obj/
-          realpath ./src/*/obj/project.assets.json
-          realpath ./test/*/obj/project.nuget.cache
+        run: ls -lah ${{ env.NUGET_PACKAGES }}
       - name: Cache Save
         if: steps.filter.outputs.csproj == 'true'
         uses: actions/cache/save@v4
         with:
           path: |
             '${{ env.NUGET_PACKAGES }}'
-            './src/*/obj/project.assets.json'
-            './src/*/obj/project.nuget.cache'
-            './test/*/obj/project.assets.json'
-            './test/*/obj/project.nuget.cache'
+            './src/*/obj/project.*'
+            './test/*/obj/project.*'
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
 
   build:
