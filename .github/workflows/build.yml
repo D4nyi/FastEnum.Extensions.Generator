@@ -48,15 +48,14 @@ jobs:
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
-      - name: Setup .NET (${{ matrix.dotnet-version }})
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
-        id: setup
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
+          dotnet-version: 9.0.x
           dotnet-quality: ga
       - name: Set DotNet Version
         run: |
-          frameworkVersion=`echo 'net${{ steps.setup.outputs.dotnet-version }}' | cut -c1-6`
+          frameworkVersion=`echo 'net${{ matrix.dotnet-version }}' | cut -c1-6`
           echo "Framework Version: ${frameworkVersion}"
           echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
       - name: Restore
