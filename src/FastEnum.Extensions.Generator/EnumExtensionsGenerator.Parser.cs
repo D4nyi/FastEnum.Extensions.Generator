@@ -16,7 +16,7 @@ public sealed partial class EnumExtensionsGenerator
         title: "Invalid visibility modifier",
         messageFormat: "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
+        defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "Current generation strategy only supports extension generation for enums with `public` or `internal` visibility modifiers.",
         helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",

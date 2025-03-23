@@ -1,0 +1,32 @@
+﻿name: "Resolve Version"
+description: "Resolves the package version"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get Tags
+      id: get_latest_release
+      uses: octokit/request-action@v2.x
+      with:
+        mediaType: 'application/json'
+        route: GET /repos/${{ github.repository }}/git/matching-refs/tags
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Store Response
+      run: |
+        tags=$(tr -d '\n\t\r ' <<<$(echo ${{ toJSON(steps.get_latest_release.outputs.data) }} | sed -e 's/\\n//g'))
+        echo "AllTags=${tags}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Set Version
+      run: |
+        releaseYear=$(date -u +"%Y")
+        buildTime=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+        version=$(sed -rn "s/^.*Version = \"(.*)\";/\1/p" ./src/FastEnum.Extensions.Generator/Constants.cs)
+        sed -i -e "s/<Version>/${version}/" -e "s/<BuildTime>/${buildTime}/" -e "s/<ReleaseYear>/${releaseYear}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
+        sed -i -e "s/1.0.0/${version}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
+
+        echo "version=${version}" >> $GITHUB_ENV
+      shell: bash
