@@ -78,6 +78,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - language: actions
@@ -95,6 +96,13 @@ jobs:
       actions: read
       contents: read
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+          dotnet-quality: ga
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
