@@ -33,7 +33,6 @@
         <PackageIcon>enum.png</PackageIcon>
         <PackageIconUrl>https://github.com/D4nyi/FastEnum.Extensions.Generator/blob/main/src/FastEnum.Extensions.Generator/enum.svg</PackageIconUrl>
         <DevelopmentDependency>True</DevelopmentDependency>
-        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <IncludeBuildOutput>False</IncludeBuildOutput> <!-- Do not include the generator as a lib dependency -->
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 
