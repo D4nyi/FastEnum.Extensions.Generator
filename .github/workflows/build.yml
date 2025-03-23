@@ -62,7 +62,7 @@ jobs:
         run: dotnet restore ./FastEnumExtensions.sln
 
       - name: Build Generator
-        run: dotnet build ./FastEnumExtensions.sln --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f netstandard2.0
+        run: dotnet build ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f netstandard2.0
       - name: Build Integration Tests
         run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
       - name: Build Snapshot Tests
