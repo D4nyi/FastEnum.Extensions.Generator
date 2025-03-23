@@ -3,6 +3,10 @@
 
 name: Build & Test
 
+permissions:
+  contents: read
+  pull-requests: write
+
 on:
   push:
     branches:
@@ -11,7 +15,6 @@ on:
     paths-ignore:
       - 'examples/**'
       - 'benchmarks/**'
-      - 'test/FastEnum.Extensions.Generator.Tests.Snapshot/Snapshots/**'
       - '**/*.ps1'
       - .editorconfig
       - .gitattributes
@@ -26,7 +29,6 @@ on:
     paths-ignore:
       - 'examples/**'
       - 'benchmarks/**'
-      - 'test/FastEnum.Extensions.Generator.Tests.Snapshot/Snapshots/**'
       - '**/*.ps1'
       - .editorconfig
       - .gitattributes
@@ -86,33 +88,32 @@ jobs:
           - language: csharp
             build-mode: manual
     permissions:
-      # required for all workflows
       security-events: write
-
-      # required to fetch internal or private CodeQL packs
       packages: read
-
-      # only required for workflows in private repositories
       actions: read
-      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup .NET
+        if: matrix.language == 'csharp'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
           dotnet-quality: ga
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          dependency-caching: true
+
       - name: Manual Build
         if: matrix.build-mode == 'manual'
-        shell: bash
         run: dotnet build ./FastEnumExtensions.sln --nologo -c ${{ env.BUILD_CONFIGURATION }}
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
+          category: "/language:${{ matrix.language }}"

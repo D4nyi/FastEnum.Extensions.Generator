@@ -3,16 +3,22 @@
 
 name: Publish
 
+permissions:
+  contents: read
+  pull-requests: write
+
 on: [ workflow_dispatch ]
 
 env:
   BUILD_CONFIGURATION: Release
-  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
-  publish:
-    name: Publish
+  build:
+    name: Build (${{ matrix.dotnet-version }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ 8.0.x, 9.0.x ]
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
@@ -20,13 +26,96 @@ jobs:
       - name: Prebuild
         uses: ./actions/resolve-version
 
-      - name: Build & Test
-        uses: ./actions/build-n-test
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          configuration: ${{ env.BUILD_CONFIGURATION }}
+          dotnet-version: 9.0.x
+          dotnet-quality: ga
+
+      - name: Set DotNet Version
+        run: |
+          frameworkVersion=`echo 'net${{ matrix.dotnet-version }}' | cut -c1-6`
+          echo "Framework Version: ${frameworkVersion}"
+          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
+
+      - name: Restore
+        run: dotnet restore ./FastEnumExtensions.sln
+
+      - name: Build Generator
+        run: dotnet build ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f netstandard2.0
+      - name: Build Integration Tests
+        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+      - name: Build Snapshot Tests
+        run: dotnet build ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+
+      - name: Integration Tests
+        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Integration/FastEnum.Extensions.Generator.Tests.Integration.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
+      - name: Snapshot Tests
+        run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
 
       - name: Pack
         run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c ${{ env.BUILD_CONFIGURATION }} --no-build --no-restore --nologo -o output /p:PackageVersion=${{ env.version }}
+
+      - name: Save NuGet Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-${{ env.version }}
+          path: ./output/FastEnum.Extensions.Generator*.nupkg
+          retention-days: 1
+
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: csharp
+            build-mode: manual
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+          dotnet-quality: ga
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          dependency-caching: true
+
+      - name: Manual Build
+        if: matrix.build-mode == 'manual'
+        run: dotnet build ./FastEnumExtensions.sln --nologo -c ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  publish:
+    name: Publish
+    needs: [build, analyze]
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Restore NuGet Package
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-${{ env.version }}
 
       - name: Push to NuGet
         run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate

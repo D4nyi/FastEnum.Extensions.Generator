@@ -11,6 +11,10 @@
 #
 name: "CodeQL Advanced"
 
+permissions:
+  contents: read
+  pull-requests: write
+
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -23,7 +27,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners (GitHub.com only)
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     permissions:
       # required for all workflows
       security-events: write
@@ -33,8 +37,6 @@ jobs:
 
       # only required for workflows in private repositories
       actions: read
-      contents: read
-
     strategy:
       fail-fast: false
       matrix:
@@ -42,7 +44,7 @@ jobs:
           - language: actions
             build-mode: none
           - language: csharp
-            build-mode: autobuild
+            build-mode: manual
         # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift'
         # Use `c-cpp` to analyze code written in C, C++ or both
         # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
@@ -54,6 +56,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup .NET
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+          dotnet-quality: ga
 
       # Add any setup steps before running the `github/codeql-action/init` action.
       # This includes steps like installing compilers or runtimes (`actions/setup-node`
@@ -81,15 +90,9 @@ jobs:
       # to build your code.
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-      - if: matrix.build-mode == 'manual'
-        shell: bash
-        run: |
-          echo 'If you are using a "manual" build mode for one or more of the' \
-            'languages you are analyzing, replace this with the commands to build' \
-            'your code, for example:'
-          echo '  make bootstrap'
-          echo '  make release'
-          exit 1
+      - name: Manual Build
+        if: matrix.build-mode == 'manual'
+        run: dotnet build ./FastEnumExtensions.sln --nologo -c ${{ env.BUILD_CONFIGURATION }}
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
