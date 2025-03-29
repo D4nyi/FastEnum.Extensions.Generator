@@ -24,15 +24,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Prebuild 1
-        run: ls -lah ./
-
-      - name: Prebuild 2
-        run: ls -lah ../
+        run: jq --version
 
       - name: Prebuild 3
         uses: ./.github/actions/resolve-version
-        with:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prebuild 4
         run: exit 1

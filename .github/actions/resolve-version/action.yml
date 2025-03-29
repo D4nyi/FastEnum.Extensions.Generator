@@ -1,12 +1,6 @@
 ﻿name: "Resolve Version"
 description: "Resolves the package version"
 
-input:
-  GH_TOKEN:
-    description: The secrets.GITHUB_TOKEN value
-    required: true
-    type: string
-
 runs:
   using: "composite"
   steps:
@@ -16,8 +10,6 @@ runs:
       with:
         mediaType: 'application/json'
         route: GET /repos/${{ github.repository }}/git/matching-refs/tags
-      env:
-        GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
 
     - name: Store Response
       run: |
