@@ -23,16 +23,10 @@ jobs:
       - name: Checkout Git
         uses: actions/checkout@v4
 
-      - name: Prebuild 1
-        run: jq --version
-
-      - name: Prebuild 3
+      - name: Prebuild
         uses: ./.github/actions/resolve-version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Prebuild 4
-        run: exit 1
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
