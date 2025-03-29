@@ -23,8 +23,17 @@ jobs:
       - name: Checkout Git
         uses: actions/checkout@v4
 
-      - name: Prebuild
+      - name: Prebuild 1
+        run: ls -lah ./
+
+      - name: Prebuild 2
+        run: ls -lah ../
+
+      - name: Prebuild 3
         uses: ./.github/actions/resolve-version
+
+      - name: Prebuild 4
+        run: exit 1
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
