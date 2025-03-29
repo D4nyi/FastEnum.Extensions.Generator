@@ -92,9 +92,9 @@ jobs:
       # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
       - name: Manual Build
         if: matrix.build-mode == 'manual'
-        run: dotnet build ./FastEnumExtensions.sln --nologo -c ${{ env.BUILD_CONFIGURATION }}
+        run: dotnet build ./FastEnumExtensions.sln --nologo -c Release
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
+          category: "/language:${{ matrix.language }}"

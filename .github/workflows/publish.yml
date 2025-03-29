@@ -24,7 +24,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Prebuild
-        uses: ./actions/resolve-version
+        uses: ./.github/actions/resolve-version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -125,11 +127,10 @@ jobs:
         with:
           script: |
             const version = process.env.version;
-            const ref = `refs/tags/v${version}`;
+            const tag = `refs/tags/v${version}`;
+            const exists = JSON.parse(process.env.AllTags).find(x => x === tag);
 
-            const exists = JSON.parse(process.env.AllTags).find(x => x.ref === ref);
-
-            console.log(`{"version":"${version}","tag":"${ref}","exists":${exists}}`);
+            console.log(JSON.stringify({version,tag,exists});
 
             if (exists) {
               console.error('Tag already exists! Skip tagging!');

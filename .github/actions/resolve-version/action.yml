@@ -10,12 +10,10 @@ runs:
       with:
         mediaType: 'application/json'
         route: GET /repos/${{ github.repository }}/git/matching-refs/tags
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Store Response
       run: |
-        tags=$(tr -d '\n\t\r ' <<<$(echo ${{ toJSON(steps.get_latest_release.outputs.data) }} | sed -e 's/\\n//g'))
+        tags=$(echo '${{ steps.get_latest_release.outputs.data }}' | jq -c '[.[].ref] | sort')
         echo "AllTags=${tags}" >> $GITHUB_ENV
       shell: bash
 
