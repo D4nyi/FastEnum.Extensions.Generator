@@ -13,7 +13,7 @@ runs:
 
     - name: Store Response
       run: |
-        tagsy=echo ${{ toJSON(steps.get_latest_release.outputs.data) }} | jq -c '[.[].ref] | sort'
+        tagsy=echo ${{ steps.get_latest_release.outputs.data }} | jq -c '[.[].ref] | sort'
         echo "Tagsy=${tagsy}" >> $GITHUB_ENV
         tags=$(tr -d '\n\t\r ' <<<$(echo ${{ toJSON(steps.get_latest_release.outputs.data) }} | sed -e 's/\\n//g'))
         echo "AllTags=${tags}" >> $GITHUB_ENV
