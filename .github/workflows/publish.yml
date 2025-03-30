@@ -65,52 +65,9 @@ jobs:
           path: ./output/FastEnum.Extensions.Generator*.nupkg
           retention-days: 1
 
-  analyze:
-    name: Analyze (${{ matrix.language }})
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - language: actions
-            build-mode: none
-          - language: csharp
-            build-mode: manual
-    permissions:
-      security-events: write
-      packages: read
-      actions: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        if: matrix.language == 'csharp'
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
-          dotnet-quality: ga
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
-          dependency-caching: true
-
-      - name: Manual Build
-        if: matrix.build-mode == 'manual'
-        run: dotnet build ./FastEnumExtensions.sln --nologo -c ${{ env.BUILD_CONFIGURATION }}
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{ matrix.language }}"
-
   publish:
     name: Publish
-    needs: [build, analyze]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
 
@@ -134,7 +91,10 @@ jobs:
           pattern: nuget-*-${{ env.FrameworkVersion }}
 
       - name: Print path
-        run: echo ${{ steps.restore.outputs.download-path }}
+        run: |
+          echo ${{ steps.restore.outputs.download-path }}
+          ls -lah ${{ steps.restore.outputs.download-path }}
+          ls -lah ${{ steps.restore.outputs.download-path }}/nuget-1.6.0-net9.0
 
       - name: Stop
         run: exit 1
