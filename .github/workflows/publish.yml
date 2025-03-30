@@ -115,6 +115,7 @@ jobs:
     steps:
 
       - name: Setup .NET
+        id: dotnet
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
@@ -122,7 +123,7 @@ jobs:
 
       - name: Set DotNet Version
         run: |
-          frameworkVersion=`echo 'net${{ matrix.dotnet-version }}' | cut -c1-6`
+          frameworkVersion=`echo 'net${{ steps.dotnet.outputs.dotnet-version }}' | cut -c1-6`
           echo "Framework Version: ${frameworkVersion}"
           echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
 
