@@ -89,12 +89,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: nuget-*-${{ env.FrameworkVersion }}
+          path: ./output
 
       - name: Print path
         run: |
           echo ${{ steps.restore.outputs.download-path }}
           ls -lah ${{ steps.restore.outputs.download-path }}
           ls -lah ${{ steps.restore.outputs.download-path }}/nuget-1.6.0-net9.0
+          ls -lah ${{ steps.restore.outputs.download-path }}/output
 
       - name: Stop
         run: exit 1
