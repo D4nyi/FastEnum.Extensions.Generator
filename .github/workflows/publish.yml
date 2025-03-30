@@ -17,8 +17,8 @@ jobs:
     name: Build (${{ matrix.dotnet-version }})
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.out.outputs.version }}
-      tags: ${{ steps.out.outputs.tags }}
+      version: ${{ steps.out.outputs.Version }}
+      tags: ${{ steps.out.outputs.Tags }}
     strategy:
       matrix:
         dotnet-version: [ 8.0.x, 9.0.x ]
@@ -59,20 +59,20 @@ jobs:
         run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
 
       - name: Pack
-        run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c ${{ env.BUILD_CONFIGURATION }} --no-build --no-restore --nologo -o output /p:PackageVersion=${{ env.version }}
+        run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c ${{ env.BUILD_CONFIGURATION }} --no-build --no-restore --nologo -o output /p:PackageVersion=${{ env.Version }}
 
       - name: Save NuGet Package
         uses: actions/upload-artifact@v4
         with:
-          name: nuget-${{ env.version }}-${{ env.FrameworkVersion }}
+          name: nuget-${{ env.Version }}-${{ env.FrameworkVersion }}
           path: ./output/FastEnum.Extensions.Generator*.nupkg
           retention-days: 1
 
       - name: Set Outputs
         id: out
         run: |
-          echo "version=${Version}" >> $GITHUB_OUTPUT
-          echo "tags=${Tags}" >> $GITHUB_OUTPUT
+          echo "Version=${Version}" >> $GITHUB_OUTPUT
+          echo "Tags=${Tags}" >> $GITHUB_OUTPUT
 
   publish:
     name: Publish
@@ -95,8 +95,8 @@ jobs:
 
       - name: Restore Env
         env:
-          Version: ${{ needs.build.outputs.version }}
-          Tags: ${{ needs.build.outputs.tags }}
+          Version: ${{ needs.build.outputs.Version }}
+          Tags: ${{ needs.build.outputs.Tags }}
         run: |
           echo "Version=${Version}" >> $GITHUB_ENV
           echo "Tags=${Tags}" >> $GITHUB_ENV
