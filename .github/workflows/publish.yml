@@ -74,9 +74,52 @@ jobs:
           echo "Version=${Version}" >> $GITHUB_OUTPUT
           echo "Tags=${Tags}" >> $GITHUB_OUTPUT
 
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: csharp
+            build-mode: manual
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+          dotnet-quality: ga
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          dependency-caching: true
+
+      - name: Manual Build
+        if: matrix.build-mode == 'manual'
+        run: dotnet build ./FastEnumExtensions.sln --nologo -c ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
+
   publish:
     name: Publish
-    needs: [build]
+    needs: [build, analyze]
     runs-on: ubuntu-latest
     steps:
 
@@ -107,12 +150,6 @@ jobs:
         with:
           name: nuget-${{ env.Version }}-${{ env.FrameworkVersion }}
           path: ./output
-
-      - name: Print path
-        run: ls -lah ${{ steps.restore.outputs.download-path }}
-
-      - name: Stop
-        run: exit 1
 
       - name: Push to NuGet
         run: dotnet nuget push ./output/FastEnum.Extensions.Generator.${{ env.Version }}.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
