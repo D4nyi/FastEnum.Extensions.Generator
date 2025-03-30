@@ -129,7 +129,7 @@ jobs:
       - name: Restore NuGet Package
         uses: actions/download-artifact@v4
         with:
-          name: nuget-${{ env.version }}-${{ env.FrameworkVersion }}
+          name: nuget-*-${{ env.FrameworkVersion }}
 
       - name: Push to NuGet
         run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
