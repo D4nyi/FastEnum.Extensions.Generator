@@ -128,9 +128,16 @@ jobs:
           echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
 
       - name: Restore NuGet Package
+        id: restore
         uses: actions/download-artifact@v4
         with:
           pattern: nuget-*-${{ env.FrameworkVersion }}
+
+      - name: Print path
+        run: echo ${{ steps.restore.outputs.download-path }}
+
+      - name: Stop
+        run: exit 1
 
       - name: Push to NuGet
         run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
