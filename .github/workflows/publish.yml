@@ -16,6 +16,9 @@ jobs:
   build:
     name: Build (${{ matrix.dotnet-version }})
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.out.outputs.Version }}
+      tags: ${{ steps.out.outputs.Tags }}
     strategy:
       matrix:
         dotnet-version: [ 8.0.x, 9.0.x ]
@@ -56,14 +59,20 @@ jobs:
         run: dotnet test ./test/FastEnum.Extensions.Generator.Tests.Snapshot/FastEnum.Extensions.Generator.Tests.Snapshot.csproj --no-build --no-restore --nologo -c ${{ env.BUILD_CONFIGURATION }} -f ${{ env.FrameworkVersion }}
 
       - name: Pack
-        run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c ${{ env.BUILD_CONFIGURATION }} --no-build --no-restore --nologo -o output /p:PackageVersion=${{ env.version }}
+        run: dotnet pack ./src/FastEnum.Extensions.Generator/FastEnum.Extensions.Generator.csproj -c ${{ env.BUILD_CONFIGURATION }} --no-build --no-restore --nologo -o output /p:PackageVersion=${{ env.Version }}
 
       - name: Save NuGet Package
         uses: actions/upload-artifact@v4
         with:
-          name: nuget-${{ env.version }}
+          name: nuget-${{ env.Version }}-${{ env.FrameworkVersion }}
           path: ./output/FastEnum.Extensions.Generator*.nupkg
           retention-days: 1
+
+      - name: Set Outputs
+        id: out
+        run: |
+          echo "Version=${Version}" >> $GITHUB_OUTPUT
+          echo "Tags=${Tags}" >> $GITHUB_OUTPUT
 
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -114,23 +123,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Setup .NET
+        id: dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+          dotnet-quality: ga
+
+      - name: Set DotNet Version
+        run: |
+          frameworkVersion=`echo 'net${{ steps.dotnet.outputs.dotnet-version }}' | cut -c1-6`
+          echo "Framework Version: ${frameworkVersion}"
+          echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
+
+      - name: Restore Env
+        env:
+          Version: ${{ needs.build.outputs.Version }}
+          Tags: ${{ needs.build.outputs.Tags }}
+        run: |
+          echo "Version=${Version}" >> $GITHUB_ENV
+          echo "Tags=${Tags}" >> $GITHUB_ENV
+
       - name: Restore NuGet Package
+        id: restore
         uses: actions/download-artifact@v4
         with:
-          name: nuget-${{ env.version }}
+          name: nuget-${{ env.Version }}-${{ env.FrameworkVersion }}
+          path: ./output
 
       - name: Push to NuGet
-        run: dotnet nuget push output/FastEnum.Extensions.Generator*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ./output/FastEnum.Extensions.Generator.${{ env.Version }}.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Git Tag
         uses: actions/github-script@v7
         with:
           script: |
-            const version = process.env.version;
+            const version = process.env.Version;
             const tag = `refs/tags/v${version}`;
-            const exists = JSON.parse(process.env.AllTags).find(x => x === tag);
+            const exists = JSON.parse(process.env.Tags).find(x => x === tag);
 
-            console.log(JSON.stringify({version,tag,exists});
+            console.log({version, tag, exists});
 
             if (exists) {
               console.error('Tag already exists! Skip tagging!');

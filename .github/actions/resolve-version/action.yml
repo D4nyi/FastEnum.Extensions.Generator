@@ -14,7 +14,7 @@ runs:
     - name: Store Response
       run: |
         tags=$(echo '${{ steps.get_latest_release.outputs.data }}' | jq -c '[.[].ref] | sort')
-        echo "AllTags=${tags}" >> $GITHUB_ENV
+        echo "Tags=${tags}" >> $GITHUB_ENV
       shell: bash
 
     - name: Set Version
@@ -26,5 +26,5 @@ runs:
         sed -i -e "s/<Version>/${version}/" -e "s/<BuildTime>/${buildTime}/" -e "s/<ReleaseYear>/${releaseYear}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
         sed -i -e "s/1.0.0/${version}/" ./src/FastEnum.Extensions.Generator/Properties/Assembly.cs
 
-        echo "version=${version}" >> $GITHUB_ENV
+        echo "Version=${version}" >> $GITHUB_ENV
       shell: bash
