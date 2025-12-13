@@ -159,10 +159,10 @@ jobs:
         with:
           script: |
             const version = process.env.Version;
-            const tag = `refs/tags/v${version}`;
-            const exists = JSON.parse(process.env.Tags).find(x => x === tag);
+            const ref = `refs/tags/v${version}`;
+            const exists = JSON.parse(process.env.Tags).find(x => x === ref);
 
-            console.log({version, tag, exists});
+            console.log({version, ref, exists});
 
             if (exists) {
               console.error('Tag already exists! Skip tagging!');
