@@ -15,18 +15,20 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
     internal string Name { get; }
     internal string Modifier { get; }
     internal string UnderlyingType { get; }
+
     internal string OriginalUnderlyingType { get; }
+
     //public bool HasFlags { get; }
     internal string ToStringFormat { get; }
 
-    internal ImmutableArray<EnumMemberSpec> Members { get; }
-    internal ImmutableArray<EnumMemberSpec> DistinctFlagMembers { get; }
-    internal ImmutableArray<EnumMemberSpec> DistinctMembers { get; }
+    internal EnumMemberSpec[] Members { get; }
+    internal EnumMemberSpec[] DistinctFlagMembers { get; }
+    internal EnumMemberSpec[] DistinctMembers { get; }
 
     internal EnumGenerationSpec(
         string fullName,
         string modifier,
-        ImmutableArray<EnumMemberSpec> members,
+        EnumMemberSpec[] members,
         bool isGlobalNamespace,
         string @namespace,
         string underlyingTypeName,
@@ -47,7 +49,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
         //HasFlags = hasFlags;
         IsGlobalNamespace = isGlobalNamespace;
 
-        if (members.IsDefaultOrEmpty)
+        if (members.IsEmpty)
         {
             ToStringFormat = null!;
             UnderlyingType = null!;
@@ -83,17 +85,20 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
 
     public override bool Equals(object? obj) => obj is EnumGenerationSpec spec && Equals(spec);
 
-    private static readonly ObjectImmutableArraySequenceEqualityComparer<EnumMemberSpec> _comparer = new();
-
-    public bool Equals(EnumGenerationSpec other) =>
 #pragma warning disable CA1307
 #pragma warning disable CA1309 // No need for checking cultures and casing
-        FullName.Equals(other.FullName)
-        && Modifier.Equals(other.Modifier)
-        && UnderlyingType.Equals(other.UnderlyingType)
-        && ToStringFormat.Equals(other.ToStringFormat)
-        //&& HasFlags.Equals(other.HasFlags)
-        && _comparer.Equals(Members, other.Members);
+    public bool Equals(EnumGenerationSpec other)
+    {
+        bool notArrayFields =
+            FullName.Equals(other.FullName) &&
+            Modifier.Equals(other.Modifier) &&
+            UnderlyingType.Equals(other.UnderlyingType) &&
+            ToStringFormat.Equals(other.ToStringFormat);
+        // HasFlags.Equals(other.HasFlags);
+
+        return notArrayFields &&
+               new ObjectArraySequenceEqualityComparer<EnumMemberSpec>().Equals(Members, other.Members);
+    }
 #pragma warning restore CA1309
 #pragma warning restore CA1307
 }

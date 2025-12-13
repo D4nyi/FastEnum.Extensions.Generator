@@ -11,6 +11,8 @@ namespace FastEnum.Extensions.Generator.Utils;
 internal static class StringBuilderCache
 {
     private const int DefaultBuilderCapacity = 25_000;
+    private const int MaxBuilderCapacity = 50_000; // Add a maximum capacity
+
     private static StringBuilder? _fastItem;
 
     /// <summary>
@@ -35,12 +37,13 @@ internal static class StringBuilderCache
     /// <remarks><code>string value = StringBuilderCache.Return(sb);</code></remarks>
     internal static string Return(StringBuilder sb)
     {
-        if (_fastItem is null)
+        string tmp = sb.ToString();
+
+        // Only cache if the StringBuilder hasn't grown too large
+        if (_fastItem is null && sb.Length <= MaxBuilderCapacity)
         {
             _ = Interlocked.CompareExchange(ref _fastItem, sb, null);
         }
-
-        string tmp = sb.ToString();
 
         sb.Clear();
 

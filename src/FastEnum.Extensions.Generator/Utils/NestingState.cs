@@ -23,7 +23,7 @@ internal static class NestingStateExtensions
         int nestingLevel = 0;
         NestingState nestingState = NestingState.Namespace;
 
-        while (containingType is not null && containingType.Kind != SymbolKind.Namespace)
+        while (containingType is { Kind: not SymbolKind.Namespace })
         {
             nestingLevel++;
 

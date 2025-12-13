@@ -15,11 +15,11 @@ internal readonly struct EnumBaseDataSpec : IEquatable<EnumBaseDataSpec>
     internal string UnderlyingTypeName { get; }
     internal string Namespace { get; }
     internal bool IsGlobalNamespace { get; }
-    internal ImmutableArray<EnumFieldSpec> Members { get; }
+    internal EnumFieldSpec[] Members { get; }
     internal Location Location { get; }
 
     public EnumBaseDataSpec(bool hasFlags, NestingState nestingState, string modifier, string typeName, string underlyingTypeName, string ns,
-        bool isGlobalNamespace, ImmutableArray<EnumFieldSpec> members, Location location)
+        bool isGlobalNamespace, EnumFieldSpec[] members, Location location)
     {
         HasFlags = hasFlags;
         NestingState = nestingState;
@@ -57,16 +57,19 @@ internal readonly struct EnumBaseDataSpec : IEquatable<EnumBaseDataSpec>
 
     public override bool Equals(object? obj) => obj is EnumBaseDataSpec spec && Equals(spec);
 
-    private static readonly ObjectImmutableArraySequenceEqualityComparer<EnumFieldSpec> _comparer = new();
+    public bool Equals(EnumBaseDataSpec other)
+    {
+        bool notArrayFields =
+            HasFlags == other.HasFlags &&
+            NestingState == other.NestingState &&
+            Modifier == other.Modifier &&
+            TypeName == other.TypeName &&
+            UnderlyingTypeName == other.UnderlyingTypeName &&
+            Namespace == other.Namespace &&
+            IsGlobalNamespace == other.IsGlobalNamespace &&
+            Location.Equals(other.Location);
 
-    public bool Equals(EnumBaseDataSpec other) =>
-        HasFlags == other.HasFlags &&
-        NestingState == other.NestingState &&
-        Modifier == other.Modifier &&
-        TypeName == other.TypeName &&
-        UnderlyingTypeName == other.UnderlyingTypeName &&
-        Namespace == other.Namespace &&
-        IsGlobalNamespace == other.IsGlobalNamespace &&
-        Location.Equals(other.Location) &&
-        _comparer.Equals(Members, other.Members);
+        return notArrayFields &&
+               new ObjectArraySequenceEqualityComparer<EnumFieldSpec>().Equals(Members, other.Members);
+    }
 }

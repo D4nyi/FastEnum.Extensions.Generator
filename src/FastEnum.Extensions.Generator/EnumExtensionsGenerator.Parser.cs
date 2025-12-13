@@ -11,7 +11,7 @@ public sealed partial class EnumExtensionsGenerator
 {
     #region Warnings
 
-    private static readonly DiagnosticDescriptor InvalidVisibilityModifier = new(
+    private static readonly DiagnosticDescriptor _invalidVisibilityModifier = new(
         id: "EEG1001",
         title: "Invalid visibility modifier",
         messageFormat: "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
@@ -22,7 +22,7 @@ public sealed partial class EnumExtensionsGenerator
         helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
         customTags: WellKnownDiagnosticTags.NotConfigurable);
 
-    private static readonly DiagnosticDescriptor GenericParentType = new(
+    private static readonly DiagnosticDescriptor _genericParentType = new(
         id: "EEG1002",
         title: "Invalid nesting type",
         messageFormat: "Extension generation for {0} is disabled, because it is nested in a generic type",
@@ -32,7 +32,7 @@ public sealed partial class EnumExtensionsGenerator
         description: "Please define your enum not inside a generic type.",
         helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1002-invalid-backing-type");
 
-    private static readonly DiagnosticDescriptor MultipleParentType = new(
+    private static readonly DiagnosticDescriptor _multipleParentType = new(
         id: "EEG1003",
         title: "Multiple nesting type",
         messageFormat: "Extension generation for {0} is disabled, because it has multiple parent types",
@@ -42,7 +42,7 @@ public sealed partial class EnumExtensionsGenerator
         description: "Please define your enum as a standalone type or reduce nesting.",
         helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1003-invalid-nesting-type");
 
-    private static readonly DiagnosticDescriptor InconsistentAccessibilityWithParentType = new(
+    private static readonly DiagnosticDescriptor _inconsistentAccessibilityWithParentType = new(
         id: "EEG1004",
         title: "Multiple nesting type",
         messageFormat: "Extension generation for {0} is disabled, because its accessibility modifier ({1}) is inconsistent with its parent's",
@@ -52,7 +52,7 @@ public sealed partial class EnumExtensionsGenerator
         description: "Please define your enum as a standalone type or define the same accessibility modifier as its parent.",
         helpLinkUri: "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1004-multiple-nesting-type");
 
-    private static readonly DiagnosticDescriptor EmptyEnum = new(
+    private static readonly DiagnosticDescriptor _emptyEnum = new(
         id: "EEG1005",
         title: "Enum has no defined members",
         messageFormat: "Extension generation for {0} is skipped, because it has no defined members",
@@ -66,7 +66,7 @@ public sealed partial class EnumExtensionsGenerator
 
     private static List<EnumBaseDataSpec> TransformExternal(GeneratorAttributeSyntaxContext context, CancellationToken ct)
     {
-        List<EnumBaseDataSpec> enums = new();
+        List<EnumBaseDataSpec> enums = [];
 
         foreach (AttributeData attribute in context.Attributes)
         {
@@ -139,21 +139,23 @@ public sealed partial class EnumExtensionsGenerator
 
         (bool isGlobalNamespace, string ns) = GetNamespace(enumSymbol, nestingState);
 
-        ImmutableArray<EnumFieldSpec> members = enumSymbol.GetMembers()
-            .Where(static x => x.Kind == SymbolKind.Field) // filter out ctor
-            .Cast<IFieldSymbol>()
-            .Select(static x =>
-            {
-                AttributeInternalsSpec[] attributesData = x.GetAttributes()
-                    .Select(y => new AttributeInternalsSpec(
-                        y.AttributeClass?.MetadataName,
-                        y.NamedArguments.ToDictionary(static x => x.Key, static x => x.Value),
-                        y.ConstructorArguments.Length == 1 ? y.ConstructorArguments[0].Value : null
-                    )).ToArray();
+        EnumFieldSpec[] members = [
+            ..enumSymbol.GetMembers()
+                .Where(static x => x.Kind == SymbolKind.Field) // filter out ctor
+                .Cast<IFieldSymbol>()
+                .Select(static x =>
+                {
+                    AttributeInternalsSpec[] attributesData = x.GetAttributes()
+                        .Select(y => new AttributeInternalsSpec(
+                            y.AttributeClass?.MetadataName,
+                            y.NamedArguments.ToDictionary(static x => x.Key, static x => x.Value),
+                            y.ConstructorArguments.Length == 1 ? y.ConstructorArguments[0].Value : null
+                        ))
+                        .ToArray();
 
-                return new EnumFieldSpec(x.Name, x.ConstantValue!, attributesData);
-            })
-            .ToImmutableArray();
+                    return new EnumFieldSpec(x.Name, x.ConstantValue!, attributesData);
+                })
+        ];
 
         Location location = GetComparableLocation(enumSymbol.Locations.First());
 
@@ -183,12 +185,12 @@ public sealed partial class EnumExtensionsGenerator
 
         if (Array.Exists(Constants.UnsupportedVisibilityModifiers, x => x == spec.Modifier))
         {
-            return Diagnostic.Create(InvalidVisibilityModifier, spec.Location, spec.TypeName);
+            return Diagnostic.Create(_invalidVisibilityModifier, spec.Location, spec.TypeName);
         }
 
-        if (spec.Members.IsDefaultOrEmpty)
+        if (spec.Members.IsEmpty)
         {
-            return Diagnostic.Create(EmptyEnum, spec.Location, spec.TypeName);
+            return Diagnostic.Create(_emptyEnum, spec.Location, spec.TypeName);
         }
 
         return spec;
@@ -203,15 +205,16 @@ public sealed partial class EnumExtensionsGenerator
             return obj;
         }
 
-        ImmutableArray<EnumMemberSpec> members = spec.Members
-            .Select(x =>
-            {
-                AttributeValues data = x.AttributesData.GetAttributeValues();
+        EnumMemberSpec[] members = [
+            ..spec.Members
+                .Select(x =>
+                {
+                    AttributeValues data = x.AttributesData.GetAttributeValues();
 
-                return new EnumMemberSpec(spec.TypeName, x.Name, x.Value, data);
-            })
-            .OrderBy(x => x.Value)
-            .ToImmutableArray();
+                    return new EnumMemberSpec(spec.TypeName, x.Name, x.Value, data);
+                })
+                .OrderBy(x => x.Value)
+        ];
 
         return new EnumGenerationSpec(
             spec.TypeName,
@@ -233,17 +236,17 @@ public sealed partial class EnumExtensionsGenerator
 
         if (spec.NestingState.HasFlagFast(NestingState.GenericParentType))
         {
-            return Diagnostic.Create(GenericParentType, spec.Location, spec.TypeName);
+            return Diagnostic.Create(_genericParentType, spec.Location, spec.TypeName);
         }
 
         if (spec.NestingState.HasFlagFast(NestingState.MultipleParentType))
         {
-            return Diagnostic.Create(MultipleParentType, spec.Location, spec.TypeName);
+            return Diagnostic.Create(_multipleParentType, spec.Location, spec.TypeName);
         }
 
         if (spec.NestingState.HasFlagFast(NestingState.InternalSingleParentType) && spec.Modifier != "internal")
         {
-            return Diagnostic.Create(InconsistentAccessibilityWithParentType, spec.Location, spec.TypeName, spec.Modifier);
+            return Diagnostic.Create(_inconsistentAccessibilityWithParentType, spec.Location, spec.TypeName, spec.Modifier);
         }
 
         return null;
