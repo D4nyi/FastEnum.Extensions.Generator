@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Text;
 
+using FastEnum.Extensions.Generator.Specs;
+
 namespace FastEnum.Extensions.Generator.Emitters;
 
 internal static class Helpers
@@ -57,6 +59,30 @@ internal static class Helpers
             return sb
                 .Append("global::System.Runtime.CompilerServices.Unsafe.As<").Append(enumName)
                 .Append(", ").Append(underlyingType).Append(">(ref value)");
+        }
+
+        internal void AddIsDefinedSequential(EnumMemberSpec[] members, EnumOrderSpec order)
+        {
+            EnumMemberSpec secondGreatestValue = members[members.Length - 2];
+            Type underlyingType = secondGreatestValue.UnderlyingType;
+
+            string value = order == EnumOrderSpec.SequentialWithZero ? "value": "(value - 1)";
+
+            sb.Append(" => ");
+
+            if (underlyingType == typeof(byte) || underlyingType == typeof(ushort) ||
+                underlyingType == typeof(uint) || underlyingType == typeof(ulong))
+            {
+                sb.Append(value).Append(" <= ").Append(secondGreatestValue.FullName);
+            }
+            else
+            {
+                sb
+                    .Append(underlyingType == typeof(long) ? "(ulong)" : "(uint)")
+                    .Append(value).Append(" <= ").Append(secondGreatestValue.Value).Append("UL");
+            }
+
+            sb.AppendLine(";").AppendLine();
         }
     }
 

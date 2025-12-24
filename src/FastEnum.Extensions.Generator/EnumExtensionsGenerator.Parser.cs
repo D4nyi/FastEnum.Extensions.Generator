@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 using FastEnum.Extensions.Generator.Specs;
 using FastEnum.Extensions.Generator.Utils;
 
@@ -139,21 +137,24 @@ public sealed partial class EnumExtensionsGenerator
 
         (bool isGlobalNamespace, string ns) = GetNamespace(enumSymbol, nestingState);
 
-        EnumFieldSpec[] members = [
+        EnumFieldSpec[] members =
+        [
             ..enumSymbol.GetMembers()
                 .Where(static x => x.Kind == SymbolKind.Field) // filter out ctor
                 .Cast<IFieldSymbol>()
                 .Select(static x =>
                 {
-                    AttributeInternalsSpec[] attributesData = x.GetAttributes()
-                        .Select(y => new AttributeInternalsSpec(
-                            y.AttributeClass?.MetadataName,
-                            y.NamedArguments.ToDictionary(static x => x.Key, static x => x.Value),
-                            y.ConstructorArguments.Length == 1 ? y.ConstructorArguments[0].Value : null
-                        ))
-                        .ToArray();
+                    AttributeInternalsSpec[] attributesData =
+                    [
+                        ..x.GetAttributes()
+                            .Select(y => new AttributeInternalsSpec(
+                                y.AttributeClass?.MetadataName,
+                                y.NamedArguments.ToDictionary(static x => x.Key, static x => x.Value),
+                                y.ConstructorArguments.Length == 1 ? y.ConstructorArguments[0].Value : null
+                            ))
+                    ];
 
-                    return new EnumFieldSpec(x.Name, x.ConstantValue!, attributesData);
+                    return new EnumFieldSpec(x.Name, ToUInt64(x.ConstantValue), x.ConstantValue!.GetType(), attributesData);
                 })
         ];
 
@@ -205,16 +206,43 @@ public sealed partial class EnumExtensionsGenerator
             return obj;
         }
 
-        EnumMemberSpec[] members = [
+        EnumMemberSpec[] members =
+        [
             ..spec.Members
                 .Select(x =>
                 {
                     AttributeValues data = x.AttributesData.GetAttributeValues();
 
-                    return new EnumMemberSpec(spec.TypeName, x.Name, x.Value, data);
+                    return new EnumMemberSpec(spec.TypeName, x.Name, x.Value, x.UnderlyingType, data);
                 })
                 .OrderBy(x => x.Value)
         ];
+
+
+        EnumOrderSpec orderSpec = EnumOrderSpec.None;
+
+        if (members.Length == 1)
+        {
+            orderSpec = EnumOrderSpec.SingleValue;
+        }
+        else if(members.Length > 1)
+        {
+            bool isSequential = true;
+            for (int i = 1; i < members.Length; i++)
+            {
+                ulong difference = unchecked(members[i].Value - members[i - 1].Value);
+
+                if (difference != 1 && difference != UInt64.MaxValue)
+                {
+                    isSequential = false;
+                    break;
+                }
+            }
+
+            orderSpec = isSequential
+                ? members[0].Value == 0UL ? EnumOrderSpec.SequentialWithZero : EnumOrderSpec.SequentialWithoutZero
+                : EnumOrderSpec.NotSequential;
+        }
 
         return new EnumGenerationSpec(
             spec.TypeName,
@@ -223,7 +251,8 @@ public sealed partial class EnumExtensionsGenerator
             spec.IsGlobalNamespace,
             spec.Namespace,
             spec.UnderlyingTypeName,
-            spec.HasFlags
+            spec.HasFlags,
+            orderSpec
         );
     }
 
@@ -287,4 +316,17 @@ public sealed partial class EnumExtensionsGenerator
             ns.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))
         );
     }
+
+    private static ulong ToUInt64(object? value) => value switch
+    {
+        byte b => b,
+        sbyte sb => unchecked((ulong)sb),
+        short s => unchecked((ulong)s),
+        ushort us => us,
+        int i => unchecked((ulong)i),
+        uint ui => ui,
+        long l => unchecked((ulong)l),
+        ulong ul => ul,
+        _ => 0UL
+    };
 }

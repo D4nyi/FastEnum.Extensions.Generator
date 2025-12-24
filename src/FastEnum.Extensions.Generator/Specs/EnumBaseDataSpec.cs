@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 using FastEnum.Extensions.Generator.Utils;
 
 using Microsoft.CodeAnalysis;

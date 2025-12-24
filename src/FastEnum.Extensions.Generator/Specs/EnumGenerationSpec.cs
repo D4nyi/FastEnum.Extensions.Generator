@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 using FastEnum.Extensions.Generator.Emitters;
 using FastEnum.Extensions.Generator.Utils;
@@ -19,20 +18,21 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
     internal string OriginalUnderlyingType { get; }
 
     //public bool HasFlags { get; }
+    public EnumOrderSpec Order { get; }
     internal string ToStringFormat { get; }
 
     internal EnumMemberSpec[] Members { get; }
     internal EnumMemberSpec[] DistinctFlagMembers { get; }
     internal EnumMemberSpec[] DistinctMembers { get; }
 
-    internal EnumGenerationSpec(
-        string fullName,
+    internal EnumGenerationSpec(string fullName,
         string modifier,
         EnumMemberSpec[] members,
         bool isGlobalNamespace,
         string @namespace,
         string underlyingTypeName,
-        bool hasFlags)
+        bool hasFlags,
+        EnumOrderSpec order)
     {
         FullName = fullName;
 
@@ -47,6 +47,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
         Namespace = @namespace;
         OriginalUnderlyingType = underlyingTypeName;
         //HasFlags = hasFlags;
+        Order = order;
         IsGlobalNamespace = isGlobalNamespace;
 
         if (members.IsEmpty)
@@ -56,7 +57,7 @@ internal readonly struct EnumGenerationSpec : IEquatable<EnumGenerationSpec>
         }
         else
         {
-            Type type = members[0].Value.GetType();
+            Type type = members[0].UnderlyingType;
 
             ToStringFormat = type.GetFormat();
             UnderlyingType = "global::" + type.FullName;

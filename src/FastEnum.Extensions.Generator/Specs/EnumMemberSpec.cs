@@ -7,13 +7,15 @@ namespace FastEnum.Extensions.Generator.Specs;
 internal readonly struct EnumMemberSpec : IEquatable<EnumMemberSpec>
 {
     internal string FullName { get; }
-    internal object Value { get; }
+    internal ulong Value { get; }
+    internal Type UnderlyingType { get; }
     internal AttributeValues Data { get; }
 
-    internal EnumMemberSpec(string typeName, string name, object value, AttributeValues data)
+    internal EnumMemberSpec(string typeName, string name, ulong value, Type underlyingType, AttributeValues data)
     {
         FullName = String.Format(CultureInfo.InvariantCulture, "{0}.{1}", typeName, name);
         Value = value;
+        UnderlyingType = underlyingType;
         Data = data;
     }
 

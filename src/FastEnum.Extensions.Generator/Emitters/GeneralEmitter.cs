@@ -114,35 +114,24 @@ internal static class GeneralEmitter
                     /// <summary>Returns a <see langword="global::System.Boolean"/> telling whether the given enum value exists in the enumeration.</summary>
                     /// <param name="value">The value to check if it's defined</param>
                     /// <returns><see langword="true"/> if the value exists in the enumeration, <see langword="false"/> otherwise</returns>
-                    public static global::System.Boolean IsDefined(this {0} value) => value switch
-                    {{
+                    public static global::System.Boolean IsDefined(this {0} value)
                 """, spec.FullName);
 
-        int length = spec.Members.Length;
-        int last = length - 1;
-        for (int i = 0; i < length; i++)
+        switch (spec.Order)
         {
-            if (i % 3 == 0)
-            {
-                sb.AppendLine().Append("        ");
-            }
-
-            sb.Append(spec.Members[i].FullName);
-
-            if (i != last)
-            {
-                sb.Append(" or ");
-            }
+            case EnumOrderSpec.None:
+                sb.AppendLine(" => false;").AppendLine();
+                break;
+            case EnumOrderSpec.SingleValue:
+                sb.Append(" => value == ").Append(spec.Members[0].FullName).AppendLine(";").AppendLine();
+                break;
+            case EnumOrderSpec.SequentialWithZero or EnumOrderSpec.SequentialWithoutZero:
+                sb.AddIsDefinedSequential(spec.Members, spec.Order);
+                break;
+            default:
+                FallbackIsDefinedImplementation(sb, spec);
+                break;
         }
-
-        sb.Append(
-            """
-             => true,
-                    _ => false
-                };
-
-
-            """);
     }
 
     internal static StringBuilder AddPrivateHelperMethods(StringBuilder sb, EnumGenerationSpec spec)
@@ -238,5 +227,36 @@ internal static class GeneralEmitter
                             new global::System.FormatException("Format string can be only \"G\", \"g\", \"X\", \"x\", \"F\", \"f\", \"D\" or \"d\".");
 
                     """);
+    }
+
+    private static void FallbackIsDefinedImplementation(StringBuilder sb, EnumGenerationSpec spec)
+    {
+        sb.AppendLine(" => value switch").AppendLine("    {");
+
+        int length = spec.Members.Length;
+        int last = length - 1;
+        for (int i = 0; i < length; i++)
+        {
+            if (i % 3 == 0)
+            {
+                sb.Append("        ");
+            }
+
+            sb.Append(spec.Members[i].FullName);
+
+            if (i != last)
+            {
+                sb.Append(" or ");
+            }
+        }
+
+        sb.Append(
+            """
+             => true,
+                    _ => false
+                };
+
+
+            """);
     }
 }
