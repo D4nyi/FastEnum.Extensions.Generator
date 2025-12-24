@@ -57,7 +57,7 @@ jobs:
           dotnet-quality: ga
       - name: Set DotNet Version
         run: |
-          frameworkVersion=`echo 'net${{ matrix.dotnet-version }}' | cut -c1-6`
+          frameworkVersion=${`echo 'net${{ matrix.dotnet-version }}'`::-2}
           echo "Framework Version: ${frameworkVersion}"
           echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
       - name: Restore
