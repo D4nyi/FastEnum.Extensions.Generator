@@ -21,7 +21,7 @@ jobs:
       tags: ${{ steps.out.outputs.Tags }}
     strategy:
       matrix:
-        dotnet-version: [ 8.0.x, 9.0.x ]
+        dotnet-version: [ 8.0.x, 9.0.x, 10.0.x ]
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           dotnet-quality: ga
 
       - name: Set DotNet Version
@@ -98,7 +98,7 @@ jobs:
         if: matrix.language == 'csharp'
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           dotnet-quality: ga
 
       - name: Initialize CodeQL
@@ -127,7 +127,7 @@ jobs:
         id: dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           dotnet-quality: ga
 
       - name: Set DotNet Version
