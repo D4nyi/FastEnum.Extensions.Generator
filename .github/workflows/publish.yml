@@ -21,7 +21,7 @@ jobs:
       tags: ${{ steps.out.outputs.Tags }}
     strategy:
       matrix:
-        dotnet-version: [ 8.0.x, 9.0.x ]
+        dotnet-version: [ 8.0.x, 9.0.x, 10.0.x ]
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
@@ -34,12 +34,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           dotnet-quality: ga
 
       - name: Set DotNet Version
         run: |
-          frameworkVersion=`echo 'net${{ matrix.dotnet-version }}' | cut -c1-6`
+          frameworkVersion=`echo 'net${{ matrix.dotnet-version }}' | sed 's/..$//'`
           echo "Framework Version: ${frameworkVersion}"
           echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
 
@@ -98,7 +98,7 @@ jobs:
         if: matrix.language == 'csharp'
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           dotnet-quality: ga
 
       - name: Initialize CodeQL
@@ -127,12 +127,12 @@ jobs:
         id: dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           dotnet-quality: ga
 
       - name: Set DotNet Version
         run: |
-          frameworkVersion=`echo 'net${{ steps.dotnet.outputs.dotnet-version }}' | cut -c1-6`
+          echo 'net${{ steps.dotnet.outputs.dotnet-version }}' | sed 's/..$//'
           echo "Framework Version: ${frameworkVersion}"
           echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
 
@@ -159,10 +159,10 @@ jobs:
         with:
           script: |
             const version = process.env.Version;
-            const tag = `refs/tags/v${version}`;
-            const exists = JSON.parse(process.env.Tags).find(x => x === tag);
+            const ref = `refs/tags/v${version}`;
+            const exists = JSON.parse(process.env.Tags).find(x => x === ref);
 
-            console.log({version, tag, exists});
+            console.log({version, ref, exists});
 
             if (exists) {
               console.error('Tag already exists! Skip tagging!');

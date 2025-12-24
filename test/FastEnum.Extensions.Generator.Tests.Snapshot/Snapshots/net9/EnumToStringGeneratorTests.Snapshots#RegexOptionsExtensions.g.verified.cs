@@ -80,10 +80,7 @@ public static class RegexOptionsExtensions
     /// <returns><see langword="true"/> if the value exists in the enumeration, <see langword="false"/> otherwise</returns>
     public static global::System.Boolean IsDefined(this System.Text.RegularExpressions.RegexOptions value) => value switch
     {
-        System.Text.RegularExpressions.RegexOptions.None or System.Text.RegularExpressions.RegexOptions.IgnoreCase or System.Text.RegularExpressions.RegexOptions.Multiline or 
-        System.Text.RegularExpressions.RegexOptions.ExplicitCapture or System.Text.RegularExpressions.RegexOptions.Compiled or System.Text.RegularExpressions.RegexOptions.Singleline or 
-        System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace or System.Text.RegularExpressions.RegexOptions.RightToLeft or System.Text.RegularExpressions.RegexOptions.ECMAScript or 
-        System.Text.RegularExpressions.RegexOptions.CultureInvariant or System.Text.RegularExpressions.RegexOptions.NonBacktracking => true,
+        System.Text.RegularExpressions.RegexOptions.None or System.Text.RegularExpressions.RegexOptions.IgnoreCase or System.Text.RegularExpressions.RegexOptions.Multiline or         System.Text.RegularExpressions.RegexOptions.ExplicitCapture or System.Text.RegularExpressions.RegexOptions.Compiled or System.Text.RegularExpressions.RegexOptions.Singleline or         System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace or System.Text.RegularExpressions.RegexOptions.RightToLeft or System.Text.RegularExpressions.RegexOptions.ECMAScript or         System.Text.RegularExpressions.RegexOptions.CultureInvariant or System.Text.RegularExpressions.RegexOptions.NonBacktracking => true,
         _ => false
     };
 

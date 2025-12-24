@@ -1,12 +1,15 @@
-using System.Collections.Immutable;
-
 using FastEnum.Extensions.Generator.Specs;
 
 namespace FastEnum.Extensions.Generator.Utils;
 
 internal static class DistinctMemberExtension
 {
-    internal static ImmutableArray<EnumMemberSpec> ToDistinct(this ImmutableArray<EnumMemberSpec> members, bool hasFlags)
+    extension<T>(T[] array)
+    {
+        internal bool IsEmpty => array.Length == 0;
+    }
+
+    internal static EnumMemberSpec[] ToDistinct(this EnumMemberSpec[] members, bool hasFlags)
     {
         HashSet<EnumMemberSpec> set = [];
 

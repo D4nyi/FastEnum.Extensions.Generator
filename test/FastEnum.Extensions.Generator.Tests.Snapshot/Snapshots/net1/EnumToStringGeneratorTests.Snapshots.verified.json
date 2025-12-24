@@ -1,0 +1,172 @@
+﻿{
+  "Diagnostics": [
+    {
+      "Location": "SnapshotTesting\\NestedInGenericClass.cs: (5,20)-(5,40)",
+      "Message": "Extension generation for SnapshotTesting.NestingGenericClass<T>.NestedInGenericClass is disabled, because it is nested in a generic type",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "EEG1002",
+        "Title": "Invalid nesting type",
+        "Description": "Please define your enum not inside a generic type.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1002-invalid-backing-type",
+        "MessageFormat": "Extension generation for {0} is disabled, because it is nested in a generic type",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\NestedWithInconsistentAccessibility.cs: (5,20)-(5,55)",
+      "Message": "Extension generation for SnapshotTesting.NestingClass.NestedWithInconsistentAccessibility is disabled, because its accessibility modifier (public) is inconsistent with its parent's",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "EEG1004",
+        "Title": "Multiple nesting type",
+        "Description": "Please define your enum as a standalone type or define the same accessibility modifier as its parent.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1004-multiple-nesting-type",
+        "MessageFormat": "Extension generation for {0} is disabled, because its accessibility modifier ({1}) is inconsistent with its parent's",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\NestedInGenericClassWithInconsistentAccessibility.cs: (5,20)-(5,69)",
+      "Message": "Extension generation for SnapshotTesting.NestingGenericInconsistentClass<T>.NestedInGenericClassWithInconsistentAccessibility is disabled, because it is nested in a generic type",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "EEG1002",
+        "Title": "Invalid nesting type",
+        "Description": "Please define your enum not inside a generic type.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1002-invalid-backing-type",
+        "MessageFormat": "Extension generation for {0} is disabled, because it is nested in a generic type",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\NestedInMultipleClass.cs: (7,24)-(7,45)",
+      "Message": "Extension generation for SnapshotTesting.NestingGrandParentClass.NestingParentClass.NestedInMultipleClass is disabled, because it has multiple parent types",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "EEG1003",
+        "Title": "Multiple nesting type",
+        "Description": "Please define your enum as a standalone type or reduce nesting.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1003-invalid-nesting-type",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has multiple parent types",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\NestedInMultipleClassWithAGenericClass.cs: (7,24)-(7,62)",
+      "Message": "Extension generation for SnapshotTesting.NestingGrandParentClass_Generic.NestingParentGenericClass<T>.NestedInMultipleClassWithAGenericClass is disabled, because it is nested in a generic type",
+      "Severity": "Warning",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "EEG1002",
+        "Title": "Invalid nesting type",
+        "Description": "Please define your enum not inside a generic type.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1002-invalid-backing-type",
+        "MessageFormat": "Extension generation for {0} is disabled, because it is nested in a generic type",
+        "Category": "Usage",
+        "DefaultSeverity": "Warning",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\EmptyEnum.cs: (3,16)-(3,25)",
+      "Message": "Extension generation for SnapshotTesting.EmptyEnum is skipped, because it has no defined members",
+      "Severity": "Info",
+      "WarningLevel": 1,
+      "Descriptor": {
+        "Id": "EEG1005",
+        "Title": "Enum has no defined members",
+        "Description": "Please define at least one member to get a generation output.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1005-empty-enum",
+        "MessageFormat": "Extension generation for {0} is skipped, because it has no defined members",
+        "Category": "Usage",
+        "DefaultSeverity": "Info",
+        "IsEnabledByDefault": true
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\ProtectedClass.cs: (5,23)-(5,45)",
+      "Message": "Extension generation for SnapshotTesting.NestingTypeProtectedClass.NestedInProtectedClass is disabled, because it has an unsupported visibility modifier",
+      "Severity": "Error",
+      "Descriptor": {
+        "Id": "EEG1001",
+        "Title": "Invalid visibility modifier",
+        "Description": "Current generation strategy only supports extension generation for enums with `public` or `internal` visibility modifiers.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
+        "Category": "Usage",
+        "DefaultSeverity": "Error",
+        "IsEnabledByDefault": true,
+        "CustomTags": [
+          "NotConfigurable"
+        ]
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\ProtectedInternalClass.cs: (5,32)-(5,62)",
+      "Message": "Extension generation for SnapshotTesting.NestingTypeProtectedInternalClass.NestedInProtectedInternalClass is disabled, because it has an unsupported visibility modifier",
+      "Severity": "Error",
+      "Descriptor": {
+        "Id": "EEG1001",
+        "Title": "Invalid visibility modifier",
+        "Description": "Current generation strategy only supports extension generation for enums with `public` or `internal` visibility modifiers.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
+        "Category": "Usage",
+        "DefaultSeverity": "Error",
+        "IsEnabledByDefault": true,
+        "CustomTags": [
+          "NotConfigurable"
+        ]
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\PrivateClass.cs: (5,21)-(5,41)",
+      "Message": "Extension generation for SnapshotTesting.NestingTypePrivateClass.NestedInPrivateClass is disabled, because it has an unsupported visibility modifier",
+      "Severity": "Error",
+      "Descriptor": {
+        "Id": "EEG1001",
+        "Title": "Invalid visibility modifier",
+        "Description": "Current generation strategy only supports extension generation for enums with `public` or `internal` visibility modifiers.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
+        "Category": "Usage",
+        "DefaultSeverity": "Error",
+        "IsEnabledByDefault": true,
+        "CustomTags": [
+          "NotConfigurable"
+        ]
+      }
+    },
+    {
+      "Location": "SnapshotTesting\\File.cs: (3,14)-(3,20)",
+      "Message": "Extension generation for SnapshotTesting.IsFile is disabled, because it has an unsupported visibility modifier",
+      "Severity": "Error",
+      "Descriptor": {
+        "Id": "EEG1001",
+        "Title": "Invalid visibility modifier",
+        "Description": "Current generation strategy only supports extension generation for enums with `public` or `internal` visibility modifiers.",
+        "HelpLink": "https://github.com/D4nyi/FastEnum.Extensions.Generator/wiki/Analyzer-Rules#eeg1001-invalid-visibility-modifier",
+        "MessageFormat": "Extension generation for {0} is disabled, because it has an unsupported visibility modifier",
+        "Category": "Usage",
+        "DefaultSeverity": "Error",
+        "IsEnabledByDefault": true,
+        "CustomTags": [
+          "NotConfigurable"
+        ]
+      }
+    }
+  ]
+}

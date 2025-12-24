@@ -46,18 +46,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: [ 8.0.x, 9.0.x ]
+        dotnet-version: [ 8.0.x, 9.0.x, 10.0.x ]
     steps:
       - name: Checkout Git
         uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           dotnet-quality: ga
       - name: Set DotNet Version
         run: |
-          frameworkVersion=`echo 'net${{ matrix.dotnet-version }}' | cut -c1-6`
+          frameworkVersion=`echo 'net${{ matrix.dotnet-version }}' | sed 's/..$//'`
           echo "Framework Version: ${frameworkVersion}"
           echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
       - name: Restore
@@ -99,7 +99,7 @@ jobs:
         if: matrix.language == 'csharp'
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           dotnet-quality: ga
 
       - name: Initialize CodeQL

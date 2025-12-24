@@ -61,13 +61,15 @@ internal readonly struct AttributeInternalsSpec : IEquatable<AttributeInternalsS
 internal readonly struct EnumFieldSpec : IEquatable<EnumFieldSpec>
 {
     internal string Name { get; }
-    internal object Value { get; }
+    internal ulong Value { get; }
+    internal Type UnderlyingType { get; }
     internal AttributeInternalsSpec[] AttributesData { get; }
 
-    internal EnumFieldSpec(string name, object value, AttributeInternalsSpec[] attributesData)
+    internal EnumFieldSpec(string name, ulong value, Type underlyingType, AttributeInternalsSpec[] attributesData)
     {
         Name = name;
         Value = value;
+        UnderlyingType = underlyingType;
         AttributesData = attributesData;
     }
 
