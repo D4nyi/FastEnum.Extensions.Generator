@@ -48,11 +48,7 @@ public static class IsShortExtensions
     /// <summary>Returns a <see langword="global::System.Boolean"/> telling whether the given enum value exists in the enumeration.</summary>
     /// <param name="value">The value to check if it's defined</param>
     /// <returns><see langword="true"/> if the value exists in the enumeration, <see langword="false"/> otherwise</returns>
-    public static global::System.Boolean IsDefined(this SnapshotTesting.IsShort value) => value switch
-    {
-        SnapshotTesting.IsShort.None => true,
-        _ => false
-    };
+    public static global::System.Boolean IsDefined(this SnapshotTesting.IsShort value) => value == SnapshotTesting.IsShort.None;
 
     /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.IsShort"/> enum value from which the attribute value is read.</param>

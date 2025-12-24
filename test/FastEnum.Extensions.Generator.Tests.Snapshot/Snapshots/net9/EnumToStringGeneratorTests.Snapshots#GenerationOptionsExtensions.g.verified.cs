@@ -62,8 +62,7 @@ public static class GenerationOptionsExtensions
     /// <returns><see langword="true"/> if the value exists in the enumeration, <see langword="false"/> otherwise</returns>
     public static global::System.Boolean IsDefined(this SnapshotTesting.GenerationOptions value) => value switch
     {
-        SnapshotTesting.GenerationOptions.None or SnapshotTesting.GenerationOptions.ToString or SnapshotTesting.GenerationOptions.Parse or 
-        SnapshotTesting.GenerationOptions.HasFlag or SnapshotTesting.GenerationOptions.IsDefined => true,
+        SnapshotTesting.GenerationOptions.None or SnapshotTesting.GenerationOptions.ToString or SnapshotTesting.GenerationOptions.Parse or         SnapshotTesting.GenerationOptions.HasFlag or SnapshotTesting.GenerationOptions.IsDefined => true,
         _ => false
     };
 

@@ -54,11 +54,7 @@ public static class ColorExtensions
     /// <summary>Returns a <see langword="global::System.Boolean"/> telling whether the given enum value exists in the enumeration.</summary>
     /// <param name="value">The value to check if it's defined</param>
     /// <returns><see langword="true"/> if the value exists in the enumeration, <see langword="false"/> otherwise</returns>
-    public static global::System.Boolean IsDefined(this SnapshotTesting.Color value) => value switch
-    {
-        SnapshotTesting.Color.Red or SnapshotTesting.Color.Green or SnapshotTesting.Color.Blue => true,
-        _ => false
-    };
+    public static global::System.Boolean IsDefined(this SnapshotTesting.Color value) => (uint)value <= 1UL;
 
     /// <summary>Gets the Value property from applied <see cref="global::System.Runtime.Serialization.EnumMemberAttribute"/>.</summary>
     /// <param name="value">A(n) <see cref="SnapshotTesting.Color"/> enum value from which the attribute value is read.</param>

@@ -59,8 +59,7 @@ public static class NoneUniqueOptionsExtensions
     /// <returns><see langword="true"/> if the value exists in the enumeration, <see langword="false"/> otherwise</returns>
     public static global::System.Boolean IsDefined(this SnapshotTesting.NoneUniqueOptions value) => value switch
     {
-        SnapshotTesting.NoneUniqueOptions.None or SnapshotTesting.NoneUniqueOptions.ToString or SnapshotTesting.NoneUniqueOptions.ToStringFormat or 
-        SnapshotTesting.NoneUniqueOptions.Parse => true,
+        SnapshotTesting.NoneUniqueOptions.None or SnapshotTesting.NoneUniqueOptions.ToString or SnapshotTesting.NoneUniqueOptions.ToStringFormat or         SnapshotTesting.NoneUniqueOptions.Parse => true,
         _ => false
     };
 
