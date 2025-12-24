@@ -20,10 +20,8 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
         <PackageReleaseNotes>
-            - BREAKING: Attributes namespace modified from `FastEnum` to `FastEnum.Attributes`.
- - New attribute to support generating extensions for external enums.
- - Added support for generating extensions for external enums.
- - Attributes marked with a `[Conditional("DEBUG")]` attribute; therfore, they will be removed from the release build but the extension generation will not be affected.
+            - Internal improvements.
+ - IsDefined has a new generation logic.
         </PackageReleaseNotes>
 
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
