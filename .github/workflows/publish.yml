@@ -132,7 +132,7 @@ jobs:
 
       - name: Set DotNet Version
         run: |
-          echo 'net${{ steps.dotnet.outputs.dotnet-version }}' | sed 's/....$//'
+          frameworkVersion=`echo 'net${{ steps.dotnet.outputs.dotnet-version }}' | sed 's/....$//'`
           echo "Framework Version: ${frameworkVersion}"
           echo "FrameworkVersion=${frameworkVersion}" >> $GITHUB_ENV
 
