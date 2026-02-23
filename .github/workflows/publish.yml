@@ -99,8 +99,6 @@ jobs:
       - name: Read Versions
         id: read-versions
         uses: D4nyi/DotNet-Actions/readProjectVersions@fix-errors
-        with:
-          source_dir: ./src
 
   publish:
     name: Publish
