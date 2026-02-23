@@ -31,6 +31,8 @@ jobs:
 
       - name: Tests
         uses: D4nyi/DotNet-Actions/runTests@fix-errors
+        with:
+          build_configuration: Release
 
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -100,34 +102,9 @@ jobs:
         with:
           source_dir: ./src
 
-  package:
-    name: Package project
-    runs-on: ubuntu-latest
-    needs: [tests]
-    outputs:
-      artifact-id: ${{ steps.package.outputs.artifact-id }}
-      artifact-digest: ${{ steps.package.outputs.artifact-digest }}
-    steps:
-      - name: Checkout Git
-        uses: actions/checkout@v6
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: |
-            8.0.x
-            9.0.x
-            10.0.x
-          dotnet-quality: ga
-
-      - name: Package
-        id: package
-        uses: D4nyi/DotNet-Actions/package@fix-errors
-        with:
-          artifact-name: nuget-CoreUtilityKit
-
   publish:
     name: Publish
-    needs: [read-tags, read-versions, package]
+    needs: [read-tags, read-versions]
     runs-on: ubuntu-latest
     steps:
       - name: Setup .NET
@@ -144,5 +121,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tags: ${{ needs.read-tags.outputs.tags }}
           versions: ${{ needs.read-versions.outputs.versions }}
-          artifact_id: ${{ needs.package.outputs.artifact-id }}
-          artifact_digest: ${{ needs.package.outputs.artifact-digest }}
