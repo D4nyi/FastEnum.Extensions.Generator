@@ -83,6 +83,8 @@ jobs:
     outputs:
       tags: ${{ steps.read-tags.outputs.tags }}
     steps:
+      - name: Checkout Git
+        uses: actions/checkout@v6
       - name: Read Tags
         id: read-tags
         uses: D4nyi/DotNet-Actions/readTags@fix-errors
