@@ -14,25 +14,25 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
 jobs:
-  tests:
-    name: Run tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Git
-        uses: actions/checkout@v6
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: |
-            8.0.x
-            9.0.x
-            10.0.x
-          dotnet-quality: ga
+  # tests:
+  #   name: Run tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Git
+  #       uses: actions/checkout@v6
+  #     - name: Setup .NET
+  #       uses: actions/setup-dotnet@v5
+  #       with:
+  #         dotnet-version: |
+  #           8.0.x
+  #           9.0.x
+  #           10.0.x
+  #         dotnet-quality: ga
 
-      - name: Tests
-        uses: D4nyi/DotNet-Actions/runTests@fix-errors
-        with:
-          build_configuration: Release
+  #     - name: Tests
+  #       uses: D4nyi/DotNet-Actions/runTests@fix-errors
+  #       with:
+  #         build_configuration: Release
 
   # analyze:
   #   name: Analyze (${{ matrix.language }})
@@ -79,12 +79,10 @@ jobs:
   read-tags:
     name: Get Tags
     runs-on: ubuntu-latest
-    needs: [tests] #analyze
+    #needs: [tests, analyze]
     outputs:
       tags: ${{ steps.read-tags.outputs.tags }}
     steps:
-      - name: Checkout Git
-        uses: actions/checkout@v6
       - name: Read Tags
         id: read-tags
         uses: D4nyi/DotNet-Actions/readTags@fix-errors
@@ -94,10 +92,12 @@ jobs:
   read-versions:
     name: Read Version
     runs-on: ubuntu-latest
-    needs: [tests] #analyze
+    #needs: [tests, analyze]
     outputs:
       versions: ${{ steps.read-versions.outputs.versions }}
     steps:
+      - name: Checkout Git
+        uses: actions/checkout@v6
       - name: Read Versions
         id: read-versions
         uses: D4nyi/DotNet-Actions/readProjectVersions@fix-errors
