@@ -34,6 +34,10 @@
         <IncludeBuildOutput>False</IncludeBuildOutput> <!-- Do not include the generator as a lib dependency -->
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 
+        <Version>1.7.0</Version>
+        <InformationalVersion>1.7.0 Built: 2026-02-22T12:54:25Z</InformationalVersion>
+        <Copyright>Copyright © 2026. Dániel Szöllősi</Copyright>
+
         <WarningsAsErrors>CA2021</WarningsAsErrors>
     </PropertyGroup>
 
