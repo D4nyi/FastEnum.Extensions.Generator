@@ -83,7 +83,7 @@ jobs:
     steps:
       - name: Read Tags
         id: read-tags
-        uses: D4nyi/DotNet-Actions/readTags@main
+        uses: D4nyi/DotNet-Actions/readTags@fix-errors
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -96,7 +96,7 @@ jobs:
     steps:
       - name: Read Versions
         id: read-versions
-        uses: D4nyi/DotNet-Actions/readProjectVersions@main
+        uses: D4nyi/DotNet-Actions/readProjectVersions@fix-errors
         with:
           source_dir: ./src
 
@@ -121,7 +121,7 @@ jobs:
 
       - name: Package
         id: package
-        uses: D4nyi/DotNet-Actions/package@main
+        uses: D4nyi/DotNet-Actions/package@fix-errors
         with:
           artifact-name: nuget-CoreUtilityKit
 
@@ -138,7 +138,7 @@ jobs:
           dotnet-quality: ga
 
       - name: Read Versions
-        uses: D4nyi/DotNet-Actions/publish@main
+        uses: D4nyi/DotNet-Actions/publish@fix-errors
         with:
           nuget_api_key: ${{ secrets.NUGET_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
