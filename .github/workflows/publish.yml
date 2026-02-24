@@ -98,15 +98,21 @@ jobs:
     steps:
       - name: Checkout Git
         uses: actions/checkout@v6
+
       - name: Read Versions
         id: read-versions
         uses: D4nyi/DotNet-Actions/readProjectVersions@fix-errors
+        with:
+          source_dir: ./src
 
   publish:
     name: Publish
     needs: [read-tags, read-versions]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Git
+        uses: actions/checkout@v6
+
       - name: Setup .NET
         id: dotnet
         uses: actions/setup-dotnet@v5
