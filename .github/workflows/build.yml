@@ -58,7 +58,7 @@ jobs:
           dotnet-quality: ga
 
       - name: Tests
-        uses: D4nyi/DotNet-Actions/runTests@fix-errors
+        uses: D4nyi/DotNet-Actions/runTests@main
 
   analyze:
     name: Analyze (${{ matrix.language }})
